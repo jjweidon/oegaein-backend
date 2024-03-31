@@ -1,7 +1,7 @@
 package com.likelion.oegaein.domain.member.repository.query;
 
 import com.likelion.oegaein.domain.member.entity.Member;
-import com.likelion.oegaein.domain.member.exception.OneToOneChatException;
+import com.likelion.oegaein.domain.member.exception.ChatException;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,7 +22,7 @@ public class MemberQueryRepository {
                 .setParameter("ids", ids)
                 .getResultList();
         if(findOneToOneChatMembers.size() != 2){
-            throw new OneToOneChatException(NOT_FOUND_ONE_TO_ONE_CHAT_MEMBERS_ERR_MSG);
+            throw new ChatException(NOT_FOUND_ONE_TO_ONE_CHAT_MEMBERS_ERR_MSG);
         }
         return findOneToOneChatMembers;
     }

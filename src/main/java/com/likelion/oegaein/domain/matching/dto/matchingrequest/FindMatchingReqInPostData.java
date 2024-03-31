@@ -34,7 +34,7 @@ public class FindMatchingReqInPostData {
         findMatchingReqInPostData.dormitory = profile.getDormitory();
         findMatchingReqInPostData.mbti = profile.getMbti();
         findMatchingReqInPostData.smoking = profile.getSmoking();
-        findMatchingReqInPostData.sleepingHabit = profile.getSleepingHabit();
+        // findMatchingReqInPostData.sleepingHabit = profile.getSleepingHabit();
         findMatchingReqInPostData.lifePattern = profile.getLifePattern();
         findMatchingReqInPostData.outing = profile.getOuting();
         findMatchingReqInPostData.cleaningCycle = profile.getCleaningCycle();
