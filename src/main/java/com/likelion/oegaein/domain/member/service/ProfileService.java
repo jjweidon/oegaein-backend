@@ -22,7 +22,7 @@ public class ProfileService {
 
     public void update(String email, UpdateProfileDto form) {
         // 사용자 찾기
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("Not Found: Member"));
 
         // 닉네임 중복 확인
         isValidName(form.getName());
@@ -36,7 +36,7 @@ public class ProfileService {
                 .birthdate(form.getBirthdate())
                 .dormitory(form.getDormitory())
                 .mbti(form.getMbti())
-                .sleepingHabit(form.getSleepingHabit())
+                //.sleepingHabit(form.getSleepingHabit())
                 .lifePattern(form.getLifePattern())
                 .smoking(form.getSmoking())
                 .cleaningCycle(form.getCleaningCycle())

@@ -31,7 +31,7 @@ public class FindMatchingPostResInProfile {
                 .birthdate(profile.getBirthdate())
                 .mbti(profile.getMbti())
                 .smoking(profile.getSmoking())
-                .sleepingHabit(profile.getSleepingHabit())
+                //.sleepingHabit(profile.getSleepingHabit())
                 .lifePattern(profile.getLifePattern())
                 .outing(profile.getOuting())
                 .cleaningCycle(profile.getCleaningCycle())
