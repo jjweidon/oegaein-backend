@@ -27,11 +27,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
-    private final ProfileRepository profileRepository;
     private final GoogleOauthUtil googleOauthUtil;
-    public Optional<Member> findByEmail(String email){
-        return memberRepository.findByEmail(email);
-    }
 
     @Transactional
     public GoogleOauthLoginResponse googleLogin(String code) throws JsonProcessingException {

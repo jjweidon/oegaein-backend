@@ -19,22 +19,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/members")
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping("/profile")
-    public void getMemberProfile(@RequestHeader(value = "Authorization") String token) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Member member = memberService.findByEmail(auth.getPrincipal().toString()).get();
-    }
-
-    @PutMapping("/profile")
-    public void updateMemberProfile(@RequestHeader(value = "Authorization") String token, @RequestBody UpdateProfileDto form) {
-
-    }
-
-    @GetMapping("/api/v1/auth/google/callback")
+    @GetMapping("/api/v1/member/auth/google/callback")
     public ResponseEntity<ResponseDto> googleLoginCallbackRequest(@RequestParam("code") String code){
         try {
             log.info("Request to login google oauth2");

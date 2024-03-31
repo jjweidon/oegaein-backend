@@ -5,11 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.oegaein.domain.member.dto.GoogleOauthToken;
 import com.likelion.oegaein.domain.member.dto.GoogleOauthUserInfo;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Component
+@PropertySource("classpath:application.yaml")
 public class GoogleOauthUtil {
     // constant
     private final String PARAM_CODE = "code";
