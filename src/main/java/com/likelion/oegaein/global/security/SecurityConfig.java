@@ -39,6 +39,13 @@ public class SecurityConfig {
             configure.requestMatchers("/api/v1/**").permitAll(); // 임시 모두 허용
             configure.anyRequest().authenticated();
         });
+        http.logout(httpSecurityLogoutConfigurer -> {
+            httpSecurityLogoutConfigurer.logoutUrl("/api/v1/member/logout");
+            httpSecurityLogoutConfigurer.logoutSuccessHandler((request, response, authentication) -> {
+               response.sendRedirect("http://127.0.0.1:3000");
+            });
+            httpSecurityLogoutConfigurer.deleteCookies("refresh_token");
+        });
         http.addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationExceptionHandlerFilter(), JwtAuthenticationFilter.class);
         return http.build();
