@@ -17,7 +17,7 @@ public class FindMyMatchingPostData {
     private String title;
     private DongType dongType;
     private RoomSizeType roomSizeType;
-    private LocalDate deadline;
+    private LocalDateTime deadline;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private MatchingStatus matchingStatus;

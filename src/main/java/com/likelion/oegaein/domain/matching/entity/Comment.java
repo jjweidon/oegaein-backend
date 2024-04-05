@@ -2,8 +2,7 @@ package com.likelion.oegaein.domain.matching.entity;
 
 import com.likelion.oegaein.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +13,8 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Comment {
     @Id @GeneratedValue
     private Long id;
@@ -28,6 +29,7 @@ public class Comment {
     @JoinColumn(name = "comment_id")
     private Comment parentComment; // 부모 댓글 FK
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_id")
     private Member receiver;
     @OneToMany(mappedBy = "parentComment", orphanRemoval = true)
     private final List<Comment> childrenComment = new ArrayList<>();
