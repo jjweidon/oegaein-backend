@@ -58,8 +58,8 @@ public class SecurityConfig {
         // cors 설정
         config.setAllowCredentials(true);
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowedOrigins(List.of("*"));
-        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedOrigins(List.of("http://127.0.0.1:3000"));
+        config.setAllowedHeaders(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "HEAD", "OPTIONS"));
         // source -> config 적용
         source.registerCorsConfiguration("/**", config);
         return source;
