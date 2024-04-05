@@ -1,4 +1,4 @@
-package com.likelion.oegaein.domain.member.dto;
+package com.likelion.oegaein.domain.member.dto.oauth;
 
 import lombok.Data;
 

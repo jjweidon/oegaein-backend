@@ -1,6 +1,6 @@
 package com.likelion.oegaein.domain.matching.dto.matchingrequest;
 
-import com.likelion.oegaein.domain.member.entity.*;
+import com.likelion.oegaein.domain.member.entity.profile.*;
 import lombok.Data;
 
 import java.util.Date;

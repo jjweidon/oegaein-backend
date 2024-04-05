@@ -1,30 +1,28 @@
-package com.likelion.oegaein.domain.member.dto;
+package com.likelion.oegaein.domain.member.dto.profile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.likelion.oegaein.domain.member.entity.*;
+import com.likelion.oegaein.domain.member.entity.profile.*;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
-public class UpdateProfileDto {
+public class ProfileData {
     private String name;
+    private String photoUrl;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @JsonProperty("student_no")
     private int studentNo;
     private String major;
     private Date birthdate;
-    @Enumerated(EnumType.STRING)
-    private Dormitory dormitory;
     private String introduction;
     @Enumerated(EnumType.STRING)
     private Mbti mbti;
     @JsonProperty("sleeping_habit")
-    private List<SleepingHabit> sleepingHabit;
+    private SleepingHabitEntity sleepingHabit;
     @Enumerated(EnumType.STRING)
     @JsonProperty("lifePattern")
     private LifePattern lifePattern;

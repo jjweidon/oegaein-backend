@@ -6,13 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
 public class UpdateMatchingPostData {
     private String title;
     private String content;
-    private LocalDate deadline;
+    private LocalDateTime deadline;
     private DongType dongType;
     private RoomSizeType roomSizeType;
 

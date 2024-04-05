@@ -1,6 +1,5 @@
-package com.likelion.oegaein.domain.member.dto;
+package com.likelion.oegaein.domain.member.dto.oauth;
 
-import com.likelion.oegaein.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 

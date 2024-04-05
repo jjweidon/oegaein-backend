@@ -5,12 +5,13 @@ import com.likelion.oegaein.domain.matching.entity.RoomSizeType;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class CreateMatchingPostRequest {
     private String title;
     private String content;
-    private LocalDate deadline;
+    private LocalDateTime deadline;
     private DongType dongType;
     private RoomSizeType roomSizeType;
 }

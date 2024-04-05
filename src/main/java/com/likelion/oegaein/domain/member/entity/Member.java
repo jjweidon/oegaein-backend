@@ -1,11 +1,10 @@
 package com.likelion.oegaein.domain.member.entity;
 
+import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -19,12 +18,13 @@ public class Member {
     private Long id;
     @Column(unique = true)
     private String email;
-    private String photoUrl;
     private String refreshToken;
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
     private Profile profile;
@@ -32,5 +32,9 @@ public class Member {
 
     public void renewRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 }

@@ -4,7 +4,7 @@ import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
 import com.likelion.oegaein.domain.matching.entity.RoomSizeType;
-import com.likelion.oegaein.domain.member.entity.Profile;
+import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import lombok.Builder;
 import lombok.Getter;
 

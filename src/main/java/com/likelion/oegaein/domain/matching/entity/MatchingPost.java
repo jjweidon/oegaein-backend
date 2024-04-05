@@ -32,7 +32,7 @@ public class MatchingPost {
     @Enumerated(EnumType.STRING)
     private RoomSizeType roomSizeType; // 기숙사 방 사이즈(* 2인실/4인실)
 
-    private LocalDate deadline;
+    private LocalDateTime deadline;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

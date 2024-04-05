@@ -1,4 +1,4 @@
-package com.likelion.oegaein.domain.member.dto;
+package com.likelion.oegaein.domain.member.dto.oauth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
