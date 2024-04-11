@@ -25,8 +25,7 @@ public class Member {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
     private Profile profile;
     private Boolean profileSetUpStatus;
 

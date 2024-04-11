@@ -3,6 +3,8 @@ package com.likelion.oegaein.domain.member.entity;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,8 @@ public class Profile {
     private Sensitivity soundSensitivity;
     private String introduction;
     private int star;
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "profile")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 }
