@@ -18,7 +18,7 @@ public class FindProfileResponse implements ResponseDto {
     private Gender gender; // 성별
     @JsonProperty("student_no")
     private int studentNo; // 학번
-//    private String major;
+    private String major;
     private Date birthdate; // 생일
     @Enumerated(EnumType.STRING)
     private Mbti mbti; // MBTI

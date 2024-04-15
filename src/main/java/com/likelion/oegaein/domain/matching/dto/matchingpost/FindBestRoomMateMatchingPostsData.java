@@ -29,7 +29,6 @@ public class FindBestRoomMateMatchingPostsData {
     public static FindBestRoomMateMatchingPostsData toFindBestRoomMateMatchingPostData(MatchingPost matchingPost){
         Profile profile = matchingPost.getAuthor().getProfile();
         return FindBestRoomMateMatchingPostsData.builder()
-                .star(profile.getStar())
                 .major(profile.getMajor())
                 //.studentNo(profile.getStudentNo())
                 .name(profile.getName())

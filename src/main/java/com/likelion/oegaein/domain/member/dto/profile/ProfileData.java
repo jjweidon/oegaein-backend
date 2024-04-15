@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ProfileData {
@@ -22,7 +23,7 @@ public class ProfileData {
     @Enumerated(EnumType.STRING)
     private Mbti mbti;
     @JsonProperty("sleeping_habit")
-    private SleepingHabitEntity sleepingHabit;
+    private List<SleepingHabit> sleepingHabit;
     @Enumerated(EnumType.STRING)
     @JsonProperty("lifePattern")
     private LifePattern lifePattern;

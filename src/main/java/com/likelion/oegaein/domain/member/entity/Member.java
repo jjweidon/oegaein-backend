@@ -4,7 +4,9 @@ import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Member {
     @Id @GeneratedValue
+    @Column(name = "member_id")
     private Long id;
     @Column(unique = true)
     private String email;

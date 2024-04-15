@@ -19,11 +19,14 @@ public class Review {
     @GeneratedValue
     @Column(name = "review_id")
     private Long id;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE) // 변경 필요
+    @JoinColumn(name = "member_id")
     private Member writer;
     private Evaluation evaluation;
     private Semester semester;
     private DongType dormitory;
     private String content;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
     private Profile profile;
 }

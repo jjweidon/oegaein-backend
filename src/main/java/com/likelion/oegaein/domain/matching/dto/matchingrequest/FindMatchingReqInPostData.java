@@ -13,7 +13,6 @@ public class FindMatchingReqInPostData {
     private int studentNo;
     private String major;
     private Date birthdate;
-    private Dormitory dormitory;
     private Mbti mbti;
     private Smoking smoking;
     private List<SleepingHabit> sleepingHabit;
@@ -31,7 +30,6 @@ public class FindMatchingReqInPostData {
         findMatchingReqInPostData.studentNo = profile.getStudentNo();
         findMatchingReqInPostData.major = profile.getMajor();
         findMatchingReqInPostData.birthdate = profile.getBirthdate();
-        findMatchingReqInPostData.dormitory = profile.getDormitory();
         findMatchingReqInPostData.mbti = profile.getMbti();
         findMatchingReqInPostData.smoking = profile.getSmoking();
         // findMatchingReqInPostData.sleepingHabit = profile.getSleepingHabit();

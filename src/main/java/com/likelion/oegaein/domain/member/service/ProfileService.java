@@ -3,8 +3,11 @@ package com.likelion.oegaein.domain.member.service;
 import com.likelion.oegaein.domain.member.dto.profile.*;
 import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
+import com.likelion.oegaein.domain.member.entity.profile.SleepingHabit;
+import com.likelion.oegaein.domain.member.entity.profile.SleepingHabitEntity;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.repository.ProfileRepository;
+import com.likelion.oegaein.domain.member.repository.SleepingHabitRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +24,7 @@ import java.util.Optional;
 public class ProfileService {
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
+    private final SleepingHabitRepository sleepingHabitRepository;
 
     public CreateProfileResponse createProfile(Authentication authentication, CreateProfileRequest form) {
         // 사용자 찾기
@@ -38,7 +43,6 @@ public class ProfileService {
                 .studentNo(form.getStudentNo())
                 .birthdate(form.getBirthdate())
                 .mbti(form.getMbti())
-                .sleepingHabit(form.getSleepingHabit())
                 .lifePattern(form.getLifePattern())
                 .smoking(form.getSmoking())
                 .cleaningCycle(form.getCleaningCycle())
@@ -47,6 +51,9 @@ public class ProfileService {
                 .build();
         profileRepository.save(profile);
         loginMember.setProfile(profile);
+
+        // 수면 습관 엔티티 생성
+        updateSleepingHabit(form.getSleepingHabit(), profile);
 
         return new CreateProfileResponse(profile.getId());
     }
@@ -65,9 +72,28 @@ public class ProfileService {
 
         // 내용 저장
         profile.update(form);
-        loginMember.setProfile(profile);
+
+        // 수면 습관 업데이트
+        updateSleepingHabit(form.getSleepingHabit(), profile);
 
         return new UpdateProfileResponse(profile.getId());
+    }
+
+    public void updateSleepingHabit(List<SleepingHabit> newSleepingHabits, Profile profile) {
+        // 기존 내용 delete
+        List<SleepingHabitEntity> findSleepingHabitEntities = sleepingHabitRepository.findAllByProfile(profile);
+        for (SleepingHabitEntity sleepingHabitEntity : findSleepingHabitEntities) {
+            sleepingHabitRepository.delete(sleepingHabitEntity);
+        }
+
+        // 새로운 내용 생성
+        for (SleepingHabit sleepingHabit : newSleepingHabits) {
+            SleepingHabitEntity sleepingHabitEntity = SleepingHabitEntity.builder()
+                    .sleepingHabit(sleepingHabit)
+                    .profile(profile)
+                    .build();
+            sleepingHabitRepository.save(sleepingHabitEntity);
+        }
     }
 
     public FindProfileResponse findProfile(Long memberId) {

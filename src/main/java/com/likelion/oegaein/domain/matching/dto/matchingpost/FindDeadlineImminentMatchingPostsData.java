@@ -29,7 +29,6 @@ public class FindDeadlineImminentMatchingPostsData {
     public static FindDeadlineImminentMatchingPostsData toFindDeadlineImminentMatchingPostsData(MatchingPost matchingPost){
         Profile profile = matchingPost.getAuthor().getProfile();
         return FindDeadlineImminentMatchingPostsData.builder()
-                .star(profile.getStar())
                 .major(profile.getMajor())
                 //.studentNo(profile.getStudentNo())
                 .name(profile.getName())

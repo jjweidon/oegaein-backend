@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class FindMatchingPostsData {
     private int star; // rate
     private String major; // major
-    private String studentNo; // studentNo
+    private int studentNo; // studentNo
     private String name; // name
     private Long matchingPostId; // matchingPost ID
     private String title; // Title
@@ -29,9 +29,8 @@ public class FindMatchingPostsData {
     public static FindMatchingPostsData toFindMatchingPostsData(MatchingPost matchingPost){
         Profile profile = matchingPost.getAuthor().getProfile();
         return FindMatchingPostsData.builder()
-                .star(profile.getStar())
                 .major(profile.getMajor())
-                //.studentNo(profile.getStudentNo())
+                .studentNo(profile.getStudentNo())
                 .name(profile.getName())
                 .matchingPostId(matchingPost.getId())
                 .title(matchingPost.getTitle())

@@ -5,12 +5,9 @@ import jakarta.transaction.Transactional;
 import lombok.*;
 
 @Entity
-@Getter
-@Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Transactional
+@NoArgsConstructor
 public class SleepingHabitEntity {
     @Id
     @GeneratedValue
@@ -18,5 +15,6 @@ public class SleepingHabitEntity {
     private Long id;
     private SleepingHabit sleepingHabit;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
     private Profile profile;
 }

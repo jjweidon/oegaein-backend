@@ -37,6 +37,7 @@ public class SecurityConfig {
         // authentication 관련 설정
         http.authorizeHttpRequests((configure) -> {
             configure.requestMatchers("/api/v1/**").permitAll(); // 임시 모두 허용
+            configure.requestMatchers("/h2-console").permitAll();
             configure.anyRequest().authenticated();
         });
         http.logout(httpSecurityLogoutConfigurer -> {
