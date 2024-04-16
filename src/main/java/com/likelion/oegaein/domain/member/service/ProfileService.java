@@ -40,7 +40,6 @@ public class ProfileService {
         // 내용 저장
         Profile profile = Profile.builder()
                 .name(form.getName())
-                .photoUrl(form.getPhotoUrl())
                 .introduction(form.getIntroduction())
                 .gender(form.getGender())
                 .studentNo(form.getStudentNo())
@@ -67,8 +66,10 @@ public class ProfileService {
         Member loginMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
 
-        // 닉네임 중복 확인
-        isValidName(form.getName());
+        // 닉네임이 바뀌었으면 중복 확인
+        if (!loginMember.getProfile().getName().equals(form.getName())) {
+            isValidName(form.getName());
+        }
 
         // 프로필 찾기
         Profile profile = profileRepository.findById(loginMember.getProfile().getId())
@@ -76,6 +77,7 @@ public class ProfileService {
 
         // 내용 저장
         profile.update(form);
+        loginMember.setPhotoUrl(form.getPhotoUrl());
 
         // 수면 습관 업데이트
         updateSleepingHabit(form.getSleepingHabit(), profile);

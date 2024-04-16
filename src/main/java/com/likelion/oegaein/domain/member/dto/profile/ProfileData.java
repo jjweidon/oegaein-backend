@@ -12,13 +12,10 @@ import java.util.List;
 @Data
 public class ProfileData {
     private String name;
-    @JsonProperty("photo_url")
-    private String photoUrl;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @JsonProperty("student_no")
     private int studentNo;
-    private String major;
     private Date birthdate;
     private String introduction;
     @Enumerated(EnumType.STRING)

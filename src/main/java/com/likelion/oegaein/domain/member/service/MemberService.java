@@ -36,7 +36,7 @@ public class MemberService {
             Member newMember = Member.builder()
                     .email(userInfo.getEmail())
                     .googleName(userInfo.getName())
-//                    .photoUrl(userInfo.getPicture())
+                    .photoUrl(userInfo.getPicture())
 //                    .profileSetUpStatus(Boolean.FALSE)
                     .build();
             memberRepository.save(newMember);

@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,7 +21,6 @@ public class Profile {
     private Long id;
     @Column(unique = true)
     private String name;
-    private String photoUrl;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private int studentNo;
@@ -30,8 +30,8 @@ public class Profile {
     private Mbti mbti;
     @Enumerated(EnumType.STRING)
     private Smoking smoking;
-//    @OneToMany(mappedBy = "profile_id")
-//    private SleepingHabitEntity sleepingHabit;
+    @OneToMany(mappedBy = "profile")
+    private List<SleepingHabitEntity> sleepingHabit;
     @Enumerated(EnumType.STRING)
     private LifePattern lifePattern;
     @Enumerated(EnumType.STRING)
@@ -46,13 +46,11 @@ public class Profile {
 
     public void update(UpdateProfileRequest request) {
         this.name = request.getName();
-        this.photoUrl = request.getPhotoUrl();
         this.gender = request.getGender();
         this.studentNo = request.getStudentNo();
         this.birthdate = request.getBirthdate();
         this.mbti = request.getMbti();
         this.smoking = request.getSmoking();
-//        this.sleepingHabit = request.getSleepingHabit();
         this.lifePattern = request.getLifePattern();
         this.outing = request.getOuting();
         this.cleaningCycle = request.getCleaningCycle();

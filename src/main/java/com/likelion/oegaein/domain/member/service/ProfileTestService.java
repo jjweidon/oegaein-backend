@@ -10,6 +10,7 @@ import com.likelion.oegaein.domain.member.repository.ProfileRepository;
 import com.likelion.oegaein.domain.member.repository.SleepingHabitRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import java.util.regex.Pattern;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ProfileTestService {
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
@@ -38,7 +40,6 @@ public class ProfileTestService {
         // 내용 저장
         Profile profile = Profile.builder()
                 .name(form.getName())
-                .photoUrl(form.getPhotoUrl())
                 .introduction(form.getIntroduction())
                 .gender(form.getGender())
                 .studentNo(form.getStudentNo())
@@ -65,8 +66,10 @@ public class ProfileTestService {
         Member loginMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + email));
 
-        // 닉네임 중복 확인
-        isValidName(form.getName());
+        // 닉네임이 바뀌었으면 중복 확인
+        if (!loginMember.getProfile().getName().equals(form.getName())) {
+            isValidName(form.getName());
+        }
 
         // 프로필 찾기
         Profile profile = profileRepository.findById(loginMember.getProfile().getId())
@@ -74,6 +77,7 @@ public class ProfileTestService {
 
         // 내용 저장
         profile.update(form);
+        loginMember.setPhotoUrl(form.getPhotoUrl());
 
         // 수면 습관 업데이트
         updateSleepingHabit(form.getSleepingHabit(), profile);
@@ -115,17 +119,17 @@ public class ProfileTestService {
     }
 
     private String extractMajor(String googleName) {
-        // 정규표현식을 사용하여 전공 추출
+        // 정규표현식으로 전공 추출
         Pattern pattern = Pattern.compile("\\/\\s*(.*?)\\s*\\]");
         Matcher matcher = pattern.matcher(googleName);
 
-        // 매칭되는 부분이 있으면 그 부분을 출력합니다.
+        // 추출된 전공을 반환
         if (matcher.find()) {
             String extracted = matcher.group(1); // 첫 번째 그룹에 해당하는 문자열 추출
-            System.out.println(extracted); // 전공 출력
+            log.info("전공: " + extracted);
             return extracted;
         } else {
-            System.out.println("추출할 전공이 없습니다.");
+            log.info("추출할 전공이 없습니다.");
             return null;
         }
     }

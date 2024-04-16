@@ -17,13 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileTestController {
     private final ProfileTestService profileTestService;
 
-    @GetMapping("api/v1/test/profile/{memberId}")
-    public ResponseEntity<ResponseDto> getProfileTest(@PathVariable Long memberId) {
-        log.info("Request to get profile");
-        FindProfileResponse response = profileTestService.findProfileTest(memberId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @PostMapping("api/v1/test/profile")
     public ResponseEntity<ResponseDto> postProfileTest(@RequestBody CreateProfileRequest dto){
         log.info("Request to post profile");

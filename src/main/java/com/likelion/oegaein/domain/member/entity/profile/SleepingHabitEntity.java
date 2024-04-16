@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.*;
 
 @Entity
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

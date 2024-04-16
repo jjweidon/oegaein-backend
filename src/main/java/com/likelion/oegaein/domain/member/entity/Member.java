@@ -21,15 +21,12 @@ public class Member {
     private Long id;
     @Column(unique = true)
     private String email;
-    @Column(name = "google_name")
     private String googleName;
-    @Column(name = "refresh_token")
+    private String photoUrl;
     private String refreshToken;
     @CreationTimestamp
-    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
     @UpdateTimestamp
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")
@@ -42,5 +39,9 @@ public class Member {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
