@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -33,11 +34,12 @@ public class SecurityConfig {
                 .cors(httpSecurityCorsConfigurer ->
                         httpSecurityCorsConfigurer.configurationSource(corsFilter()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(c -> c.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable).disable()) // h2
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // authentication 관련 설정
         http.authorizeHttpRequests((configure) -> {
             configure.requestMatchers("/api/v1/**").permitAll(); // 임시 모두 허용
-            configure.requestMatchers("/h2-console").permitAll();
+            configure.requestMatchers("/h2-console/**").permitAll();
             configure.anyRequest().authenticated();
         });
         http.logout(httpSecurityLogoutConfigurer -> {

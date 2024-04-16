@@ -40,5 +40,4 @@ public class ProfileApiController {
         UpdateProfileResponse response = profileService.updateProfile(authentication, dto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 }

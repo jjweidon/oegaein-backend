@@ -10,8 +10,6 @@ import com.likelion.oegaein.domain.member.repository.ProfileRepository;
 import com.likelion.oegaein.domain.member.repository.SleepingHabitRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,20 +21,20 @@ import java.util.regex.Pattern;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Slf4j
-public class ProfileService {
+public class ProfileTestService {
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
     private final SleepingHabitRepository sleepingHabitRepository;
 
-    public CreateProfileResponse createProfile(Authentication authentication, CreateProfileRequest form) {
+    public CreateProfileResponse createProfileTest(String email, CreateProfileRequest form) {
+
         // 사용자 찾기
-        Member loginMember = memberRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
-        
+        Member loginMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + email));
+
         // 닉네임 중복 확인
         isValidName(form.getName());
-        
+
         // 내용 저장
         Profile profile = Profile.builder()
                 .name(form.getName())
@@ -62,10 +60,10 @@ public class ProfileService {
         return new CreateProfileResponse(profile.getId());
     }
 
-    public UpdateProfileResponse updateProfile(Authentication authentication, UpdateProfileRequest form) {
+    public UpdateProfileResponse updateProfileTest(String email, UpdateProfileRequest form) {
         // 사용자 찾기
-        Member loginMember = memberRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+        Member loginMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + email));
 
         // 닉네임 중복 확인
         isValidName(form.getName());
@@ -100,7 +98,7 @@ public class ProfileService {
         }
     }
 
-    public FindProfileResponse findProfile(Long memberId) {
+    public FindProfileResponse findProfileTest(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + memberId));
         Profile profile = profileRepository.findById(member.getProfile().getId())
@@ -116,19 +114,18 @@ public class ProfileService {
         }
     }
 
-    // 전공 추출
     private String extractMajor(String googleName) {
-        // 정규표현식으로 전공 추출
+        // 정규표현식을 사용하여 전공 추출
         Pattern pattern = Pattern.compile("\\/\\s*(.*?)\\s*\\]");
         Matcher matcher = pattern.matcher(googleName);
 
-        // 추출된 전공을 반환
+        // 매칭되는 부분이 있으면 그 부분을 출력합니다.
         if (matcher.find()) {
             String extracted = matcher.group(1); // 첫 번째 그룹에 해당하는 문자열 추출
-            log.info("전공: " + extracted);
+            System.out.println(extracted); // 전공 출력
             return extracted;
         } else {
-            log.info("추출할 전공이 없습니다.");
+            System.out.println("추출할 전공이 없습니다.");
             return null;
         }
     }

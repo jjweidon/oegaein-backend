@@ -2,7 +2,6 @@ package com.likelion.oegaein.domain.member.entity.profile;
 
 import com.likelion.oegaein.domain.member.dto.profile.UpdateProfileRequest;
 import com.likelion.oegaein.domain.member.entity.Member;
-import com.likelion.oegaein.domain.member.entity.review.Review;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.*;

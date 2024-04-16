@@ -21,6 +21,9 @@ public class Member {
     private Long id;
     @Column(unique = true)
     private String email;
+    @Column(name = "google_name")
+    private String googleName;
+    @Column(name = "refresh_token")
     private String refreshToken;
     @CreationTimestamp
     @Column(name = "created_at")

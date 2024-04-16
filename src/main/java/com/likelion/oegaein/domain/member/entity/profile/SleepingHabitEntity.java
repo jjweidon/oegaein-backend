@@ -13,6 +13,7 @@ public class SleepingHabitEntity {
     @GeneratedValue
     @Column(name = "sleeping_habit_id")
     private Long id;
+    @Enumerated(EnumType.STRING)
     private SleepingHabit sleepingHabit;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")

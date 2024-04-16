@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class ProfileData {
     private String name;
+    @JsonProperty("photo_url")
     private String photoUrl;
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -25,7 +26,7 @@ public class ProfileData {
     @JsonProperty("sleeping_habit")
     private List<SleepingHabit> sleepingHabit;
     @Enumerated(EnumType.STRING)
-    @JsonProperty("lifePattern")
+    @JsonProperty("life_pattern")
     private LifePattern lifePattern;
     @Enumerated(EnumType.STRING)
     private Smoking smoking;
