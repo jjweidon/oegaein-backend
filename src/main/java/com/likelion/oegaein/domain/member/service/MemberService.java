@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthLoginResponse;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthToken;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthUserInfo;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.profile.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.util.GoogleOauthUtil;
 import com.likelion.oegaein.domain.member.util.JwtUtil;

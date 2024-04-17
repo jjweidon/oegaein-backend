@@ -1,7 +1,7 @@
 package com.likelion.oegaein.domain.member.service;
 
 import com.likelion.oegaein.domain.member.dto.profile.*;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.profile.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabit;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabitEntity;

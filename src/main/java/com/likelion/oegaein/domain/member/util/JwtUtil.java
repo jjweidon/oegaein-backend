@@ -1,6 +1,6 @@
 package com.likelion.oegaein.domain.member.util;
 
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.profile.Member;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;

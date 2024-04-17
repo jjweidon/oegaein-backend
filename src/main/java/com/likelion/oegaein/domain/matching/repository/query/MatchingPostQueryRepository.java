@@ -1,7 +1,7 @@
 package com.likelion.oegaein.domain.matching.repository.query;
 
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.profile.Member;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
