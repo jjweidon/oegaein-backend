@@ -4,12 +4,11 @@ import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
 import com.likelion.oegaein.domain.matching.entity.RoomSizeType;
-import com.likelion.oegaein.domain.member.entity.Profile;
+import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import com.likelion.oegaein.global.dto.ResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

@@ -3,7 +3,7 @@ package com.likelion.oegaein.domain.matching.dto.matchingrequest;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingRequest;
 import com.likelion.oegaein.domain.member.entity.Member;
-import com.likelion.oegaein.domain.member.entity.Profile;
+import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

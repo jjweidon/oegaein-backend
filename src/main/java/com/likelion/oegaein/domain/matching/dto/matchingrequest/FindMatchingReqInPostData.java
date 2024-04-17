@@ -1,6 +1,6 @@
 package com.likelion.oegaein.domain.matching.dto.matchingrequest;
 
-import com.likelion.oegaein.domain.member.entity.*;
+import com.likelion.oegaein.domain.member.entity.profile.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,7 +13,6 @@ public class FindMatchingReqInPostData {
     private int studentNo;
     private String major;
     private Date birthdate;
-    private Dormitory dormitory;
     private Mbti mbti;
     private Smoking smoking;
     private List<SleepingHabit> sleepingHabit;
@@ -31,7 +30,6 @@ public class FindMatchingReqInPostData {
         findMatchingReqInPostData.studentNo = profile.getStudentNo();
         findMatchingReqInPostData.major = profile.getMajor();
         findMatchingReqInPostData.birthdate = profile.getBirthdate();
-        findMatchingReqInPostData.dormitory = profile.getDormitory();
         findMatchingReqInPostData.mbti = profile.getMbti();
         findMatchingReqInPostData.smoking = profile.getSmoking();
         // findMatchingReqInPostData.sleepingHabit = profile.getSleepingHabit();
