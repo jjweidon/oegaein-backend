@@ -4,7 +4,10 @@ import com.likelion.oegaein.domain.member.dto.profile.UpdateProfileRequest;
 import com.likelion.oegaein.domain.member.entity.Member;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;

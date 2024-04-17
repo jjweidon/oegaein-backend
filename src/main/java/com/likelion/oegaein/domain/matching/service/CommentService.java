@@ -28,17 +28,13 @@ public class CommentService {
         MatchingPost matchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found: matchingPost"));
         Member author = memberRepository.findById(2L).orElseThrow(() -> new EntityNotFoundException("Not Found: member")); // 임시 작성자
-        Member receiver = null; // memberRepository.findById(1L).orElseThrow(); // 임시 수신자
-        Comment parentComment = dto.getParentCommentId() == null ? null : commentRepository.findById(dto.getParentCommentId())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found: comment"));
 
         // create new comment
         Comment comment = Comment.builder()
                 .content(dto.getContent())
                 .matchingPost(matchingPost)
-                .parentComment(parentComment)
                 .author(author)
-                .receiver(receiver)
+                .isDeleted(Boolean.FALSE)
                 .build();
         commentRepository.save(comment);
         return new CreateCommentResponse(comment.getId());
@@ -48,9 +44,7 @@ public class CommentService {
     public UpdateCommentResponse updateComment(UpdateCommentData dto, Long commentId){
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found: comment"));
-        Member receiver = null;
         comment.updateContent(dto.getContent());
-        comment.updateReceiver(receiver);
         return new UpdateCommentResponse(commentId);
     }
 
@@ -58,7 +52,12 @@ public class CommentService {
     public DeleteCommentResponse removeComment(Long commentId){
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found: comment"));
-        commentRepository.delete(comment);
+        if(comment.getReplies().isEmpty()){ // no child comments
+            commentRepository.delete(comment);
+        }else{ // has child comments
+            comment.updateDeleteStatus();
+            if(comment.canDirectlyDelete()) commentRepository.delete(comment);
+        }
         return new DeleteCommentResponse(commentId);
     }
 }

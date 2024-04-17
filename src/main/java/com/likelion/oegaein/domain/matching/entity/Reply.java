@@ -4,26 +4,23 @@ import com.likelion.oegaein.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Comment {
-    @Id @GeneratedValue
+public class Reply {
+    @Id
+    @GeneratedValue
     private Long id;
-    private String content; // 댓글 내용
+    private String content; // 대댓글 내용
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "matchingpost_id")
-    private MatchingPost matchingPost; // 게시글 FK
+    @JoinColumn(name = "parent_comment_id")
+    private Comment comment; // 부모 댓글 FK
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member author; // 작성자 FK
@@ -32,18 +29,20 @@ public class Comment {
     @UpdateTimestamp
     private LocalDateTime modifiedAt; // 수정일
     private Boolean isDeleted; // 삭제 여부
-    @OneToMany(mappedBy = "comment", orphanRemoval = true)
-    private final List<Reply> replies = new ArrayList<>();
 
     public void updateContent(String content){
         this.content = content;
     }
+
     public void updateDeleteStatus(){
         this.content = "삭제된 댓글입니다.";
         this.isDeleted = Boolean.TRUE;
     }
+
     public Boolean canDirectlyDelete(){
-        for(Reply reply : this.replies){
+        Comment parentComment = this.comment;
+        for(Reply reply : parentComment.getReplies()){
+            if(reply.getId().equals(this.id)) continue;
             if(reply.getIsDeleted().equals(Boolean.FALSE)){
                 return Boolean.FALSE;
             }

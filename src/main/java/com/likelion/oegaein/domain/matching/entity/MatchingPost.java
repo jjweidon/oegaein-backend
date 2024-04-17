@@ -46,9 +46,13 @@ public class MatchingPost {
     @JoinColumn(name = "user_id")
     private Member author;
 
-    @OneToMany(mappedBy = "matchingPost")
+    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
     @Builder.Default
     private List<MatchingRequest> matchingRequests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 
     public void updateMatchingPost(UpdateMatchingPostData dto){
         title = dto.getTitle();
