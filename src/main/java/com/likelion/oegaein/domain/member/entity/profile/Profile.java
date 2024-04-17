@@ -4,6 +4,7 @@ import com.likelion.oegaein.domain.member.dto.profile.UpdateProfileRequest;
 import com.likelion.oegaein.domain.member.entity.Member;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,8 +44,10 @@ public class Profile {
     private CleaningCycle cleaningCycle;
     @Enumerated(EnumType.STRING)
     private Sensitivity soundSensitivity;
+    @Size(max = 20)
     private String introduction;
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "profile")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public void update(UpdateProfileRequest request) {
