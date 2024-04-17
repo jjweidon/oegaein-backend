@@ -3,11 +3,14 @@ package com.likelion.oegaein.domain.matching.service;
 import com.likelion.oegaein.domain.matching.dto.matchingpost.*;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
+import com.likelion.oegaein.domain.matching.validation.MatchingPostValidator;
 import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.query.MatchingPostQueryRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +21,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MatchingPostService {
+    // constants
+    private final String NOT_FOUND_MEMBER_ERR_MSG = "찾을 수 없는 사용자입니다.";
+    // repository & validator
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingPostQueryRepository matchingPostQueryRepository;
     private final MemberRepository memberRepository;
+    private final MatchingPostValidator matchingPostValidator;
 
     // 모든 매칭글 조회
     public FindMatchingPostsResponse findAllMatchingPosts(){
@@ -35,8 +42,10 @@ public class MatchingPostService {
 
     // 매칭글 작성
     @Transactional
-    public CreateMatchingPostResponse saveMatchingPost(CreateMatchingPostData dto){
-        // 로그인 유저 데이터 가져오기
+    public CreateMatchingPostResponse saveMatchingPost(Authentication authentication, CreateMatchingPostData dto){
+        matchingPostValidator.validateRoomSizeAndTargetNumOfPeople(dto.getRoomSizeType(), dto.getTargetNumberOfPeople());
+        // Member author = memberRepository.findByEmail(authentication.getName())
+        //         .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         // Member author = memberRepository.findById(); // 로그인 구현 완료시 사용
         Member author = new Member();
         // Create MatchingPost Entity
@@ -44,6 +53,7 @@ public class MatchingPostService {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .deadline(dto.getDeadline())
+                .targetNumberOfPeople(dto.getTargetNumberOfPeople())
                 .dongType(dto.getDongType())
                 .roomSizeType(dto.getRoomSizeType())
                 .matchingStatus(MatchingStatus.WAITING)

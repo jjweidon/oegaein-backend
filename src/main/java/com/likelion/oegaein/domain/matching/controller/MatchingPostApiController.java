@@ -3,10 +3,12 @@ package com.likelion.oegaein.domain.matching.controller;
 import com.likelion.oegaein.domain.matching.dto.matchingpost.*;
 import com.likelion.oegaein.domain.matching.service.MatchingPostService;
 import com.likelion.oegaein.global.dto.ResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,10 +25,10 @@ public class MatchingPostApiController {
     }
 
     @PostMapping("/api/v1/matchingposts") // 매칭 글 등록
-    public ResponseEntity<ResponseDto> postMatchingPost(@RequestBody CreateMatchingPostRequest dto){
+    public ResponseEntity<ResponseDto> postMatchingPost(@Valid @RequestBody CreateMatchingPostRequest dto, Authentication authentication){
         log.info("Request to post matchingpost");
         CreateMatchingPostData convertedDto = CreateMatchingPostData.toCreateMatchingPostData(dto);
-        CreateMatchingPostResponse response = matchingPostService.saveMatchingPost(convertedDto);
+        CreateMatchingPostResponse response = matchingPostService.saveMatchingPost(authentication, convertedDto);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 

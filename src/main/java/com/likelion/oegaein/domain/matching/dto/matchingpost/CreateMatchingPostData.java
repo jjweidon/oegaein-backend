@@ -14,6 +14,7 @@ public class CreateMatchingPostData {
     private LocalDateTime deadline;
     private DongType dongType;
     private RoomSizeType roomSizeType;
+    private int targetNumberOfPeople;
 
     public static CreateMatchingPostData toCreateMatchingPostData(CreateMatchingPostRequest dto){
         CreateMatchingPostData createMatchingPostData = new CreateMatchingPostData();
@@ -22,6 +23,7 @@ public class CreateMatchingPostData {
         createMatchingPostData.setDeadline(dto.getDeadline());
         createMatchingPostData.setDongType(dto.getDongType());
         createMatchingPostData.setRoomSizeType(dto.getRoomSizeType());
+        createMatchingPostData.setTargetNumberOfPeople(dto.getTargetNumberOfPeople());
         return createMatchingPostData;
     }
 }
