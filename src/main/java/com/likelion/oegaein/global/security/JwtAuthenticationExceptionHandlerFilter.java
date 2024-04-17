@@ -1,6 +1,6 @@
 package com.likelion.oegaein.global.security;
 
-import com.likelion.oegaein.domain.member.exception.AuthException;
+import com.likelion.oegaein.domain.member.exception.MemberException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ public class JwtAuthenticationExceptionHandlerFilter extends OncePerRequestFilte
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
             filterChain.doFilter(request, response);
-        }catch (AuthException e){
+        }catch (MemberException e){
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

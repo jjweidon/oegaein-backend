@@ -8,6 +8,8 @@ import com.likelion.oegaein.domain.member.entity.profile.Member;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.query.MatchingPostQueryRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
+import com.likelion.oegaein.domain.member.validation.MemberValidator;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -22,11 +24,14 @@ import java.util.List;
 public class MatchingPostService {
     // constants
     private final String NOT_FOUND_MEMBER_ERR_MSG = "찾을 수 없는 사용자입니다.";
+    private final String NOT_FOUND_MATCHING_POST_ERR_MSG = "찾을 수 없는 매칭글입니다.";
     // repository & validator
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingPostQueryRepository matchingPostQueryRepository;
     private final MemberRepository memberRepository;
+    // validators
     private final MatchingPostValidator matchingPostValidator;
+    private final MemberValidator memberValidator;
 
     // 모든 매칭글 조회
     public FindMatchingPostsResponse findAllMatchingPosts(){
@@ -66,15 +71,18 @@ public class MatchingPostService {
     // 특정 매칭글 조회(ID)
     public FindMatchingPostResponse findByIdMatchingPost(Long matchingPostId){
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_POST_ERR_MSG));
         return FindMatchingPostResponse.toFindMatchingPostResponse(matchingPost);
     }
 
     // 특정 매칭글 삭제
     @Transactional
-    public void removeMatchingPost(Long matchingPostId) {
+    public void removeMatchingPost(Long matchingPostId, Authentication authentication) {
+        Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         MatchingPost findMatchingPost = matchingPostRepository.findById(matchingPostId)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_POST_ERR_MSG));
+        memberValidator.validateIsOwnerMatchingPost(authenticatedMember.getId(), findMatchingPost.getAuthor().getId());
         matchingPostRepository.delete(findMatchingPost);
     }
 

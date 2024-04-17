@@ -40,9 +40,9 @@ public class MatchingPostApiController {
     }
 
     @DeleteMapping("/api/v1/matchingposts/{matchingpostid}")
-    public ResponseEntity<ResponseDto> deleteMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
+    public ResponseEntity<ResponseDto> deleteMatchingPost(@PathVariable("matchingpostid") Long matchingPostId, Authentication authentication){
         log.info("Request to delete matchingpost by id-{}", matchingPostId);
-        matchingPostService.removeMatchingPost(matchingPostId);
+        matchingPostService.removeMatchingPost(matchingPostId, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
