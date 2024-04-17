@@ -1,15 +1,11 @@
 package com.likelion.oegaein.domain.member.util;
 
-import com.google.common.net.HttpHeaders;
 import com.likelion.oegaein.domain.member.entity.Member;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.security.auth.message.AuthException;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
@@ -24,12 +20,14 @@ import java.util.Map;
 @PropertySource("classpath:application.yaml")
 public class JwtUtil {
     @Value("${jwt.secret}")
-    private static String SECRET_KEY;
+    private String SECRET_KEY;
     private final String TOKEN_SUBJECT = "oegaein";
     private final int ACCESS_TOKEN_EXPIRE = 1000 * 60 * 60 * 2;
     private final int REFRESH_TOKEN_EXPIRE = 1000 * 60 * 60 * 24;
 
     public String generateAccessToken(Member member) {
+        System.out.println("===============================");
+        System.out.println(SECRET_KEY);
         Map<String, Object> claims = new HashMap<>(); // claim 생성
         claims.put("email", member.getEmail());
         return Jwts.builder()
@@ -44,6 +42,7 @@ public class JwtUtil {
     public String generateRefreshToken(Member member) {
         Map<String, Object> claims = new HashMap<>(); // claim 생성
         claims.put("email", member.getEmail());
+        System.out.println(SECRET_KEY);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(TOKEN_SUBJECT)
@@ -53,7 +52,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String extractEmail(String token){
+    public String extractEmail(String token){
         Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
         return (String) claims.getOrDefault("email", "");
     }

@@ -1,16 +1,12 @@
 package com.likelion.oegaein.domain.matching.dto.matchingpost;
 
-<<<<<<< HEAD
 import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
 import com.likelion.oegaein.domain.matching.entity.RoomSizeType;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
-=======
 import com.likelion.oegaein.domain.matching.dto.comment.FindCommentData;
 import com.likelion.oegaein.domain.matching.entity.*;
-import com.likelion.oegaein.domain.member.entity.Profile;
->>>>>>> bd3ff737520520439e96987de67ec72a0d6c9855
 import com.likelion.oegaein.global.dto.ResponseDto;
 import lombok.Builder;
 import lombok.Getter;
