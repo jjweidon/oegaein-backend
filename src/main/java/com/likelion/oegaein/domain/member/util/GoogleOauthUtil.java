@@ -2,8 +2,8 @@ package com.likelion.oegaein.domain.member.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.oegaein.domain.member.dto.GoogleOauthToken;
-import com.likelion.oegaein.domain.member.dto.GoogleOauthUserInfo;
+import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthToken;
+import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthUserInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
