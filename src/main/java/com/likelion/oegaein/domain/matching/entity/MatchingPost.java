@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
@@ -32,6 +34,8 @@ public class MatchingPost {
     @Enumerated(EnumType.STRING)
     private RoomSizeType roomSizeType; // 기숙사 방 사이즈(* 2인실/4인실)
 
+    private int targetNumberOfPeople; // 목표 인원 수
+
     private LocalDateTime deadline;
 
     @CreationTimestamp
@@ -43,7 +47,8 @@ public class MatchingPost {
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // 변경 필요
-    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "author_id")
     private Member author;
 
     @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
