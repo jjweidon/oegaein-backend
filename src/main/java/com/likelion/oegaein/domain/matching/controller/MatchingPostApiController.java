@@ -55,9 +55,9 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/my-matchingposts")
-    public ResponseEntity<ResponseDto> getMyMatchingPosts(){
+    public ResponseEntity<ResponseDto> getMyMatchingPosts(Authentication authentication){
         log.info("Request to get my matching posts");
-        FindMyMatchingPostResponse response = matchingPostService.findMyMatchingPosts();
+        FindMyMatchingPostResponse response = matchingPostService.findMyMatchingPosts(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

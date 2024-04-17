@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class FindMatchingPostsData {
-    private int star; // rate
     private String major; // major
     private int studentNo; // studentNo
     private String name; // name
