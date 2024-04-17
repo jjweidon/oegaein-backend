@@ -88,10 +88,14 @@ public class MatchingPostService {
 
     // 매칭글 수정
     @Transactional
-    public UpdateMatchingPostResponse updateMatchingPost(Long matchingPostId, UpdateMatchingPostData dto){
-        MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingPostId));
-        matchingPost.updateMatchingPost(dto); // dirty checking
+    public UpdateMatchingPostResponse updateMatchingPost(Long matchingPostId, UpdateMatchingPostData dto, Authentication authentication){
+        Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        MatchingPost findMatchingPost = matchingPostRepository.findById(matchingPostId)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_POST_ERR_MSG));
+        memberValidator.validateIsOwnerMatchingPost(authenticatedMember.getId(), findMatchingPost.getAuthor().getId());
+        matchingPostValidator.validateRoomSizeAndTargetNumOfPeople(dto.getRoomSizeType(), dto.getTargetNumberOfPeople());
+        findMatchingPost.updateMatchingPost(dto); // dirty checking
         return new UpdateMatchingPostResponse(matchingPostId);
     }
 

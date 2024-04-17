@@ -48,9 +48,9 @@ public class MatchingPostApiController {
 
     @PutMapping("/api/v1/matchingposts/{matchingpostid}")
     public ResponseEntity<ResponseDto> putMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
-                                                  @RequestBody UpdateMatchingPostRequest dto){
+                                                  @Valid @RequestBody UpdateMatchingPostRequest dto, Authentication authentication){
         UpdateMatchingPostData convertedDto = UpdateMatchingPostData.toUpdateMatchingPostData(dto);
-        UpdateMatchingPostResponse response = matchingPostService.updateMatchingPost(matchingPostId, convertedDto);
+        UpdateMatchingPostResponse response = matchingPostService.updateMatchingPost(matchingPostId, convertedDto, authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
