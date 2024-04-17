@@ -29,8 +29,7 @@ public class Member {
     private LocalDateTime createdAt = LocalDateTime.now();
     @UpdateTimestamp
     private LocalDateTime updatedAt = LocalDateTime.now();
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
     private Profile profile;
     private Boolean profileSetUpStatus;
 
