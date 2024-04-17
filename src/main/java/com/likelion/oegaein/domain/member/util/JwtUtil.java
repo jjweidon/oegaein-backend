@@ -24,7 +24,7 @@ import java.util.Map;
 @PropertySource("classpath:application.yaml")
 public class JwtUtil {
     @Value("${jwt.secret}")
-    private String SECRET_KEY;
+    private static String SECRET_KEY;
     private final String TOKEN_SUBJECT = "oegaein";
     private final int ACCESS_TOKEN_EXPIRE = 1000 * 60 * 60 * 2;
     private final int REFRESH_TOKEN_EXPIRE = 1000 * 60 * 60 * 24;
@@ -53,7 +53,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String extractEmail(String token){
+    public static String extractEmail(String token){
         Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
         return (String) claims.getOrDefault("email", "");
     }
