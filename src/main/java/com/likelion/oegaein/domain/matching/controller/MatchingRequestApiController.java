@@ -40,23 +40,23 @@ public class MatchingRequestApiController {
     }
 
     @DeleteMapping("/api/v1/matchingrequests/{matchingrequestid}") // 매칭 신청 취소
-    public ResponseEntity<ResponseDto> deleteMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+    public ResponseEntity<ResponseDto> deleteMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId, Authentication authentication){
         log.info("Request to delete matching request");
-        matchingRequestService.removeMatchingRequest(matchingRequestId);
+        matchingRequestService.removeMatchingRequest(matchingRequestId, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/api/v1/matchingrequests/{matchingrequestid}/accept")
-    public ResponseEntity<ResponseDto> acceptMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+    public ResponseEntity<ResponseDto> acceptMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId, Authentication authentication){
         log.info("Request to accept matching request");
-        ResponseDto response = matchingRequestService.acceptMatchingRequest(matchingRequestId);
+        ResponseDto response = matchingRequestService.acceptMatchingRequest(matchingRequestId, authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PatchMapping("/api/v1/matchingrequests/{matchingrequestid}/reject")
-    public ResponseEntity<ResponseDto> rejectMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId){
+    public ResponseEntity<ResponseDto> rejectMatchingRequest(@PathVariable("matchingrequestid") Long matchingRequestId, Authentication authentication){
         log.info("Request to accept matching request");
-        RejectMatchingReqResponse response = matchingRequestService.rejectMatchingRequest(matchingRequestId);
+        RejectMatchingReqResponse response = matchingRequestService.rejectMatchingRequest(matchingRequestId, authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

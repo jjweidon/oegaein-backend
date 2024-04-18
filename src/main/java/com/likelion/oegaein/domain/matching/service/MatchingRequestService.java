@@ -9,6 +9,7 @@ import com.likelion.oegaein.domain.member.entity.profile.Member;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.MatchingRequestRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
+import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import com.likelion.oegaein.global.dto.ResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class MatchingRequestService {
     // constants
     private final String NOT_FOUND_MEMBER_ERR_MSG = "찾을 수 없는 사용자입니다.";
     private final String NOT_FOUND_MATCHING_POST_ERR_MSG = "찾을 수 없는 매칭글입니다.";
+    private final String NOT_FOUND_MATCHING_REQ_ERR_MSG = "찾을 수 없는 매칭요청입니다.";
     // repository
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
@@ -33,6 +35,7 @@ public class MatchingRequestService {
     private final MemberRepository memberRepository;
     // validators
     private final MatchingRequestValidator matchingRequestValidator;
+    private final MemberValidator memberValidator;
 
     public FindMyMatchingReqsResponse findMyMatchingRequest(Authentication authentication){
         Member participant = memberRepository.findByEmail(authentication.getName()) // 인증 유저 조회
@@ -58,9 +61,7 @@ public class MatchingRequestService {
     @Transactional
     public CreateMatchingReqResponse createMatchingRequest(CreateMatchingReqData dto, Authentication authentication){
         // find participant
-//        Member findParticipant = memberRepository.findByEmail(authentication.getName())
-//                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        Member findParticipant = memberRepository.findById(102L)
+        Member findParticipant = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         // find matchingPost
         MatchingPost findMatchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
@@ -76,17 +77,26 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public void removeMatchingRequest(Long matchingRequestId){
+    public void removeMatchingRequest(Long matchingRequestId, Authentication authentication){
+        Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_REQ_ERR_MSG));
+        memberValidator.validateIsOwnerMatchingRequest(authenticatedMember.getId(), matchingRequest.getParticipant().getId());
+        matchingRequestValidator.validateIsNotAcceptOrRejectMatchingRequest(matchingRequest);
         matchingRequestRepository.delete(matchingRequest);
     }
 
     @Transactional
-    public ResponseDto acceptMatchingRequest(Long matchingRequestId){
+    public ResponseDto acceptMatchingRequest(Long matchingRequestId, Authentication authentication){
+        Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_REQ_ERR_MSG));
         MatchingPost matchingPost = matchingRequest.getMatchingPost();
+        // validation
+        memberValidator.validateIsOwnerComeMatchingRequest(authenticatedMember.getId(), matchingPost.getAuthor().getId());
+        matchingRequestValidator.validateIsNotAcceptOrRejectMatchingRequest(matchingRequest);
         // change matchingAcceptance
         matchingRequest.acceptMatchingRequest();
         // check matching is completed
@@ -108,9 +118,15 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public RejectMatchingReqResponse rejectMatchingRequest(Long matchingRequestId){
+    public RejectMatchingReqResponse rejectMatchingRequest(Long matchingRequestId, Authentication authentication){
+        Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         MatchingRequest matchingRequest = matchingRequestRepository.findById(matchingRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + matchingRequestId));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_REQ_ERR_MSG));
+        MatchingPost matchingPost = matchingRequest.getMatchingPost();
+        // validation
+        memberValidator.validateIsOwnerComeMatchingRequest(authenticatedMember.getId(), matchingPost.getAuthor().getId());
+        matchingRequestValidator.validateIsNotAcceptOrRejectMatchingRequest(matchingRequest);
         // change matchingAcceptance
         matchingRequest.rejectMatchingRequest();
         // return matchingReqResponse
