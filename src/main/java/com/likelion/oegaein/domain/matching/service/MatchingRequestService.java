@@ -4,6 +4,7 @@ import com.likelion.oegaein.domain.matching.dto.matchingrequest.*;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingRequest;
 import com.likelion.oegaein.domain.matching.repository.query.MatchingRequestQueryRepository;
+import com.likelion.oegaein.domain.matching.validation.MatchingRequestValidator;
 import com.likelion.oegaein.domain.member.entity.profile.Member;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.MatchingRequestRepository;
@@ -24,11 +25,14 @@ import java.util.UUID;
 public class MatchingRequestService {
     // constants
     private final String NOT_FOUND_MEMBER_ERR_MSG = "찾을 수 없는 사용자입니다.";
+    private final String NOT_FOUND_MATCHING_POST_ERR_MSG = "찾을 수 없는 매칭글입니다.";
     // repository
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
     private final MatchingPostRepository matchingPostRepository;
     private final MemberRepository memberRepository;
+    // validators
+    private final MatchingRequestValidator matchingRequestValidator;
 
     public FindMyMatchingReqsResponse findMyMatchingRequest(Authentication authentication){
         Member participant = memberRepository.findByEmail(authentication.getName()) // 인증 유저 조회
@@ -52,13 +56,20 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public CreateMatchingReqResponse createMatchingRequest(CreateMatchingReqData dto){
+    public CreateMatchingReqResponse createMatchingRequest(CreateMatchingReqData dto, Authentication authentication){
+        // find participant
+//        Member findParticipant = memberRepository.findByEmail(authentication.getName())
+//                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        Member findParticipant = memberRepository.findById(102L)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         // find matchingPost
         MatchingPost findMatchingPost = matchingPostRepository.findById(dto.getMatchingPostId())
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: " + dto.getMatchingPostId()));
-        // find participant
-        Member findParticipant = memberRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: Participant"));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_POST_ERR_MSG));
+        // validation
+        matchingRequestValidator.validateIsNotSelfRequest(findParticipant.getId(), findMatchingPost.getAuthor().getId());
+        matchingRequestValidator.validateIsNotAlreadyRequest(findParticipant, findMatchingPost);
+        matchingRequestValidator.validateIsNotCompletedOrExpiredMatchingPost(findMatchingPost);
+        // create new matching request
         MatchingRequest newMatchingRequest = new MatchingRequest(findMatchingPost, findParticipant);
         matchingRequestRepository.save(newMatchingRequest);
         return new CreateMatchingReqResponse(newMatchingRequest.getId());

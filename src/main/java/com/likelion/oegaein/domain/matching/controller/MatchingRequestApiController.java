@@ -3,6 +3,7 @@ package com.likelion.oegaein.domain.matching.controller;
 import com.likelion.oegaein.domain.matching.dto.matchingrequest.*;
 import com.likelion.oegaein.domain.matching.service.MatchingRequestService;
 import com.likelion.oegaein.global.dto.ResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,10 @@ public class MatchingRequestApiController {
     }
 
     @PostMapping("/api/v1/matchingrequests") // 매칭 신청 등록
-    public ResponseEntity<ResponseDto> postMatchingRequest(@RequestBody CreateMatchingReqRequest dto){
+    public ResponseEntity<ResponseDto> postMatchingRequest(@Valid @RequestBody CreateMatchingReqRequest dto, Authentication authentication){
         log.info("Request to post matching request");
         CreateMatchingReqData convertedDto = CreateMatchingReqData.toCreateMatchingReqData(dto);
-        CreateMatchingReqResponse response = matchingRequestService.createMatchingRequest(convertedDto);
+        CreateMatchingReqResponse response = matchingRequestService.createMatchingRequest(convertedDto, authentication);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
