@@ -137,9 +137,9 @@ public class MatchingRequestService {
 
     // 사용자 정의 메서드
     private Boolean isCompletedMatching(MatchingPost matchingPost){
-        int roomSizeNum = matchingPost.getRoomSizeType().getValueNum();
+        int targetNumberOfPeople = matchingPost.getTargetNumberOfPeople();
         int completedMatchingRequest = matchingRequestQueryRepository
                 .countCompletedMatchingRequest(matchingPost);
-        return roomSizeNum == (completedMatchingRequest+1);
+        return targetNumberOfPeople == (completedMatchingRequest+1);
     }
 }
