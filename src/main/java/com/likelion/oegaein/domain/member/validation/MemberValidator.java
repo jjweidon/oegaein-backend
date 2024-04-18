@@ -10,6 +10,7 @@ public class MemberValidator {
     private final String IS_OWNER_REPLY_ERR_MSG = "올바른 대댓글 작성자가 아닙니다.";
     private final String IS_OWNER_MATCHING_REQ_ERR_MSG = "올바른 매칭 신청자가 아닙니다.";
     private final String IS_OWNER_COME_MATCHING_REQ_ERR_MSG = "올바른 매칭 수락/거부자가 아닙니다.";
+    private final String IS_OWNER_ROOMMATE_ALARM_ERR_MSG = "올바른 룸메이트 알림 수신자가 아닙니다.";
     public void validateIsOwnerMatchingPost(Long authenticatedMemberId, Long matchingPostAuthorId){
         if(!authenticatedMemberId.equals(matchingPostAuthorId)){
             throw new MemberException(IS_OWNER_MATCHING_POST_ERR_MSG);
@@ -33,6 +34,12 @@ public class MemberValidator {
     public void validateIsOwnerComeMatchingRequest(Long authenticatedMemberId, Long comeMatchingRequestMatchingPostAuthorId){
         if(!authenticatedMemberId.equals(comeMatchingRequestMatchingPostAuthorId)){
             throw new MemberException(IS_OWNER_COME_MATCHING_REQ_ERR_MSG);
+        }
+    }
+
+    public void validateIsOwnerRoommateAlarm(Long authenticatedMemberId, Long roommateAlarmAuthorId){
+        if(!authenticatedMemberId.equals(roommateAlarmAuthorId)){
+            throw new MemberException(IS_OWNER_ROOMMATE_ALARM_ERR_MSG);
         }
     }
 }

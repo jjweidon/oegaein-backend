@@ -45,7 +45,7 @@ public class MatchingPost {
     @Enumerated(EnumType.STRING)
     private MatchingStatus matchingStatus; // 매칭 상태, WAITING, COMPLETED
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // 변경 필요
+    @ManyToOne(fetch = FetchType.LAZY) // 변경 필요
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "author_id")
     private Member author;
