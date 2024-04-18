@@ -4,6 +4,8 @@ import com.likelion.oegaein.domain.member.entity.profile.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -17,10 +19,12 @@ public class MatchingRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matching_post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MatchingPost matchingPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participant_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member participant;
 
     @Enumerated(EnumType.STRING)
