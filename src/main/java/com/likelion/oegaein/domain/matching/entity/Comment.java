@@ -4,6 +4,8 @@ import com.likelion.oegaein.domain.member.entity.profile.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -21,9 +23,11 @@ public class Comment {
     private String content; // 댓글 내용
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matchingpost_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MatchingPost matchingPost; // 게시글 FK
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member author; // 작성자 FK
     @CreationTimestamp
     private LocalDateTime createdAt; // 작성일

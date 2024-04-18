@@ -23,7 +23,9 @@ public class MatchingRequestQueryRepository {
                 " join fetch mrmpa.profile mrmpap" +
                 " where mrmpa.id = :authorId" +
                 " order by mr.createdAt desc";
-        return em.createQuery(jpql, MatchingRequest.class).getResultList();
+        return em.createQuery(jpql, MatchingRequest.class)
+                .setParameter("authorId", authorId)
+                .getResultList();
     }
 
     public int countCompletedMatchingRequest(MatchingPost matchingPost){

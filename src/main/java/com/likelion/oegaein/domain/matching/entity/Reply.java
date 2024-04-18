@@ -4,6 +4,8 @@ import com.likelion.oegaein.domain.member.entity.profile.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -20,9 +22,11 @@ public class Reply {
     private String content; // 대댓글 내용
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Comment comment; // 부모 댓글 FK
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member author; // 작성자 FK
     @CreationTimestamp
     private LocalDateTime createdAt; // 작성일

@@ -9,7 +9,9 @@ import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.MatchingRequestRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.global.dto.ResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +22,17 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MatchingRequestService {
+    // constants
+    private final String NOT_FOUND_MEMBER_ERR_MSG = "찾을 수 없는 사용자입니다.";
+    // repository
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
     private final MatchingPostRepository matchingPostRepository;
     private final MemberRepository memberRepository;
 
-    public FindMyMatchingReqsResponse findMyMatchingRequest(){
-        Member participant = memberRepository.findById(1L) // 인증 유저 조회
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: Participant"));
+    public FindMyMatchingReqsResponse findMyMatchingRequest(Authentication authentication){
+        Member participant = memberRepository.findByEmail(authentication.getName()) // 인증 유저 조회
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         // 내 매칭 요청 목록 조회
         List<MatchingRequest> matchingRequests = matchingRequestRepository.findByParticipant(participant);
         List<FindMyMatchingReqData> matchingReqDatas = matchingRequests.stream()
@@ -36,9 +41,9 @@ public class MatchingRequestService {
         return new FindMyMatchingReqsResponse(matchingReqDatas.size(), matchingReqDatas);
     }
 
-    public FindComeMatchingReqsResponse findComeMatchingRequest(){
-        Member author = memberRepository.findById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("Not Found: Author")); // 인증 유저 조회
+    public FindComeMatchingReqsResponse findComeMatchingRequest(Authentication authentication){
+        Member author = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG)); // 인증 유저 조회
         List<MatchingRequest> matchingRequests = matchingRequestQueryRepository.findComeMatchingRequests(author);
         List<FindComeMatchingReqData> matchingReqDatas = matchingRequests.stream()
                 .map(FindComeMatchingReqData::toFindComeMatchingReqData)
