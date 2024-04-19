@@ -4,6 +4,8 @@ import com.likelion.oegaein.domain.alarm.entity.RoommateAlarm;
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarmType;
 import com.likelion.oegaein.domain.alarm.repository.RoommateAlarmRepository;
 import com.likelion.oegaein.domain.alarm.repository.query.RoommateAlarmQueryRepository;
+import com.likelion.oegaein.domain.email.dto.EmailMessage;
+import com.likelion.oegaein.domain.email.service.EmailService;
 import com.likelion.oegaein.domain.matching.dto.matchingrequest.*;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingRequest;
@@ -32,6 +34,15 @@ public class MatchingRequestService {
     private final String NOT_FOUND_MEMBER_ERR_MSG = "찾을 수 없는 사용자입니다.";
     private final String NOT_FOUND_MATCHING_POST_ERR_MSG = "찾을 수 없는 매칭글입니다.";
     private final String NOT_FOUND_MATCHING_REQ_ERR_MSG = "찾을 수 없는 매칭요청입니다.";
+    private final String EMAIL_MATCHING_REQUEST_SUBJECT = "[외개인] 매칭 요청이 도착했습니다.";
+    private final String EMAIL_MATCHING_REQUEST_ACCEPT_SUBJECT = "[외개인] 매칭 요청이 수락되었습니다.";
+    private final String EMAIL_MATCHING_REQUEST_REJECT_SUBJECT = "[외개인] 매칭 요청이 거부되었습니다.";
+    private final String EMAIL_MATCHING_REQUEST_COMPLETE_SUBJECT = "[외개인] 매칭 요청이 완료되었습니다.";
+    private final String EMAIL_MATCHING_REQUEST_TYPE = "matchingrequest";
+    private final String EMAIL_MATCHING_REQUEST_ACCEPT_TYPE = "matchingrequestaccept";
+    private final String EMAIL_MATCHING_REQUEST_REJECT_TYPE = "matchingrequestreject";
+    private final String EMAIL_MATCHING_COMPLETE_TYPE = "matchingrequestcomplete";
+
     // repository
     private final MatchingRequestRepository matchingRequestRepository;
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
@@ -39,6 +50,8 @@ public class MatchingRequestService {
     private final MemberRepository memberRepository;
     private final RoommateAlarmRepository roommateAlarmRepository;
     private final RoommateAlarmQueryRepository roommateAlarmQueryRepository;
+    // service
+    private final EmailService emailService;
     // validators
     private final MatchingRequestValidator matchingRequestValidator;
     private final MemberValidator memberValidator;
@@ -79,6 +92,18 @@ public class MatchingRequestService {
         // create new matching request
         MatchingRequest newMatchingRequest = new MatchingRequest(findMatchingPost, findParticipant);
         matchingRequestRepository.save(newMatchingRequest);
+        RoommateAlarm roommateAlarm = RoommateAlarm.builder()
+                .matchingPost(findMatchingPost)
+                .member(findMatchingPost.getAuthor())
+                .alarmType(RoommateAlarmType.MATCHING_REQUEST)
+                .build();
+        roommateAlarmRepository.save(roommateAlarm);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(findMatchingPost.getAuthor().getEmail())
+                .subject(EMAIL_MATCHING_REQUEST_SUBJECT)
+                .message(findMatchingPost.getTitle())
+                .build();
+        emailService.sendMail(emailMessage,EMAIL_MATCHING_REQUEST_TYPE);
         return new CreateMatchingReqResponse(newMatchingRequest.getId());
     }
 
@@ -112,6 +137,12 @@ public class MatchingRequestService {
                 .alarmType(RoommateAlarmType.MATCHING_REQUEST_ACCEPT)
                 .build();
         roommateAlarmRepository.save(acceptRoommateAlarm);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(matchingRequest.getParticipant().getEmail())
+                .subject(EMAIL_MATCHING_REQUEST_ACCEPT_SUBJECT)
+                .message(matchingPost.getTitle())
+                .build();
+        emailService.sendMail(emailMessage,EMAIL_MATCHING_REQUEST_TYPE);
         // check matching is completed
         if(isCompletedMatching(matchingPost)){
             updateFailedMatchingRequests(matchingPost);
@@ -146,6 +177,12 @@ public class MatchingRequestService {
         roommateAlarmRepository.save(roommateAlarm);
         // change matchingAcceptance
         matchingRequest.rejectMatchingRequest();
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(matchingRequest.getParticipant().getEmail())
+                .subject(EMAIL_MATCHING_REQUEST_REJECT_SUBJECT)
+                .message(matchingPost.getTitle())
+                .build();
+        emailService.sendMail(emailMessage,EMAIL_MATCHING_REQUEST_REJECT_TYPE);
         // return matchingReqResponse
         return new RejectMatchingReqResponse(
                 matchingRequest.getId()
@@ -174,6 +211,12 @@ public class MatchingRequestService {
                     .alarmType(RoommateAlarmType.MATCHING_REQUEST_REJECT)
                     .build()).toList();
             roommateAlarmQueryRepository.bulkSaveAll(failedRoommateAlarms);
+            List<EmailMessage> emailMessages = failedMatchingRequests.stream().map((fmr) -> EmailMessage.builder()
+                    .to(fmr.getParticipant().getEmail())
+                    .subject(EMAIL_MATCHING_REQUEST_REJECT_SUBJECT)
+                    .message(fmr.getMatchingPost().getTitle())
+                    .build()).toList();
+            emailMessages.forEach((emailMessage) -> emailService.sendMail(emailMessage, EMAIL_MATCHING_REQUEST_REJECT_TYPE));
         }
     }
 
@@ -189,5 +232,11 @@ public class MatchingRequestService {
                 .alarmType(RoommateAlarmType.MATCHING_POST_COMPLETED)
                 .build()).toList();
         roommateAlarmQueryRepository.bulkSaveAll(succeedRoommateAlarms);
+        List<EmailMessage> emailMessages = succeedMatchingRequests.stream().map((fmr) -> EmailMessage.builder()
+                .to(fmr.getParticipant().getEmail())
+                .subject(EMAIL_MATCHING_REQUEST_COMPLETE_SUBJECT)
+                .message(fmr.getMatchingPost().getTitle())
+                .build()).toList();
+        emailMessages.forEach((emailMessage) -> emailService.sendMail(emailMessage, EMAIL_MATCHING_COMPLETE_TYPE));
     }
 }
