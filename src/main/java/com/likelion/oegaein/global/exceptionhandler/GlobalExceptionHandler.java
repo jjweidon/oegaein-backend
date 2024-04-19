@@ -1,5 +1,6 @@
 package com.likelion.oegaein.global.exceptionhandler;
 
+import com.likelion.oegaein.domain.email.exception.EmailException;
 import com.likelion.oegaein.domain.matching.exception.MatchingPostException;
 import com.likelion.oegaein.domain.matching.exception.MatchingRequestException;
 import com.likelion.oegaein.domain.member.exception.MemberException;
@@ -84,6 +85,16 @@ public class GlobalExceptionHandler {
                 .errorMessages(errors)
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+    // EmailException
+    @ExceptionHandler(EmailException.class)
+    public ResponseEntity<ErrorResponseDto> handleMatchingPostException(EmailException ex){
+        Map<String, String> errors = new HashMap<>();
+        errors.put(COMMON_ERR_MSG_KEY, ex.getMessage());
+        final ErrorResponseDto errorResponse = ErrorResponseDto.builder()
+                .errorMessages(errors)
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     // global exception
     @ExceptionHandler(Exception.class)

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Completed</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            background-color: #8A7FF9; /* Changed button color */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .title1 {
+            font-size: 28px; /* Slightly larger font size for title1 */
+            margin-bottom: 10px;
+        }
+        .title2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1 class="title1">매칭 요청 거절</h1>
+        <h2 class="title2"><span style="color:#8A7FF9" th:text="${message}"></span></h2>
+        <h2 class="title2">글에 대한 매칭 요청이 거절되었습니다.</h2>
+        <p style="font-size:50px">🙅🏻‍♂🙅🏻‍♀️</p>
+        <a href="#" class="button">페이지로 이동하기</a>
+    </div>
+</div>
+</body>
+</html>
