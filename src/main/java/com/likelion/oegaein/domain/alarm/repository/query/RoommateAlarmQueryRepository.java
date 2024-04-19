@@ -4,14 +4,17 @@ import com.likelion.oegaein.domain.alarm.entity.RoommateAlarm;
 import com.likelion.oegaein.domain.member.entity.profile.Member;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
 public class RoommateAlarmQueryRepository {
     private final EntityManager em;
+    private final JdbcTemplate jdbcTemplate;
 
     public int deleteAllByMember(Member member){
         String jpql = "delete from RoommateAlarm ra" +
@@ -34,5 +37,17 @@ public class RoommateAlarmQueryRepository {
         return em.createQuery(jpql, RoommateAlarm.class)
                 .setParameter("member", member)
                 .getResultList();
+    }
+
+    public void bulkSaveAll(List<RoommateAlarm> roommateAlarms){
+        String sql = "INSERT INTO roommate_alarm (alarm_type, matchingpost_id, member_id)" +
+                " VALUES (?,?,?)";
+        jdbcTemplate.batchUpdate(sql,roommateAlarms,roommateAlarms.size(),
+                (PreparedStatement ps, RoommateAlarm roommateAlarm) -> {
+                    ps.setString(1, roommateAlarm.getAlarmType().getValue());
+                    ps.setLong(2, roommateAlarm.getMatchingPost().getId());
+                    ps.setLong(3, roommateAlarm.getMember().getId());
+                }
+                );
     }
 }

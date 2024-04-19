@@ -1,5 +1,8 @@
 package com.likelion.oegaein.domain.matching.service;
 
+import com.likelion.oegaein.domain.alarm.entity.RoommateAlarm;
+import com.likelion.oegaein.domain.alarm.entity.RoommateAlarmType;
+import com.likelion.oegaein.domain.alarm.repository.RoommateAlarmRepository;
 import com.likelion.oegaein.domain.matching.dto.matchingrequest.*;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingRequest;
@@ -33,6 +36,7 @@ public class MatchingRequestService {
     private final MatchingRequestQueryRepository matchingRequestQueryRepository;
     private final MatchingPostRepository matchingPostRepository;
     private final MemberRepository memberRepository;
+    private final RoommateAlarmRepository roommateAlarmRepository;
     // validators
     private final MatchingRequestValidator matchingRequestValidator;
     private final MemberValidator memberValidator;
@@ -99,11 +103,23 @@ public class MatchingRequestService {
         matchingRequestValidator.validateIsNotAcceptOrRejectMatchingRequest(matchingRequest);
         // change matchingAcceptance
         matchingRequest.acceptMatchingRequest();
+        // create alarm
+        RoommateAlarm acceptRoommateAlarm = RoommateAlarm.builder()
+                .member(matchingRequest.getParticipant())
+                .matchingPost(matchingPost)
+                .alarmType(RoommateAlarmType.MATCHING_REQUEST_ACCEPT)
+                .build();
+        roommateAlarmRepository.save(acceptRoommateAlarm);
         // check matching is completed
         if(isCompletedMatching(matchingPost)){
             // change other requests of status
-            List<MatchingRequest> matchingRequests = matchingPost.getMatchingRequests();
-            matchingRequests.forEach(MatchingRequest::failedMatchingRequest);
+            List<MatchingRequest> failedMatchingRequests = matchingPost.getMatchingRequests().stream()
+                    .filter((mr) -> mr.getFailedMatchingRequestId().isPresent()).toList();
+            List<MatchingRequest> succeedMatchingRequests = matchingPost.getMatchingRequests().stream()
+                    .filter((mr) -> mr.getSucceedMatchingRequestId().isPresent()).toList();
+            List<Long> failedMatchingRequestsId = failedMatchingRequests.stream().map(MatchingRequest::getId).toList();
+            List<Long> succeedMatchingRequestsId = succeedMatchingRequests.stream().map(MatchingRequest::getId).toList();
+            matchingRequestQueryRepository.bulkUpdateFailedMatchingRequest(failedMatchingRequestsId);
             // change matchingPost of status
             matchingPost.completeMatchingPost();
             // generate uuid
@@ -127,6 +143,13 @@ public class MatchingRequestService {
         // validation
         memberValidator.validateIsOwnerComeMatchingRequest(authenticatedMember.getId(), matchingPost.getAuthor().getId());
         matchingRequestValidator.validateIsNotAcceptOrRejectMatchingRequest(matchingRequest);
+        // create alarm
+        RoommateAlarm roommateAlarm = RoommateAlarm.builder()
+                .member(matchingRequest.getParticipant())
+                .matchingPost(matchingPost)
+                .alarmType(RoommateAlarmType.MATCHING_REQUEST_REJECT)
+                .build();
+        roommateAlarmRepository.save(roommateAlarm);
         // change matchingAcceptance
         matchingRequest.rejectMatchingRequest();
         // return matchingReqResponse

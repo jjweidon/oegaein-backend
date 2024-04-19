@@ -40,4 +40,16 @@ public class MatchingRequestQueryRepository {
                 .getSingleResult()
                 .intValue();
     }
+
+    public void bulkUpdateFailedMatchingRequest(List<Long> failedMatchingRequestsId){
+        String jpql = "update MatchingRequest mr" +
+                " set mr.matchingAcceptance = :matchingacceptance" +
+                " where mr.id in :failedmatchingrequestsid";
+        em.createQuery(jpql, MatchingRequest.class)
+                .setParameter("matchingacceptance", MatchingAcceptance.REJECT)
+                .setParameter("failedmatchingrequestsid", failedMatchingRequestsId)
+                .executeUpdate();
+        em.flush();
+        em.clear();
+    }
 }

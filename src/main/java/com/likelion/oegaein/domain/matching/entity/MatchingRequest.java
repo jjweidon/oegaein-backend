@@ -9,6 +9,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -51,9 +53,16 @@ public class MatchingRequest {
         this.matchingAcceptance = MatchingAcceptance.REJECT;
     }
 
-    public void failedMatchingRequest(){
+    public Optional<Long> getFailedMatchingRequestId(){
         if(this.matchingAcceptance.equals(MatchingAcceptance.WAITING)){
-            this.matchingAcceptance = MatchingAcceptance.REJECT;
+            return Optional.of(this.id);
         }
+        return Optional.empty();
+    }
+    public Optional<Long> getSucceedMatchingRequestId(){
+        if(this.matchingAcceptance.equals(MatchingAcceptance.ACCEPT)){
+            return Optional.of(this.id);
+        }
+        return Optional.empty();
     }
 }
