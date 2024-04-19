@@ -26,7 +26,6 @@ public class Member {
     private Long id;
     @Column(unique = true)
     private String email;
-    private String googleName;
     private String photoUrl;
     private String refreshToken;
     @CreatedDate
@@ -35,7 +34,6 @@ public class Member {
     private LocalDateTime updatedAt = LocalDateTime.now();
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
     private Profile profile;
-    private Boolean profileSetUpStatus;
 
     public void renewRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;

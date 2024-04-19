@@ -26,8 +26,6 @@ public class JwtUtil {
     private final int REFRESH_TOKEN_EXPIRE = 1000 * 60 * 60 * 24;
 
     public String generateAccessToken(Member member) {
-        System.out.println("===============================");
-        System.out.println(SECRET_KEY);
         Map<String, Object> claims = new HashMap<>(); // claim 생성
         claims.put("email", member.getEmail());
         return Jwts.builder()
@@ -42,7 +40,6 @@ public class JwtUtil {
     public String generateRefreshToken(Member member) {
         Map<String, Object> claims = new HashMap<>(); // claim 생성
         claims.put("email", member.getEmail());
-        System.out.println(SECRET_KEY);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(TOKEN_SUBJECT)

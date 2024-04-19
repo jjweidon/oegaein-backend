@@ -14,10 +14,12 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RoommateAlarmService {
     // constants
@@ -33,7 +35,7 @@ public class RoommateAlarmService {
     public FindRoommateAlarmsResponse findRoommateAlarms(Authentication authentication){
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        List<RoommateAlarm> roommateAlarms = roommateAlarmRepository.findByMemberOrderByCreatedAtDesc(authenticatedMember);
+        List<RoommateAlarm> roommateAlarms = roommateAlarmQueryRepository.findByMemberOrderByCreatedAtDesc(authenticatedMember);
         List<FindRoommateAlarmsData> roommateAlarmsData = roommateAlarms.stream()
                 .map(FindRoommateAlarmsData::toFindRoommateAlarmsData).toList();
         return FindRoommateAlarmsResponse.builder()
@@ -42,6 +44,7 @@ public class RoommateAlarmService {
                 .build();
     }
 
+    @Transactional
     public DeleteRoommateAlarmResponse removeRoommateAlarm(Long roommateAlarmId, Authentication authentication){
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
@@ -52,6 +55,7 @@ public class RoommateAlarmService {
         return new DeleteRoommateAlarmResponse(roommateAlarmId);
     }
 
+    @Transactional
     public DeleteRoommateAlarmsResponse removeRoommateAlarms(Authentication authentication){
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
