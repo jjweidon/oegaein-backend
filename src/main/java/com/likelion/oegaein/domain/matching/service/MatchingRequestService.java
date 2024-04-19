@@ -226,11 +226,17 @@ public class MatchingRequestService {
         // create alarms
         List<MatchingRequest> succeedMatchingRequests = matchingPost.getMatchingRequests().stream()
                 .filter((mr) -> mr.getSucceedMatchingRequestId().isPresent()).toList();
-        List<RoommateAlarm> succeedRoommateAlarms = succeedMatchingRequests.stream().map((smr) -> RoommateAlarm.builder()
+        List<RoommateAlarm> succeedRoommateAlarms = new java.util.ArrayList<>(succeedMatchingRequests.stream().map((smr) -> RoommateAlarm.builder()
                 .member(smr.getParticipant())
                 .matchingPost(matchingPost)
                 .alarmType(RoommateAlarmType.MATCHING_POST_COMPLETED)
-                .build()).toList();
+                .build()).toList());
+        RoommateAlarm succeedRoommateAlarm = RoommateAlarm.builder()
+                        .member(matchingPost.getAuthor())
+                                .matchingPost(matchingPost)
+                                        .alarmType(RoommateAlarmType.MATCHING_POST_COMPLETED)
+                                                .build();
+        succeedRoommateAlarms.add(succeedRoommateAlarm);
         roommateAlarmQueryRepository.bulkSaveAll(succeedRoommateAlarms);
         List<EmailMessage> emailMessages = succeedMatchingRequests.stream().map((fmr) -> EmailMessage.builder()
                 .to(fmr.getParticipant().getEmail())
