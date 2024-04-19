@@ -1,5 +1,6 @@
 package com.likelion.oegaein.domain.member.dto.review;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.member.entity.review.Evaluation;
 import com.likelion.oegaein.domain.member.entity.review.Review;
@@ -11,6 +12,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class FindReviewData implements ResponseDto {
+    @JsonProperty("writer_name")
     private String writerName;
     private Evaluation evaluation;
     private Semester semester;

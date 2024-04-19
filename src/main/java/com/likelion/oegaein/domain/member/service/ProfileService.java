@@ -52,8 +52,8 @@ public class ProfileService {
                 .outing(form.getOuting())
                 .soundSensitivity(form.getSoundSensitivity())
                 .build();
+        profile.setMember(loginMember);
         profileRepository.save(profile);
-        loginMember.setProfile(profile);
 
         // 수면 습관 엔티티 생성
         updateSleepingHabit(form.getSleepingHabit(), profile);

@@ -37,10 +37,6 @@ public class Member {
         this.refreshToken = refreshToken;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
-    }
-
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
