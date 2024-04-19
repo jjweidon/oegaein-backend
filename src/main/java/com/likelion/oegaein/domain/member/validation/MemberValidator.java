@@ -11,6 +11,8 @@ public class MemberValidator {
     private final String IS_OWNER_MATCHING_REQ_ERR_MSG = "올바른 매칭 신청자가 아닙니다.";
     private final String IS_OWNER_COME_MATCHING_REQ_ERR_MSG = "올바른 매칭 수락/거부자가 아닙니다.";
     private final String IS_OWNER_ROOMMATE_ALARM_ERR_MSG = "올바른 룸메이트 알림 수신자가 아닙니다.";
+    private final String IS_HUFS_EMAIL_DOMAIN_ERR_MSG = "한국외국어대학교 계정이 아닙니다.";
+    private final String HUFS_EMAIL_DOMAIN = "hufs.ac.kr";
     public void validateIsOwnerMatchingPost(Long authenticatedMemberId, Long matchingPostAuthorId){
         if(!authenticatedMemberId.equals(matchingPostAuthorId)){
             throw new MemberException(IS_OWNER_MATCHING_POST_ERR_MSG);
@@ -36,10 +38,15 @@ public class MemberValidator {
             throw new MemberException(IS_OWNER_COME_MATCHING_REQ_ERR_MSG);
         }
     }
-
     public void validateIsOwnerRoommateAlarm(Long authenticatedMemberId, Long roommateAlarmAuthorId){
         if(!authenticatedMemberId.equals(roommateAlarmAuthorId)){
             throw new MemberException(IS_OWNER_ROOMMATE_ALARM_ERR_MSG);
+        }
+    }
+    public void validateIsUnivEmailDomain(String email){
+        String emailDomain = email.substring(email.indexOf('@') + 1);
+        if(!emailDomain.equals(HUFS_EMAIL_DOMAIN)){
+            throw new MemberException(IS_HUFS_EMAIL_DOMAIN_ERR_MSG);
         }
     }
 }
