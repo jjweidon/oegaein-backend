@@ -35,7 +35,7 @@ public class RoommateAlarmService {
     public FindRoommateAlarmsResponse findRoommateAlarms(Authentication authentication){
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        List<RoommateAlarm> roommateAlarms = roommateAlarmQueryRepository.findByMemberOrderByCreatedAtDesc(authenticatedMember);
+        List<RoommateAlarm> roommateAlarms = roommateAlarmQueryRepository.findByMemberOrderByCreatedAtDesc(authenticatedMember.getId());
         List<FindRoommateAlarmsData> roommateAlarmsData = roommateAlarms.stream()
                 .map(FindRoommateAlarmsData::toFindRoommateAlarmsData).toList();
         return FindRoommateAlarmsResponse.builder()
@@ -59,7 +59,7 @@ public class RoommateAlarmService {
     public DeleteRoommateAlarmsResponse removeRoommateAlarms(Authentication authentication){
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        int deletedRoommateAlarmCount = roommateAlarmQueryRepository.deleteAllByMember(authenticatedMember);
+        int deletedRoommateAlarmCount = roommateAlarmQueryRepository.deleteAllByMember(authenticatedMember.getId());
         return new DeleteRoommateAlarmsResponse(deletedRoommateAlarmCount);
     }
 }

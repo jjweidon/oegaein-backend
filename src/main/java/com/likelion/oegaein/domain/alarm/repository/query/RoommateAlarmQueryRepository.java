@@ -16,26 +16,26 @@ public class RoommateAlarmQueryRepository {
     private final EntityManager em;
     private final JdbcTemplate jdbcTemplate;
 
-    public int deleteAllByMember(Member member){
+    public int deleteAllByMember(Long memberId){
         String jpql = "delete from RoommateAlarm ra" +
-                " where ra.member = :member";
+                " where ra.member = :memberid";
         int deletedRoommateAlarmCount = em.createQuery(jpql)
-                .setParameter("member", member)
+                .setParameter("memberid", memberId)
                 .executeUpdate();
         em.flush();
         em.clear();
         return deletedRoommateAlarmCount;
     }
 
-    public List<RoommateAlarm> findByMemberOrderByCreatedAtDesc(Member member){
+    public List<RoommateAlarm> findByMemberOrderByCreatedAtDesc(Long memberId){
         String jpql = "select ra from RoommateAlarm ra" +
                 " join fetch ra.member ram" +
                 " join fetch ram.profile ramp" +
-                " join fetch ra.matchingPost ramp" +
-                " where ram.member = :member" +
+                " join fetch ra.matchingPost ramap" +
+                " where ra.member.id = :memberid" +
                 " order by ra.createdAt desc";
         return em.createQuery(jpql, RoommateAlarm.class)
-                .setParameter("member", member)
+                .setParameter("memberid", memberId)
                 .getResultList();
     }
 
@@ -44,7 +44,7 @@ public class RoommateAlarmQueryRepository {
                 " VALUES (?,?,?)";
         jdbcTemplate.batchUpdate(sql,roommateAlarms,roommateAlarms.size(),
                 (PreparedStatement ps, RoommateAlarm roommateAlarm) -> {
-                    ps.setString(1, roommateAlarm.getAlarmType().getValue());
+                    ps.setString(1, roommateAlarm.getAlarmType().name());
                     ps.setLong(2, roommateAlarm.getMatchingPost().getId());
                     ps.setLong(3, roommateAlarm.getMember().getId());
                 }

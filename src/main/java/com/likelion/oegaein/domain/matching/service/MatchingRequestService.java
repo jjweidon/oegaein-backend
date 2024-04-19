@@ -3,6 +3,7 @@ package com.likelion.oegaein.domain.matching.service;
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarm;
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarmType;
 import com.likelion.oegaein.domain.alarm.repository.RoommateAlarmRepository;
+import com.likelion.oegaein.domain.alarm.repository.query.RoommateAlarmQueryRepository;
 import com.likelion.oegaein.domain.matching.dto.matchingrequest.*;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingRequest;
@@ -37,6 +38,7 @@ public class MatchingRequestService {
     private final MatchingPostRepository matchingPostRepository;
     private final MemberRepository memberRepository;
     private final RoommateAlarmRepository roommateAlarmRepository;
+    private final RoommateAlarmQueryRepository roommateAlarmQueryRepository;
     // validators
     private final MatchingRequestValidator matchingRequestValidator;
     private final MemberValidator memberValidator;
@@ -112,16 +114,8 @@ public class MatchingRequestService {
         roommateAlarmRepository.save(acceptRoommateAlarm);
         // check matching is completed
         if(isCompletedMatching(matchingPost)){
-            // change other requests of status
-            List<MatchingRequest> failedMatchingRequests = matchingPost.getMatchingRequests().stream()
-                    .filter((mr) -> mr.getFailedMatchingRequestId().isPresent()).toList();
-            List<MatchingRequest> succeedMatchingRequests = matchingPost.getMatchingRequests().stream()
-                    .filter((mr) -> mr.getSucceedMatchingRequestId().isPresent()).toList();
-            List<Long> failedMatchingRequestsId = failedMatchingRequests.stream().map(MatchingRequest::getId).toList();
-            List<Long> succeedMatchingRequestsId = succeedMatchingRequests.stream().map(MatchingRequest::getId).toList();
-            matchingRequestQueryRepository.bulkUpdateFailedMatchingRequest(failedMatchingRequestsId);
-            // change matchingPost of status
-            matchingPost.completeMatchingPost();
+            updateFailedMatchingRequests(matchingPost);
+            updateCompletedMatchingRequests(matchingPost);
             // generate uuid
             String chatRoomNo = UUID.randomUUID().toString();
             // return matchingReqResponse
@@ -163,6 +157,37 @@ public class MatchingRequestService {
         int targetNumberOfPeople = matchingPost.getTargetNumberOfPeople();
         int completedMatchingRequest = matchingRequestQueryRepository
                 .countCompletedMatchingRequest(matchingPost);
-        return targetNumberOfPeople == (completedMatchingRequest+1);
+        return targetNumberOfPeople == completedMatchingRequest;
+    }
+
+    private void updateFailedMatchingRequests(MatchingPost matchingPost){
+        // change other requests of status
+        List<MatchingRequest> failedMatchingRequests = matchingPost.getMatchingRequests().stream()
+                .filter((mr) -> mr.getFailedMatchingRequestId().isPresent()).toList();
+        List<Long> failedMatchingRequestsId = failedMatchingRequests.stream().map(MatchingRequest::getId).toList();
+        if(!failedMatchingRequests.isEmpty()){
+            matchingRequestQueryRepository.bulkUpdateFailedMatchingRequest(failedMatchingRequestsId);
+            // create alarms
+            List<RoommateAlarm> failedRoommateAlarms = failedMatchingRequests.stream().map((fmr) -> RoommateAlarm.builder()
+                    .member(fmr.getParticipant())
+                    .matchingPost(matchingPost)
+                    .alarmType(RoommateAlarmType.MATCHING_REQUEST_REJECT)
+                    .build()).toList();
+            roommateAlarmQueryRepository.bulkSaveAll(failedRoommateAlarms);
+        }
+    }
+
+    private void updateCompletedMatchingRequests(MatchingPost matchingPost){
+        // change matchingPost of status
+        matchingPost.completeMatchingPost();
+        // create alarms
+        List<MatchingRequest> succeedMatchingRequests = matchingPost.getMatchingRequests().stream()
+                .filter((mr) -> mr.getSucceedMatchingRequestId().isPresent()).toList();
+        List<RoommateAlarm> succeedRoommateAlarms = succeedMatchingRequests.stream().map((smr) -> RoommateAlarm.builder()
+                .member(smr.getParticipant())
+                .matchingPost(matchingPost)
+                .alarmType(RoommateAlarmType.MATCHING_POST_COMPLETED)
+                .build()).toList();
+        roommateAlarmQueryRepository.bulkSaveAll(succeedRoommateAlarms);
     }
 }

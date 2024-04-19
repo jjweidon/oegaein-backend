@@ -29,9 +29,9 @@ public class Member {
     private String photoUrl;
     private String refreshToken;
     @CreatedDate
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
     @LastModifiedDate
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
     private Profile profile;
 
