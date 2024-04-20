@@ -30,7 +30,7 @@ public class NewsCrawler {
     @Scheduled(cron = "0 0 0 * * *")
     public void newsCrawling(){
         // webdriver config
-        System.setProperty("webdriver.chrome.driver", "/Users/seolhuigwan/Desktop/private_project/Oegaein-back-end/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/app/chrome/chromedriver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-popup-blocking"); // 팝업창 차단
         options.addArguments("headless"); // headless 실행
