@@ -4,7 +4,7 @@ import com.likelion.oegaein.domain.matching.dto.matchingpost.*;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
 import com.likelion.oegaein.domain.matching.validation.MatchingPostValidator;
-import com.likelion.oegaein.domain.member.entity.profile.Member;
+import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.query.MatchingPostQueryRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
@@ -15,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

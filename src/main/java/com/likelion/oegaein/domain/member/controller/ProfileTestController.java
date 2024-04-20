@@ -20,7 +20,7 @@ public class ProfileTestController {
     @PostMapping("api/v1/test/profile")
     public ResponseEntity<ResponseDto> postProfileTest(@RequestBody CreateProfileRequest dto){
         log.info("Request to post profile");
-        String email = "test@hufs.ac.kr";
+        String email = "test1@hufs.ac.kr";
         CreateProfileResponse response = profileTestService.createProfileTest(email, dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -28,7 +28,7 @@ public class ProfileTestController {
     @PutMapping("api/v1/test/profile")
     public ResponseEntity<ResponseDto> putProfileTest(@RequestBody UpdateProfileRequest dto){
         log.info("Request to put profile");
-        String email = "test@hufs.ac.kr";
+        String email = "test1@hufs.ac.kr";
         UpdateProfileResponse response = profileTestService.updateProfileTest(email, dto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -1,7 +1,7 @@
 package com.likelion.oegaein.domain.member.service;
 
 import com.likelion.oegaein.domain.member.dto.profile.*;
-import com.likelion.oegaein.domain.member.entity.profile.Member;
+import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabit;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabitEntity;
@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -52,8 +50,8 @@ public class ProfileService {
                 .outing(form.getOuting())
                 .soundSensitivity(form.getSoundSensitivity())
                 .build();
+        profile.setMember(loginMember);
         profileRepository.save(profile);
-        loginMember.setProfile(profile);
 
         // 수면 습관 엔티티 생성
         updateSleepingHabit(form.getSleepingHabit(), profile);
