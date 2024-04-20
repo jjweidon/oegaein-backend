@@ -8,6 +8,7 @@ import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.util.GoogleOauthUtil;
 import com.likelion.oegaein.domain.member.util.JwtUtil;
+import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final GoogleOauthUtil googleOauthUtil;
+    private final MemberValidator memberValidator;
 
     @Transactional
     public GoogleOauthLoginResponse googleLogin(String code) throws JsonProcessingException {
@@ -31,13 +33,12 @@ public class MemberService {
         ResponseEntity<String> userInfoResponse = googleOauthUtil.requestUserInfo(oauthToken);
         GoogleOauthUserInfo userInfo = googleOauthUtil.getUserInfo(userInfoResponse);
         // validation
+        memberValidator.validateIsUnivEmailDomain(userInfo.getEmail());
         // find user or save user
         Member member = memberRepository.findByEmail(userInfo.getEmail()).orElseGet(() -> {
             Member newMember = Member.builder()
                     .email(userInfo.getEmail())
-                    .googleName(userInfo.getName())
                     .photoUrl(userInfo.getPicture())
-//                    .profileSetUpStatus(Boolean.FALSE)
                     .build();
             memberRepository.save(newMember);
             return newMember;

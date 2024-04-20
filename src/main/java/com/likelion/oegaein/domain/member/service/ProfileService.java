@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -43,7 +41,7 @@ public class ProfileService {
                 .introduction(form.getIntroduction())
                 .gender(form.getGender())
                 .studentNo(form.getStudentNo())
-                .major(extractMajor(loginMember.getGoogleName()))
+                //.major(extractMajor(loginMember.getGoogleName()))
                 .birthdate(form.getBirthdate())
                 .mbti(form.getMbti())
                 .lifePattern(form.getLifePattern())
@@ -119,19 +117,19 @@ public class ProfileService {
     }
 
     // 전공 추출
-    private String extractMajor(String googleName) {
-        // 정규표현식으로 전공 추출
-        Pattern pattern = Pattern.compile("\\/\\s*(.*?)\\s*\\]");
-        Matcher matcher = pattern.matcher(googleName);
-
-        // 추출된 전공을 반환
-        if (matcher.find()) {
-            String extracted = matcher.group(1); // 첫 번째 그룹에 해당하는 문자열 추출
-            log.info("전공: " + extracted);
-            return extracted;
-        } else {
-            log.info("추출할 전공이 없습니다.");
-            return null;
-        }
-    }
+//    private String extractMajor(String googleName) {
+//        // 정규표현식으로 전공 추출
+//        Pattern pattern = Pattern.compile("\\/\\s*(.*?)\\s*\\]");
+//        Matcher matcher = pattern.matcher(googleName);
+//
+//        // 추출된 전공을 반환
+//        if (matcher.find()) {
+//            String extracted = matcher.group(1); // 첫 번째 그룹에 해당하는 문자열 추출
+//            log.info("전공: " + extracted);
+//            return extracted;
+//        } else {
+//            log.info("추출할 전공이 없습니다.");
+//            return null;
+//        }
+//    }
 }

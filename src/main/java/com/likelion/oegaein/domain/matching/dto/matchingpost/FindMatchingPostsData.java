@@ -4,6 +4,7 @@ import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
 import com.likelion.oegaein.domain.matching.entity.RoomSizeType;
+import com.likelion.oegaein.domain.member.entity.profile.Gender;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,10 +15,10 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class FindMatchingPostsData {
-    private int star; // rate
     private String major; // major
     private int studentNo; // studentNo
     private String name; // name
+    private Gender gender; // gender
     private Long matchingPostId; // matchingPost ID
     private String title; // Title
     private Long dDay; // D-day
@@ -32,6 +33,7 @@ public class FindMatchingPostsData {
                 .major(profile.getMajor())
                 .studentNo(profile.getStudentNo())
                 .name(profile.getName())
+                .gender(profile.getGender())
                 .matchingPostId(matchingPost.getId())
                 .title(matchingPost.getTitle())
                 .dDay(Duration.between(LocalDateTime.now(), matchingPost.getDeadline()).toDays())

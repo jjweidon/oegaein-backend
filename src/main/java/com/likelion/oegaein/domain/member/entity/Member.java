@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -16,22 +19,21 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Member {
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
     @Column(unique = true)
     private String email;
-    private String googleName;
     private String photoUrl;
     private String refreshToken;
-    @CreationTimestamp
-    private LocalDateTime createdAt = LocalDateTime.now();
-    @UpdateTimestamp
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
     private Profile profile;
-    private Boolean profileSetUpStatus;
 
     public void renewRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;

@@ -1,13 +1,15 @@
 package com.likelion.oegaein.domain.matching.entity;
 
 import com.likelion.oegaein.domain.member.entity.Member;
-import com.likelion.oegaein.domain.matching.exception.MatchingRequestException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -18,10 +20,12 @@ public class MatchingRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matching_post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MatchingPost matchingPost;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participant_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member participant;
 
     @Enumerated(EnumType.STRING)
@@ -48,9 +52,16 @@ public class MatchingRequest {
         this.matchingAcceptance = MatchingAcceptance.REJECT;
     }
 
-    public void failedMatchingRequest(){
+    public Optional<Long> getFailedMatchingRequestId(){
         if(this.matchingAcceptance.equals(MatchingAcceptance.WAITING)){
-            this.matchingAcceptance = MatchingAcceptance.REJECT;
+            return Optional.of(this.id);
         }
+        return Optional.empty();
+    }
+    public Optional<Long> getSucceedMatchingRequestId(){
+        if(this.matchingAcceptance.equals(MatchingAcceptance.ACCEPT)){
+            return Optional.of(this.id);
+        }
+        return Optional.empty();
     }
 }

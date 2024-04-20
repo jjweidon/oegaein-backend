@@ -16,6 +16,7 @@ public class UpdateMatchingPostData {
     private LocalDateTime deadline;
     private DongType dongType;
     private RoomSizeType roomSizeType;
+    private int targetNumberOfPeople;
 
     public static UpdateMatchingPostData toUpdateMatchingPostData(UpdateMatchingPostRequest dto){
         return UpdateMatchingPostData.builder()
@@ -24,6 +25,7 @@ public class UpdateMatchingPostData {
                 .deadline(dto.getDeadline())
                 .dongType(dto.getDongType())
                 .roomSizeType(dto.getRoomSizeType())
+                .targetNumberOfPeople(dto.getTargetNumberOfPeople())
                 .build();
     }
 }

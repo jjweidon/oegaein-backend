@@ -1,12 +1,11 @@
 package com.likelion.oegaein.global.security;
 
 import com.likelion.oegaein.domain.member.entity.Member;
-import com.likelion.oegaein.domain.member.exception.AuthException;
+import com.likelion.oegaein.domain.member.exception.MemberException;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +30,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String accessToken = jwtUtil.getAccessToken(authHeader);
             Boolean isValidAccessToken = jwtUtil.validateToken(accessToken);
             if(isValidAccessToken.equals(Boolean.FALSE)){ // 유효하지 않은 액세스 토큰
-                throw new AuthException("Auth Error: Invalid Access Token");
+                throw new MemberException("Auth Error: Invalid Access Token");
             }
             String email = jwtUtil.extractEmail(accessToken);
             Member authMember = memberRepository.findByEmail(email) // 사용자 찾기
-                    .orElseThrow(() -> new AuthException("Not Found: Member"));
+                    .orElseThrow(() -> new MemberException("Not Found: Member"));
             GoogleOauthMemberDetails googleOauthMemberDetails = new GoogleOauthMemberDetails(authMember);
             Authentication authentication = new UsernamePasswordAuthenticationToken(googleOauthMemberDetails, null, googleOauthMemberDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

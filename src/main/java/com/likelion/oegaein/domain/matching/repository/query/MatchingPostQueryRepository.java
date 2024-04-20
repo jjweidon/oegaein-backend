@@ -1,12 +1,13 @@
 package com.likelion.oegaein.domain.matching.repository.query;
 
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
+import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
 import com.likelion.oegaein.domain.member.entity.Member;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -36,15 +37,17 @@ public class MatchingPostQueryRepository {
                 .getResultList();
     }
 
-    public List<MatchingPost> findMatchingPostsBetweenTwoDates(LocalDate fromDate, LocalDate toDate){
+    public List<MatchingPost> findMatchingPostsBetweenTwoDates(LocalDateTime fromDate, LocalDateTime toDate){
         String jpql = "select mp from MatchingPost mp" +
                 " join fetch mp.author mpa" +
                 " join fetch mpa.profile mpap" +
                 " where mp.deadline between :fromDate and :toDate" +
+                " and mp.matchingStatus = :matchingPostStatus" +
                 " order by mp.createdAt asc";
         return em.createQuery(jpql, MatchingPost.class)
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
+                .setParameter("matchingPostStatus", MatchingStatus.WAITING)
                 .setFirstResult(0)
                 .setMaxResults(20)
                 .getResultList();

@@ -23,9 +23,11 @@ public class Comment {
     private String content; // 댓글 내용
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matchingpost_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private MatchingPost matchingPost; // 게시글 FK
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member author; // 작성자 FK
     @CreationTimestamp
     private LocalDateTime createdAt; // 작성일

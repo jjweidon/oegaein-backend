@@ -40,24 +40,24 @@ public class MatchingPostApiController {
     }
 
     @DeleteMapping("/api/v1/matchingposts/{matchingpostid}")
-    public ResponseEntity<ResponseDto> deleteMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
+    public ResponseEntity<ResponseDto> deleteMatchingPost(@PathVariable("matchingpostid") Long matchingPostId, Authentication authentication){
         log.info("Request to delete matchingpost by id-{}", matchingPostId);
-        matchingPostService.removeMatchingPost(matchingPostId);
+        matchingPostService.removeMatchingPost(matchingPostId, authentication);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/api/v1/matchingposts/{matchingpostid}")
     public ResponseEntity<ResponseDto> putMatchingPost(@PathVariable("matchingpostid") Long matchingPostId,
-                                                  @RequestBody UpdateMatchingPostRequest dto){
+                                                  @Valid @RequestBody UpdateMatchingPostRequest dto, Authentication authentication){
         UpdateMatchingPostData convertedDto = UpdateMatchingPostData.toUpdateMatchingPostData(dto);
-        UpdateMatchingPostResponse response = matchingPostService.updateMatchingPost(matchingPostId, convertedDto);
+        UpdateMatchingPostResponse response = matchingPostService.updateMatchingPost(matchingPostId, convertedDto, authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/api/v1/my-matchingposts")
-    public ResponseEntity<ResponseDto> getMyMatchingPosts(){
+    public ResponseEntity<ResponseDto> getMyMatchingPosts(Authentication authentication){
         log.info("Request to get my matching posts");
-        FindMyMatchingPostResponse response = matchingPostService.findMyMatchingPosts();
+        FindMyMatchingPostResponse response = matchingPostService.findMyMatchingPosts(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
