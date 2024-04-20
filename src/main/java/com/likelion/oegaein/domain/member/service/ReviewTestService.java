@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ReviewService {
+public class ReviewTestService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
 
@@ -39,8 +39,8 @@ public class ReviewService {
                 .build();
     }
 
-    public CreateReviewResponse createReview(Authentication authentication, CreateReviewRequest form) {
-        Member writer = findAuthenticatedMember(authentication);
+    public CreateReviewResponse createReview(String email, CreateReviewRequest form) {
+        Member writer = findAuthenticatedMember(email);
         Member receiver = memberRepository.findById(form.getReceiverId())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Receiver: " + form.getReceiverId()));
         Review review = Review.builder()
@@ -56,8 +56,8 @@ public class ReviewService {
         return new CreateReviewResponse(review.getId());
     }
 
-    public UpdateReviewResponse updateReview(Authentication authentication, Long reviewId, UpdateReviewRequest form) {
-        Member writer = findAuthenticatedMember(authentication);
+    public UpdateReviewResponse updateReview(String email, Long reviewId, UpdateReviewRequest form) {
+        Member writer = findAuthenticatedMember(email);
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Review: " + reviewId));
         review.update(form);
@@ -65,8 +65,8 @@ public class ReviewService {
         return new UpdateReviewResponse(review.getId());
     }
 
-    public DeleteReviewResponse removeReview(Authentication authentication, Long reviewId) {
-        Member writer = findAuthenticatedMember(authentication);
+    public DeleteReviewResponse removeReview(String email, Long reviewId) {
+        Member writer = findAuthenticatedMember(email);
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Review: " + reviewId));
         reviewRepository.delete(review);
@@ -74,8 +74,8 @@ public class ReviewService {
         return new DeleteReviewResponse(reviewId);
     }
 
-    private Member findAuthenticatedMember(Authentication authentication) {
-        return memberRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+    private Member findAuthenticatedMember(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + email));
     }
 }

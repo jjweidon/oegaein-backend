@@ -7,7 +7,7 @@ import com.likelion.oegaein.domain.alarm.dto.roommate.FindRoommateAlarmsResponse
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarm;
 import com.likelion.oegaein.domain.alarm.repository.RoommateAlarmRepository;
 import com.likelion.oegaein.domain.alarm.repository.query.RoommateAlarmQueryRepository;
-import com.likelion.oegaein.domain.member.entity.profile.Member;
+import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;

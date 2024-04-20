@@ -1,4 +1,4 @@
-package com.likelion.oegaein.domain.member.entity.profile;
+package com.likelion.oegaein.domain.member.entity;
 
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import jakarta.persistence.*;
@@ -37,10 +37,6 @@ public class Member {
 
     public void renewRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
     }
 
     public void setPhotoUrl(String photoUrl) {

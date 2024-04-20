@@ -1,6 +1,6 @@
 package com.likelion.oegaein.global.security;
 
-import com.likelion.oegaein.domain.member.entity.profile.Member;
+import com.likelion.oegaein.domain.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

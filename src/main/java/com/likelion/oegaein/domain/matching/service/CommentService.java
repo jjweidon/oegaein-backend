@@ -5,7 +5,7 @@ import com.likelion.oegaein.domain.matching.entity.Comment;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.repository.CommentRepository;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
-import com.likelion.oegaein.domain.member.entity.profile.Member;
+import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;

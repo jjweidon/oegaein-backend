@@ -1,7 +1,11 @@
 package com.likelion.oegaein.domain.member.entity.review;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public enum Semester {
     _18_1("2018년 1학기"),
@@ -19,4 +23,19 @@ public enum Semester {
     _24_1("2024년 1학기");
 
     private final String value;
+
+    @JsonCreator
+    public static Semester deserializer(String value) {
+        for(Semester semester : Semester.values()){
+            if(semester.getValue().equals(value)) {
+                return semester;
+            }
+        }
+        return null;
+    }
+
+    @JsonValue
+    public String serializer(){
+        return value;
+    }
 }

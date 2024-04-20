@@ -1,7 +1,7 @@
 package com.likelion.oegaein.domain.alarm.entity;
 
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
-import com.likelion.oegaein.domain.member.entity.profile.Member;
+import com.likelion.oegaein.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
