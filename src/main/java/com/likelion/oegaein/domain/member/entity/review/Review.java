@@ -3,7 +3,6 @@ package com.likelion.oegaein.domain.member.entity.review;
 import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.member.dto.review.UpdateReviewRequest;
 import com.likelion.oegaein.domain.member.entity.Member;
-import com.likelion.oegaein.domain.member.dto.review.UpdateReviewRequest;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Size;
@@ -35,7 +34,7 @@ public class Review {
     @Size(max = 50)
     private String content;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receiver_id")
+    @JoinColumn
     private Member receiver;
 
     public void update(UpdateReviewRequest request) {
