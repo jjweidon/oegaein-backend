@@ -5,10 +5,7 @@ import com.likelion.oegaein.domain.member.entity.Member;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -28,7 +25,8 @@ public class Profile {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private int studentNo;
-    private String major;
+    @Enumerated(EnumType.STRING)
+    private Major major;
     private Date birthdate;
     @Enumerated(EnumType.STRING)
     private Mbti mbti;
@@ -46,6 +44,7 @@ public class Profile {
     private Sensitivity soundSensitivity;
     @Size(max = 20)
     private String introduction;
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -62,9 +61,5 @@ public class Profile {
         this.cleaningCycle = request.getCleaningCycle();
         this.soundSensitivity = request.getSoundSensitivity();
         this.introduction = request.getIntroduction();
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
     }
 }

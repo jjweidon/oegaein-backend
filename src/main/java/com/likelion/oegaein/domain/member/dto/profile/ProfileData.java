@@ -17,6 +17,7 @@ public class ProfileData {
     @JsonProperty("student_no")
     private int studentNo;
     private Date birthdate;
+    private Major major;
     private String introduction;
     @Enumerated(EnumType.STRING)
     private Mbti mbti;

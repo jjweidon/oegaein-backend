@@ -41,7 +41,7 @@ public class ProfileService {
                 .introduction(form.getIntroduction())
                 .gender(form.getGender())
                 .studentNo(form.getStudentNo())
-                //.major(extractMajor(loginMember.getGoogleName()))
+                .major(form.getMajor())
                 .birthdate(form.getBirthdate())
                 .mbti(form.getMbti())
                 .lifePattern(form.getLifePattern())
