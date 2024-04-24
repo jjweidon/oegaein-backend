@@ -1,17 +1,21 @@
 package com.likelion.oegaein.domain.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.likelion.oegaein.domain.member.dto.member.CreateBlockResponse;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthLoginResponse;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthToken;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthUserInfo;
+import com.likelion.oegaein.domain.member.entity.Block;
 import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.util.GoogleOauthUtil;
 import com.likelion.oegaein.domain.member.util.JwtUtil;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,5 +57,18 @@ public class MemberService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Transactional
+    public CreateBlockResponse createBlockMember(Authentication authentication, Long blockedId) {
+        Member blockingMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+        Member blockedMember = memberRepository.findById(blockedId)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + blockedId));
+        Block block = Block.builder()
+                .blocking(blockingMember)
+                .blocked(blockedMember)
+                .build();
+        return null;
     }
 }
