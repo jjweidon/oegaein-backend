@@ -2,17 +2,13 @@ package com.likelion.oegaein.domain.member.controller;
 
 import com.likelion.oegaein.domain.member.dto.profile.*;
 import com.likelion.oegaein.domain.member.service.ProfileService;
-import com.likelion.oegaein.domain.member.util.JwtUtil;
 import com.likelion.oegaein.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.devtools.v116.audits.model.FederatedAuthUserInfoRequestIssueDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.image.AreaAveragingScaleFilter;
 
 @Slf4j
 @RestController
@@ -21,9 +17,9 @@ public class ProfileApiController {
     private final ProfileService profileService;
 
     @GetMapping("api/v1/member/profile/{memberId}")
-    public ResponseEntity<ResponseDto> getProfile(@PathVariable("memberId") Long memberId) {
+    public ResponseEntity<ResponseDto> getProfile(Authentication authentication, @PathVariable("memberId") Long memberId) {
         log.info("Request to get profile");
-        FindProfileResponse response = profileService.findProfile(memberId);
+        FindProfileResponse response = profileService.findProfile(authentication, memberId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

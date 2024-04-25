@@ -5,6 +5,7 @@ import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabit;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabitEntity;
+import com.likelion.oegaein.domain.member.repository.BlockRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.repository.ProfileRepository;
 import com.likelion.oegaein.domain.member.repository.SleepingHabitRepository;
@@ -26,11 +27,10 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
     private final SleepingHabitRepository sleepingHabitRepository;
+    private final BlockRepository blockRepository;
 
     public CreateProfileResponse createProfile(Authentication authentication, CreateProfileRequest form) {
-        // 사용자 찾기
-        Member loginMember = memberRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+        Member loginMember = findAuthenticatedMember(authentication);
         
         // 닉네임 중복 확인
         isValidName(form.getName());
@@ -41,7 +41,7 @@ public class ProfileService {
                 .introduction(form.getIntroduction())
                 .gender(form.getGender())
                 .studentNo(form.getStudentNo())
-                //.major(extractMajor(loginMember.getGoogleName()))
+                .major(form.getMajor())
                 .birthdate(form.getBirthdate())
                 .mbti(form.getMbti())
                 .lifePattern(form.getLifePattern())
@@ -60,9 +60,7 @@ public class ProfileService {
     }
 
     public UpdateProfileResponse updateProfile(Authentication authentication, UpdateProfileRequest form) {
-        // 사용자 찾기
-        Member loginMember = memberRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+        Member loginMember = findAuthenticatedMember(authentication);// 사용자 찾기
 
         // 닉네임이 바뀌었으면 중복 확인
         if (!loginMember.getProfile().getName().equals(form.getName())) {
@@ -100,10 +98,15 @@ public class ProfileService {
         }
     }
 
-    public FindProfileResponse findProfile(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+    public FindProfileResponse findProfile(Authentication authentication, Long memberId) {
+        Member loginMember = findAuthenticatedMember(authentication);
+        Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + memberId));
-        Profile profile = profileRepository.findById(member.getProfile().getId())
+
+        // 차단 확인
+        isBlockedMember(loginMember, findMember);
+
+        Profile profile = profileRepository.findById(findMember.getProfile().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Profile: " + memberId));
         return FindProfileResponse.of(profile);
     }
@@ -113,6 +116,19 @@ public class ProfileService {
         Optional<Profile> member = profileRepository.findByName(name);
         if (member.isPresent()) {
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+        }
+    }
+
+    // 로그인한 사용자 찾기
+    private Member findAuthenticatedMember(Authentication authentication) {
+        return memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+    }
+
+    // 차단 확인
+    public void isBlockedMember(Member loginMember, Member findMember) {
+        if (blockRepository.isBlocked(loginMember.getId(), findMember.getId())) {
+            throw new IllegalStateException("차단된 사용자입니다.");
         }
     }
 

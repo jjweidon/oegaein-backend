@@ -1,14 +1,12 @@
 package com.likelion.oegaein.domain.member.controller;
 
 import com.likelion.oegaein.domain.member.dto.review.*;
-import com.likelion.oegaein.domain.member.service.ReviewService;
 import com.likelion.oegaein.domain.member.service.ReviewTestService;
 import com.likelion.oegaein.global.dto.ResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
