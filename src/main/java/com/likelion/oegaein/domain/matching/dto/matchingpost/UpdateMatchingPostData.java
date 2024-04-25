@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class UpdateMatchingPostData {
     private String title;
     private String content;
-    private LocalDateTime deadline;
+    private LocalDate deadline;
     private DongType dongType;
     private RoomSizeType roomSizeType;
     private int targetNumberOfPeople;

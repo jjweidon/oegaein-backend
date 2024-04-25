@@ -48,10 +48,8 @@ public class MatchingPostService {
     @Transactional
     public CreateMatchingPostResponse saveMatchingPost(Authentication authentication, CreateMatchingPostData dto){
         matchingPostValidator.validateRoomSizeAndTargetNumOfPeople(dto.getRoomSizeType(), dto.getTargetNumberOfPeople());
-        // Member author = memberRepository.findByEmail(authentication.getName())
-        //         .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        // Member author = memberRepository.findById(); // 로그인 구현 완료시 사용
-        Member author = new Member();
+         Member author = memberRepository.findByEmail(authentication.getName())
+                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         // Create MatchingPost Entity
         MatchingPost newMatchingPost = MatchingPost.builder()
                 .title(dto.getTitle())

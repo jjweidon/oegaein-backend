@@ -11,6 +11,7 @@ import com.likelion.oegaein.global.dto.ResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class FindMatchingPostResponse implements ResponseDto {
     private String content; // 내용
     private DongType dong; // 동 타입
     private RoomSizeType roomSize; // 방 사이즈
-    private LocalDateTime deadline; // 마감일
+    private LocalDate deadline; // 마감일
     private LocalDateTime createdAt; // 생성일
     private MatchingStatus matchingStatus; // 매칭 상태
     private FindMatchingPostResInProfile authorProfile; // 작성자 프로필

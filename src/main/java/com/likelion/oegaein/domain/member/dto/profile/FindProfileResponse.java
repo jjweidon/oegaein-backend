@@ -26,7 +26,7 @@ public class FindProfileResponse implements ResponseDto {
     @Enumerated(EnumType.STRING)
     private Gender gender; // 성별
     private int studentNo; // 학번
-    private String major;
+    private Major major;
     private Date birthdate; // 생일
     @Enumerated(EnumType.STRING)
     private Mbti mbti; // MBTI

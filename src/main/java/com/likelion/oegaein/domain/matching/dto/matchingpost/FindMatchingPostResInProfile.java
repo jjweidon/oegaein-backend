@@ -12,7 +12,7 @@ import java.util.List;
 public class FindMatchingPostResInProfile {
     private Gender gender; // 성별
     private int studentNo; // 학번
-    private String major; // 전공
+    private Major major; // 전공
     private Date birthdate; // 생년월일
 
     private Mbti mbti;

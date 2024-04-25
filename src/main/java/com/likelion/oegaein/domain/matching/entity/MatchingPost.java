@@ -12,6 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class MatchingPost {
 
     private int targetNumberOfPeople; // 목표 인원 수
 
-    private LocalDateTime deadline;
+    private LocalDate deadline;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

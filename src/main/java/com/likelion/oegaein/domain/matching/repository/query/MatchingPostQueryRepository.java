@@ -48,4 +48,16 @@ public class MatchingPostQueryRepository {
                 .setParameter("matchingPostStatus", MatchingStatus.WAITING)
                 .getResultList();
     }
+
+    public List<MatchingPost> searchMatchingPost(String content){
+        String jpql = "select mp from MatchingPost mp" +
+                " join fetch mp.author mpa" +
+                " join fetch mpa.profile mpap" +
+                " where mp.title like concat('%',:content,'%')" +
+                " or mp.content like concat('%',:content,'%')" +
+                " order by mp.createdAt desc";
+        return em.createQuery(jpql, MatchingPost.class)
+                .setParameter("content", content)
+                .getResultList();
+    }
 }
