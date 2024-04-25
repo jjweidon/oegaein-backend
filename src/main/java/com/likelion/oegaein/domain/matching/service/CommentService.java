@@ -38,8 +38,6 @@ public class CommentService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MATCHING_POST_ERR_MSG));
         Member author = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG)); // 임시 작성자
-        // validation
-        blockValidator.validateBlockedMember(author.getId(), matchingPost.getAuthor().getId());
         // create new comment
         MatchingPostComment comment = MatchingPostComment.builder()
                 .content(dto.getContent())

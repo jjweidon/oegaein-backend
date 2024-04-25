@@ -60,4 +60,15 @@ public class MatchingPostQueryRepository {
                 .setParameter("content", content)
                 .getResultList();
     }
+
+    public List<MatchingPost> findAllExceptBlockedMember(List<Long> blockedMemberIds){
+        String jpql = "select mp from MatchingPost mp" +
+                " join fetch mp.author mpa" +
+                " join fetch mpa.profile mpap" +
+                " where mpa.id not in :blockedmemberids" +
+                " order by mp.createdAt desc";
+        return em.createQuery(jpql, MatchingPost.class)
+                .setParameter("blockedmemberids", blockedMemberIds)
+                .getResultList();
+    }
 }

@@ -37,9 +37,6 @@ public class ReplyService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         MatchingPostComment comment = commentRepository.findById(dto.getCommentId())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_COMMENT_ERR_MSG));
-        // validation
-        blockValidator.validateBlockedMember(author.getId(), comment.getId());
-        blockValidator.validateBlockedMember(author.getId(), comment.getMatchingPost().getAuthor().getId());
         // create new reply
         MatchingPostReply reply = MatchingPostReply.builder()
                 .comment(comment)

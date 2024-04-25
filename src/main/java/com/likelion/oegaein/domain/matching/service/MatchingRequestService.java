@@ -92,6 +92,7 @@ public class MatchingRequestService {
         matchingRequestValidator.validateIsNotAlreadyRequest(findParticipant, findMatchingPost);
         matchingRequestValidator.validateIsNotCompletedOrExpiredMatchingPost(findMatchingPost);
         blockValidator.validateBlockedMember(findParticipant.getId(), findMatchingPost.getAuthor().getId());
+        blockValidator.validateBlockedMember(findMatchingPost.getAuthor().getId(), findParticipant.getId());
         // create new matching request
         MatchingRequest newMatchingRequest = new MatchingRequest(findMatchingPost, findParticipant);
         matchingRequestRepository.save(newMatchingRequest);
