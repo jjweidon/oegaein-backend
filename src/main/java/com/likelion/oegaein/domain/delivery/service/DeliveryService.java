@@ -53,7 +53,7 @@ public class DeliveryService {
                 .deadLine(request.getDeadLine())
                 .content(request.getContent())
                 .restaurantImageUrl(imagePath)
-                .like(false)
+                .heart(false)
                 .build();
         deliveryRepository.save(newDelivery);
         Long deliveryPostId = newDelivery.getId();
@@ -80,7 +80,7 @@ public class DeliveryService {
                 .restaurantName(delivery.getRestaurantName())
                 .nowApplicants(delivery.getNowApplicants())
                 .maxApplicants(delivery.getMaxApplicants())
-                .like(delivery.isLike())
+                .like(delivery.isHeart())
                 .deadLine(delivery.getDeadLine())
                 .build();
     }
@@ -145,7 +145,7 @@ public class DeliveryService {
 
         if(optionalDelivery.isPresent()) {
             Delivery delivery = optionalDelivery.get();
-            delivery.setLike(true);
+            delivery.setHeart(true);
             return dto;
         } else {
             return null;

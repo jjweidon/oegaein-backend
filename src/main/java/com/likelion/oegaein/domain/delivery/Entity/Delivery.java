@@ -18,6 +18,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
@@ -37,7 +39,7 @@ public class Delivery {
     private LocalDateTime deadLine;
     private String content;
     private String restaurantImageUrl;
-    public boolean like;
+    public boolean heart;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -45,6 +47,7 @@ public class Delivery {
     private LocalDateTime updatedAt;
 
     @OneToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "together_delivery_id")
     private TogetherDelivery togetherDelivery;
 
