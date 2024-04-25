@@ -32,8 +32,6 @@ public class MatchingPostQueryRepository {
                 " order by mpap.rate desc";
         return em.createQuery(jpql, MatchingPost.class)
                 .setParameter("standardRate", STANDARD_RATE)
-                .setFirstResult(0)
-                .setMaxResults(20)
                 .getResultList();
     }
 
@@ -48,8 +46,6 @@ public class MatchingPostQueryRepository {
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("matchingPostStatus", MatchingStatus.WAITING)
-                .setFirstResult(0)
-                .setMaxResults(20)
                 .getResultList();
     }
 }

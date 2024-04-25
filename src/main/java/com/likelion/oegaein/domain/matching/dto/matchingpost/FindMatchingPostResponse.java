@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,7 +30,7 @@ public class FindMatchingPostResponse implements ResponseDto {
     public static FindMatchingPostResponse toFindMatchingPostResponse(MatchingPost matchingPost){
         Profile findProfile = matchingPost.getAuthor().getProfile();
         FindMatchingPostResInProfile convertedProfile = FindMatchingPostResInProfile.toFindMatchingPostResInProfile(findProfile);
-        List<Comment> findComments = matchingPost.getComments();
+        List<MatchingPostComment> findComments = matchingPost.getComments();
         List<FindCommentData> convertedComments = findComments.stream().map(FindCommentData::toFindCommentData).toList();
         return FindMatchingPostResponse.builder()
                 .title(matchingPost.getTitle())

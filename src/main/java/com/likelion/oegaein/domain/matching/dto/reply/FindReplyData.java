@@ -1,6 +1,6 @@
 package com.likelion.oegaein.domain.matching.dto.reply;
 
-import com.likelion.oegaein.domain.matching.entity.Reply;
+import com.likelion.oegaein.domain.matching.entity.MatchingPostReply;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,7 +17,7 @@ public class FindReplyData {
     private LocalDateTime modifiedAt;
     private Boolean isDeleted;
 
-    public static FindReplyData toFindReplyData(Reply reply){
+    public static FindReplyData toFindReplyData(MatchingPostReply reply){
         return FindReplyData.builder()
                 .id(reply.getId())
                 .content(reply.getContent())

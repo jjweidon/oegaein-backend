@@ -56,7 +56,7 @@ public class MatchingPost {
 
     @OneToMany(mappedBy = "matchingPost", orphanRemoval = true)
     @Builder.Default
-    private List<Comment> comments = new ArrayList<>();
+    private List<MatchingPostComment> comments = new ArrayList<>();
 
     public void updateMatchingPost(UpdateMatchingPostData dto){
         title = dto.getTitle();
