@@ -7,6 +7,7 @@ import com.likelion.oegaein.domain.matching.repository.CommentRepository;
 import com.likelion.oegaein.domain.matching.repository.ReplyRepository;
 import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
+import com.likelion.oegaein.domain.member.validation.BlockValidator;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ReplyService {
     private final MemberRepository memberRepository;
     // validators
     private final MemberValidator memberValidator;
+    private final BlockValidator blockValidator;
 
     @Transactional
     public CreateReplyResponse saveReply(CreateReplyData dto, Authentication authentication) {
@@ -35,6 +37,9 @@ public class ReplyService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         MatchingPostComment comment = commentRepository.findById(dto.getCommentId())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_COMMENT_ERR_MSG));
+        // validation
+        blockValidator.validateBlockedMember(author.getId(), comment.getId());
+        blockValidator.validateBlockedMember(author.getId(), comment.getMatchingPost().getAuthor().getId());
         // create new reply
         MatchingPostReply reply = MatchingPostReply.builder()
                 .comment(comment)
