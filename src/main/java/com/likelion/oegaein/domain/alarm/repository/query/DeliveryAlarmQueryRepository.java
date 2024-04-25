@@ -15,6 +15,17 @@ public class DeliveryAlarmQueryRepository {
     private final EntityManager em;
     private final JdbcTemplate jdbcTemplate;
 
+    public int deleteAllByMember(Long memberId){
+        String jpql = "delete from DeliveryAlarm da" +
+                " where da.member = :memberid";
+        int deletedDeliveryAlarmCount = em.createQuery(jpql)
+                .setParameter("memberid", memberId)
+                .executeUpdate();
+        em.flush();
+        em.clear();
+        return deletedDeliveryAlarmCount;
+    }
+
     public List<DeliveryAlarm> findByMemberOrderByCreatedAtDesc(Long memberId){
         String jpql = "select da from DeliveryAlarm da" +
                 " join fetch da.member dam" +

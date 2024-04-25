@@ -1,7 +1,10 @@
 package com.likelion.oegaein.domain.alarm.service;
 
+import com.likelion.oegaein.domain.alarm.dto.delivery.DeleteDeliveryAlarmResponse;
+import com.likelion.oegaein.domain.alarm.dto.delivery.DeleteDeliveryAlarmsResponse;
 import com.likelion.oegaein.domain.alarm.dto.delivery.FindDeliveryAlarmData;
 import com.likelion.oegaein.domain.alarm.dto.delivery.FindDeliveryAlarmsResponse;
+import com.likelion.oegaein.domain.alarm.dto.roommate.DeleteRoommateAlarmResponse;
 import com.likelion.oegaein.domain.alarm.entity.DeliveryAlarm;
 import com.likelion.oegaein.domain.alarm.repository.DeliveryAlarmRepository;
 import com.likelion.oegaein.domain.alarm.repository.query.DeliveryAlarmQueryRepository;
@@ -37,5 +40,24 @@ public class DeliveryAlarmService {
                 .count(deliveryAlarmsData.size())
                 .data(deliveryAlarmsData)
                 .build();
+    }
+
+    @Transactional
+    public DeleteDeliveryAlarmsResponse removeDeliveryAlarms(Authentication authentication){
+        Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        int deletedDeliveryAlarmCount = deliveryAlarmQueryRepository.deleteAllByMember(authenticatedMember.getId());
+        return new DeleteDeliveryAlarmsResponse(deletedDeliveryAlarmCount);
+    }
+
+    @Transactional
+    public DeleteDeliveryAlarmResponse removeDeliveryAlarm(Long deliveryAlarmId, Authentication authentication){
+        Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        DeliveryAlarm deliveryAlarm = deliveryAlarmRepository.findById(deliveryAlarmId)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_DELIVERY_ALARM_ERR_MSG));
+        // validation code
+        deliveryAlarmRepository.delete(deliveryAlarm);
+        return new DeleteDeliveryAlarmResponse(deliveryAlarmId);
     }
 }

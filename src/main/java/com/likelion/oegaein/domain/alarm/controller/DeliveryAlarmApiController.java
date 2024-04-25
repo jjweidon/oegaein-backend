@@ -1,5 +1,7 @@
 package com.likelion.oegaein.domain.alarm.controller;
 
+import com.likelion.oegaein.domain.alarm.dto.delivery.DeleteDeliveryAlarmResponse;
+import com.likelion.oegaein.domain.alarm.dto.delivery.DeleteDeliveryAlarmsResponse;
 import com.likelion.oegaein.domain.alarm.dto.delivery.FindDeliveryAlarmsResponse;
 import com.likelion.oegaein.domain.alarm.service.DeliveryAlarmService;
 import com.likelion.oegaein.global.dto.ResponseDto;
@@ -29,12 +31,14 @@ public class DeliveryAlarmApiController {
     @DeleteMapping("/api/v1/delivery-alarms")
     public ResponseEntity<ResponseDto> deleteDeliveryAlarms(Authentication authentication){
         log.info("Request to delete delivery-alarms");
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        DeleteDeliveryAlarmsResponse response = deliveryAlarmService.removeDeliveryAlarms(authentication);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/api/v1/delivery-alarms/{deliveryalarmid}")
     public ResponseEntity<ResponseDto> deleteDeliveryAlarm(@PathVariable("deliveryalarmid") Long deliveryAlarmId, Authentication authentication){
         log.info("Request to delete delivery-alarms {}", deliveryAlarmId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        DeleteDeliveryAlarmResponse response = deliveryAlarmService.removeDeliveryAlarm(deliveryAlarmId, authentication);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 }
