@@ -32,10 +32,13 @@ public class NewsCrawler {
         // webdriver config
         System.setProperty("webdriver.chrome.driver", "/app/chrome/chromedriver");
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--disable-popup-blocking"); // 팝업창 차단
-        options.addArguments("headless"); // headless 실행
-        options.addArguments("--disable-gpu"); // gpu 비활성화
-        options.addArguments("--blink-settings=imagesEnabled=false"); // 이미지 다운 비활성화
+        options.addArguments("--no-sandbox"); // Bypass OS security model
+        options.addArguments("start-maximized"); // open Browser in maximized mode
+        options.addArguments("disable-infobars"); // disabling infobars
+        options.addArguments("--disable-extensions"); // disabling extensions
+        options.addArguments("--disable-dev-shm-usage"); // overcome limited resource problems
+        options.addArguments("--disable-gpu");
+        options.addArguments("--headless");
         webDriver = new ChromeDriver(options);
 
         try{
