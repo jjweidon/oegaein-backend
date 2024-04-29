@@ -1,6 +1,7 @@
 package com.likelion.oegaein.domain.member.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.likelion.oegaein.domain.member.dto.member.CreateBlockRequest;
 import com.likelion.oegaein.domain.member.dto.member.CreateBlockResponse;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthLoginResponse;
 import com.likelion.oegaein.domain.member.service.MemberService;
@@ -40,9 +41,9 @@ public class MemberController {
     }
 
     @PostMapping("api/v1/member/block")
-    public ResponseEntity<ResponseDto> postBlockMember(Authentication authentication, @RequestParam("blocked") Long blockedId) {
+    public ResponseEntity<ResponseDto> postBlockMember(Authentication authentication, CreateBlockRequest dto) {
         log.info("Request to post block member");
-        CreateBlockResponse response = memberService.createBlockMember(authentication, blockedId);
+        CreateBlockResponse response = memberService.createBlockMember(authentication, dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

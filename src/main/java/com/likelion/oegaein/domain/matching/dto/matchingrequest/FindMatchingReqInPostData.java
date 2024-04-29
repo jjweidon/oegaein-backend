@@ -11,7 +11,7 @@ public class FindMatchingReqInPostData {
     private String name;
     private Gender gender;
     private int studentNo;
-    private String major;
+    private Major major;
     private Date birthdate;
     private Mbti mbti;
     private Smoking smoking;

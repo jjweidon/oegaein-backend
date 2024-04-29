@@ -53,6 +53,7 @@ public class Profile {
         this.name = request.getName();
         this.gender = request.getGender();
         this.studentNo = request.getStudentNo();
+        this.major = request.getMajor();
         this.birthdate = request.getBirthdate();
         this.mbti = request.getMbti();
         this.smoking = request.getSmoking();

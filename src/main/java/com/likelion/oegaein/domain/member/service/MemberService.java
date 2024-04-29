@@ -1,6 +1,7 @@
 package com.likelion.oegaein.domain.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.likelion.oegaein.domain.member.dto.member.CreateBlockRequest;
 import com.likelion.oegaein.domain.member.dto.member.CreateBlockResponse;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthLoginResponse;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthToken;
@@ -60,15 +61,15 @@ public class MemberService {
     }
 
     @Transactional
-    public CreateBlockResponse createBlockMember(Authentication authentication, Long blockedId) {
+    public CreateBlockResponse createBlockMember(Authentication authentication, CreateBlockRequest form) {
         Member blockingMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
-        Member blockedMember = memberRepository.findById(blockedId)
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + blockedId));
+        Member blockedMember = memberRepository.findById(form.getBlockedId())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getBlockedId()));
         Block block = Block.builder()
                 .blocking(blockingMember)
                 .blocked(blockedMember)
                 .build();
-        return null;
+        return new CreateBlockResponse(block.getId());
     }
 }

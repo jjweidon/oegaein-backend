@@ -1,5 +1,6 @@
 package com.likelion.oegaein.global.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -75,7 +77,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationExceptionHandlerFilter jwtAuthenticationExceptionHandlerFilter(){
-        return new JwtAuthenticationExceptionHandlerFilter();
+        return new JwtAuthenticationExceptionHandlerFilter(objectMapper);
     }
 
     @Bean

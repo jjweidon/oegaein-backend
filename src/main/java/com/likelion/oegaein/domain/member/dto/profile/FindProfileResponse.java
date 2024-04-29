@@ -1,17 +1,13 @@
 package com.likelion.oegaein.domain.member.dto.profile;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.likelion.oegaein.domain.member.entity.profile.*;
-import com.likelion.oegaein.domain.member.repository.SleepingHabitRepository;
 import com.likelion.oegaein.global.dto.ResponseDto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
@@ -26,7 +22,7 @@ public class FindProfileResponse implements ResponseDto {
     @Enumerated(EnumType.STRING)
     private Gender gender; // 성별
     private int studentNo; // 학번
-    private String major;
+    private Major major; // 전공
     private Date birthdate; // 생일
     @Enumerated(EnumType.STRING)
     private Mbti mbti; // MBTI
@@ -41,7 +37,6 @@ public class FindProfileResponse implements ResponseDto {
     private Outing outing; // 외출 빈도
     @Enumerated(EnumType.STRING)
     private Sensitivity soundSensitivity; // 소리 민감도
-    // 후기
 
     public static FindProfileResponse of(Profile profile) {;
         List<SleepingHabit> sleepingHabit = profile.getSleepingHabit().stream()

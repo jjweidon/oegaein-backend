@@ -36,7 +36,7 @@ public class ReviewApiController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("api/v1/review/{reviewId}") // 리뷰 수정
+    @PutMapping("api/v1/review/{reviewId}") // 리뷰 수정
     public ResponseEntity<ResponseDto> putReview(Authentication authentication, @PathVariable("reviewId") Long reviewId, @RequestBody UpdateReviewRequest dto) {
         log.info("Request to put review");
         UpdateReviewResponse response = reviewService.updateReview(authentication, reviewId, dto);
