@@ -1,5 +1,6 @@
 package com.likelion.oegaein.global.validation;
 
+import com.likelion.oegaein.domain.matching.entity.DongType;
 import jakarta.validation.Constraint;
 
 import java.lang.annotation.ElementType;

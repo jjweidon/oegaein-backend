@@ -4,10 +4,13 @@ import com.likelion.oegaein.domain.matching.dto.matchingpost.*;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
 import com.likelion.oegaein.domain.matching.validation.MatchingPostValidator;
+import com.likelion.oegaein.domain.member.entity.Block;
 import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.query.MatchingPostQueryRepository;
+import com.likelion.oegaein.domain.member.repository.BlockRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
+import com.likelion.oegaein.domain.member.validation.BlockValidator;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,14 +35,24 @@ public class MatchingPostService {
     private final MatchingPostRepository matchingPostRepository;
     private final MatchingPostQueryRepository matchingPostQueryRepository;
     private final MemberRepository memberRepository;
+    private final BlockRepository blockRepository;
     // validators
     private final MatchingPostValidator matchingPostValidator;
     private final MemberValidator memberValidator;
+    private final BlockValidator blockValidator;
 
     // 모든 매칭글 조회
-    public FindMatchingPostsResponse findAllMatchingPosts(){
+    public FindMatchingPostsResponse findAllMatchingPosts(Authentication authentication){
         // find matchingPosts
-        List<MatchingPost> matchingPosts = matchingPostRepository.findAll();
+        List<MatchingPost> matchingPosts;
+        if (authentication != null){ // find member except black list members
+            Member member = memberRepository.findByEmail(authentication.getName())
+                    .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+            List<Long> blackList = getBlackList(member);
+            matchingPosts = matchingPostQueryRepository.findAllExceptBlockedMember(blackList);
+        }else{
+            matchingPosts = matchingPostRepository.findAll();
+        }
         // create matchingPostsData
         List<FindMatchingPostsData> matchingPostsData = matchingPosts.stream()
                 .map(FindMatchingPostsData::toFindMatchingPostsData)
@@ -48,10 +64,8 @@ public class MatchingPostService {
     @Transactional
     public CreateMatchingPostResponse saveMatchingPost(Authentication authentication, CreateMatchingPostData dto){
         matchingPostValidator.validateRoomSizeAndTargetNumOfPeople(dto.getRoomSizeType(), dto.getTargetNumberOfPeople());
-        // Member author = memberRepository.findByEmail(authentication.getName())
-        //         .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        // Member author = memberRepository.findById(); // 로그인 구현 완료시 사용
-        Member author = new Member();
+         Member author = memberRepository.findByEmail(authentication.getName())
+                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         // Create MatchingPost Entity
         MatchingPost newMatchingPost = MatchingPost.builder()
                 .title(dto.getTitle())
@@ -69,9 +83,15 @@ public class MatchingPostService {
     }
 
     // 특정 매칭글 조회(ID)
-    public FindMatchingPostResponse findByIdMatchingPost(Long matchingPostId){
+    public FindMatchingPostResponse findByIdMatchingPost(Long matchingPostId, Authentication authentication){
         MatchingPost matchingPost = matchingPostRepository.findById(matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_POST_ERR_MSG));
+        if(authentication != null){
+            Member member = memberRepository.findByEmail(authentication.getName())
+                    .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+            blockValidator.validateBlockedMember(member.getId(), matchingPost.getAuthor().getId());
+            blockValidator.validateBlockedMember(matchingPost.getAuthor().getId(), member.getId());
+        }
         return FindMatchingPostResponse.toFindMatchingPostResponse(matchingPost);
     }
 
@@ -132,5 +152,16 @@ public class MatchingPostService {
                 .map(FindDeadlineImminentMatchingPostsData::toFindDeadlineImminentMatchingPostsData)
                 .toList();
         return new FindDeadlineImminentMatchingPostsResponse(deadlineImminentMatchingPostsData);
+    }
+
+    // 사용자 정의 함수
+    private List<Long> getBlackList(Member member){
+        List<Block> blocking = blockRepository.findByBlocking(member); // 내가 차단한 사람 목록
+        List<Block> blocked = blockRepository.findByBlocked(member); // 나를 차단한 사람 목록
+        List<Long> blockingList = blocking.stream().map((block) -> block.getBlocked().getId()).toList();
+        List<Long> blockedList = blocked.stream().map((block) -> block.getBlocking().getId()).toList();
+        Set<Long> blackSet = new LinkedHashSet<>(blockingList);
+        blackSet.addAll(blockedList);
+        return new ArrayList<>(blackSet);
     }
 }

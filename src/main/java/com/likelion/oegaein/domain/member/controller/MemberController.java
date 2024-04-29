@@ -3,9 +3,11 @@ package com.likelion.oegaein.domain.member.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.likelion.oegaein.domain.member.dto.member.CreateBlockRequest;
 import com.likelion.oegaein.domain.member.dto.member.CreateBlockResponse;
+import com.likelion.oegaein.domain.member.dto.member.RenewRefreshTokenResponse;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthLoginResponse;
 import com.likelion.oegaein.domain.member.service.MemberService;
 import com.likelion.oegaein.global.dto.ResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +28,7 @@ public class MemberController {
         try {
             log.info("Request to login google oauth2");
             GoogleOauthLoginResponse response = memberService.googleLogin(code);
-            ResponseCookie responseCookie = ResponseCookie.from("refresh_token", response.getRefreshToken())
+            ResponseCookie responseCookie = ResponseCookie.from("refreshToken", response.getRefreshToken())
                     .httpOnly(true)
                     .maxAge(60*60*24)
                     .path("/")
@@ -45,5 +47,12 @@ public class MemberController {
         log.info("Request to post block member");
         CreateBlockResponse response = memberService.createBlockMember(authentication, dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/api/v1/member/refresh")
+    public ResponseEntity<ResponseDto> renewRefreshToken(HttpServletRequest httpServletRequest){
+        log.info("Request to renew refresh token");
+        RenewRefreshTokenResponse response = memberService.renewRefreshToken(httpServletRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

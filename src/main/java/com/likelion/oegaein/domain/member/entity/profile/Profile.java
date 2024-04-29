@@ -32,7 +32,7 @@ public class Profile {
     private Mbti mbti;
     @Enumerated(EnumType.STRING)
     private Smoking smoking;
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", orphanRemoval = true)
     private List<SleepingHabitEntity> sleepingHabit;
     @Enumerated(EnumType.STRING)
     private LifePattern lifePattern;

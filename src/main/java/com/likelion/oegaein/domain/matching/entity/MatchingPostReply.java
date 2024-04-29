@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Reply {
+public class MatchingPostReply {
     @Id
     @GeneratedValue
     private Long id;
@@ -23,7 +23,7 @@ public class Reply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Comment comment; // 부모 댓글 FK
+    private MatchingPostComment comment; // 부모 댓글 FK
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -44,8 +44,8 @@ public class Reply {
     }
 
     public Boolean canDirectlyDelete(){
-        Comment parentComment = this.comment;
-        for(Reply reply : parentComment.getReplies()){
+        MatchingPostComment parentComment = this.comment;
+        for(MatchingPostReply reply : parentComment.getReplies()){
             if(reply.getId().equals(this.id)) continue;
             if(reply.getIsDeleted().equals(Boolean.FALSE)){
                 return Boolean.FALSE;

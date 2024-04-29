@@ -32,8 +32,6 @@ public class MatchingPostQueryRepository {
                 " order by mpap.rate desc";
         return em.createQuery(jpql, MatchingPost.class)
                 .setParameter("standardRate", STANDARD_RATE)
-                .setFirstResult(0)
-                .setMaxResults(20)
                 .getResultList();
     }
 
@@ -48,8 +46,29 @@ public class MatchingPostQueryRepository {
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("matchingPostStatus", MatchingStatus.WAITING)
-                .setFirstResult(0)
-                .setMaxResults(20)
+                .getResultList();
+    }
+
+    public List<MatchingPost> searchMatchingPost(String content){
+        String jpql = "select mp from MatchingPost mp" +
+                " join fetch mp.author mpa" +
+                " join fetch mpa.profile mpap" +
+                " where mp.title like concat('%',:content,'%')" +
+                " or mp.content like concat('%',:content,'%')" +
+                " order by mp.createdAt desc";
+        return em.createQuery(jpql, MatchingPost.class)
+                .setParameter("content", content)
+                .getResultList();
+    }
+
+    public List<MatchingPost> findAllExceptBlockedMember(List<Long> blockedMemberIds){
+        String jpql = "select mp from MatchingPost mp" +
+                " join fetch mp.author mpa" +
+                " join fetch mpa.profile mpap" +
+                " where mpa.id not in :blockedmemberids" +
+                " order by mp.createdAt desc";
+        return em.createQuery(jpql, MatchingPost.class)
+                .setParameter("blockedmemberids", blockedMemberIds)
                 .getResultList();
     }
 }

@@ -1,8 +1,7 @@
 package com.likelion.oegaein.domain.matching.dto.comment;
 
 import com.likelion.oegaein.domain.matching.dto.reply.FindReplyData;
-import com.likelion.oegaein.domain.matching.entity.Comment;
-import com.likelion.oegaein.domain.matching.entity.Reply;
+import com.likelion.oegaein.domain.matching.entity.MatchingPostComment;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,7 +20,7 @@ public class FindCommentData {
     private Boolean isDeleted;
     private List<FindReplyData> replies;
 
-    public static FindCommentData toFindCommentData(Comment comment){
+    public static FindCommentData toFindCommentData(MatchingPostComment comment){
         List<FindReplyData> repliesData = comment.getReplies().stream()
                 .map(FindReplyData::toFindReplyData).toList();
         return FindCommentData.builder()

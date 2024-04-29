@@ -18,9 +18,9 @@ public class MatchingPostApiController {
     private final MatchingPostService matchingPostService;
 
     @GetMapping("/api/v1/matchingposts") // 전체 매칭 글 조회
-    public ResponseEntity<ResponseDto> getMatchingPosts(){
+    public ResponseEntity<ResponseDto> getMatchingPosts(Authentication authentication){
         log.info("Request to get matchingposts"); // logging
-        FindMatchingPostsResponse response = matchingPostService.findAllMatchingPosts();
+        FindMatchingPostsResponse response = matchingPostService.findAllMatchingPosts(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -33,9 +33,9 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/matchingposts/{matchingpostid}") // 특정 매칭 글 조회
-    public ResponseEntity<ResponseDto> getMatchingPost(@PathVariable("matchingpostid") Long matchingPostId){
+    public ResponseEntity<ResponseDto> getMatchingPost(@PathVariable("matchingpostid") Long matchingPostId, Authentication authentication){
         log.info("Request to get matchingpost by id-{}", matchingPostId);
-        FindMatchingPostResponse response = matchingPostService.findByIdMatchingPost(matchingPostId);
+        FindMatchingPostResponse response = matchingPostService.findByIdMatchingPost(matchingPostId, authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

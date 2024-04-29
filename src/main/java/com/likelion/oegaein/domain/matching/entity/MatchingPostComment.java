@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Comment {
+public class MatchingPostComment {
     @Id @GeneratedValue
     private Long id;
     private String content; // 댓글 내용
@@ -35,7 +35,7 @@ public class Comment {
     private LocalDateTime modifiedAt; // 수정일
     private Boolean isDeleted; // 삭제 여부
     @OneToMany(mappedBy = "comment", orphanRemoval = true)
-    private final List<Reply> replies = new ArrayList<>();
+    private final List<MatchingPostReply> replies = new ArrayList<>();
 
     public void updateContent(String content){
         this.content = content;
@@ -45,7 +45,7 @@ public class Comment {
         this.isDeleted = Boolean.TRUE;
     }
     public Boolean canDirectlyDelete(){
-        for(Reply reply : this.replies){
+        for(MatchingPostReply reply : this.replies){
             if(reply.getIsDeleted().equals(Boolean.FALSE)){
                 return Boolean.FALSE;
             }
