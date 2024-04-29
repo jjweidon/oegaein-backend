@@ -12,6 +12,8 @@ import lombok.Getter;
 @Builder
 @Getter
 public class FindReviewData implements ResponseDto {
+    @JsonProperty("writer_id")
+    private Long writerId;
     @JsonProperty("writer_name")
     private String writerName;
     private Evaluation evaluation;
@@ -21,6 +23,7 @@ public class FindReviewData implements ResponseDto {
 
     public static FindReviewData of(Review review) {
         return FindReviewData.builder()
+                .writerId(review.getWriter().getId())
                 .writerName(review.getWriter().getProfile().getName())
                 .evaluation(review.getEvaluation())
                 .semester(review.getSemester())
