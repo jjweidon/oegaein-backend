@@ -1,12 +1,13 @@
 package com.likelion.oegaein.domain.matching.service;
 
 import com.likelion.oegaein.domain.matching.dto.reply.*;
-import com.likelion.oegaein.domain.matching.entity.Comment;
-import com.likelion.oegaein.domain.matching.entity.Reply;
+import com.likelion.oegaein.domain.matching.entity.MatchingPostComment;
+import com.likelion.oegaein.domain.matching.entity.MatchingPostReply;
 import com.likelion.oegaein.domain.matching.repository.CommentRepository;
 import com.likelion.oegaein.domain.matching.repository.ReplyRepository;
 import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
+import com.likelion.oegaein.domain.member.validation.BlockValidator;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +29,16 @@ public class ReplyService {
     private final MemberRepository memberRepository;
     // validators
     private final MemberValidator memberValidator;
+    private final BlockValidator blockValidator;
 
     @Transactional
     public CreateReplyResponse saveReply(CreateReplyData dto, Authentication authentication) {
         Member author = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        Comment comment = commentRepository.findById(dto.getCommentId())
+        MatchingPostComment comment = commentRepository.findById(dto.getCommentId())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_COMMENT_ERR_MSG));
         // create new reply
-        Reply reply = Reply.builder()
+        MatchingPostReply reply = MatchingPostReply.builder()
                 .comment(comment)
                 .content(dto.getContent())
                 .author(author)
@@ -50,7 +52,7 @@ public class ReplyService {
     public UpdateReplyResponse updateReply(UpdateReplyData dto, Long replyId, Authentication authentication) {
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        Reply reply = replyRepository.findById(replyId)
+        MatchingPostReply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_REPLY_ERR_MSG));
         memberValidator.validateIsOwnerReply(authenticatedMember.getId(), reply.getAuthor().getId());
         reply.updateContent(dto.getContent());
@@ -61,10 +63,10 @@ public class ReplyService {
     public DeleteReplyResponse removeReply(Long replyId, Authentication authentication) {
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        Reply reply = replyRepository.findById(replyId)
+        MatchingPostReply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_REPLY_ERR_MSG));
         memberValidator.validateIsOwnerReply(authenticatedMember.getId(), reply.getAuthor().getId());
-        Comment parentComment = reply.getComment();
+        MatchingPostComment parentComment = reply.getComment();
         if (parentComment.getIsDeleted().equals(Boolean.FALSE)) {
             reply.updateDeleteStatus();
         } else {

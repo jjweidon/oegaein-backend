@@ -11,8 +11,8 @@ import com.likelion.oegaein.global.dto.ResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,7 +22,7 @@ public class FindMatchingPostResponse implements ResponseDto {
     private String content; // 내용
     private DongType dong; // 동 타입
     private RoomSizeType roomSize; // 방 사이즈
-    private LocalDateTime deadline; // 마감일
+    private LocalDate deadline; // 마감일
     private LocalDateTime createdAt; // 생성일
     private MatchingStatus matchingStatus; // 매칭 상태
     private FindMatchingPostResInProfile authorProfile; // 작성자 프로필
@@ -31,7 +31,7 @@ public class FindMatchingPostResponse implements ResponseDto {
     public static FindMatchingPostResponse toFindMatchingPostResponse(MatchingPost matchingPost){
         Profile findProfile = matchingPost.getAuthor().getProfile();
         FindMatchingPostResInProfile convertedProfile = FindMatchingPostResInProfile.toFindMatchingPostResInProfile(findProfile);
-        List<Comment> findComments = matchingPost.getComments();
+        List<MatchingPostComment> findComments = matchingPost.getComments();
         List<FindCommentData> convertedComments = findComments.stream().map(FindCommentData::toFindCommentData).toList();
         return FindMatchingPostResponse.builder()
                 .title(matchingPost.getTitle())

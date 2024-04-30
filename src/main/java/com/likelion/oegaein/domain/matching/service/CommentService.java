@@ -1,12 +1,13 @@
 package com.likelion.oegaein.domain.matching.service;
 
 import com.likelion.oegaein.domain.matching.dto.comment.*;
-import com.likelion.oegaein.domain.matching.entity.Comment;
+import com.likelion.oegaein.domain.matching.entity.MatchingPostComment;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.repository.CommentRepository;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
+import com.likelion.oegaein.domain.member.validation.BlockValidator;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class CommentService {
     private final MemberRepository memberRepository;
     // validator
     private final MemberValidator memberValidator;
+    private final BlockValidator blockValidator;
 
     @Transactional
     public CreateCommentResponse saveComment(CreateCommentData dto, Authentication authentication){
@@ -36,9 +38,8 @@ public class CommentService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MATCHING_POST_ERR_MSG));
         Member author = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG)); // 임시 작성자
-
         // create new comment
-        Comment comment = Comment.builder()
+        MatchingPostComment comment = MatchingPostComment.builder()
                 .content(dto.getContent())
                 .matchingPost(matchingPost)
                 .author(author)
@@ -52,7 +53,7 @@ public class CommentService {
     public UpdateCommentResponse updateComment(UpdateCommentData dto, Long commentId, Authentication authentication){
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        Comment comment = commentRepository.findById(commentId)
+        MatchingPostComment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_COMMENT_ERR_MSG));
         memberValidator.validateIsOwnerComment(authenticatedMember.getId(), comment.getAuthor().getId());
         comment.updateContent(dto.getContent());
@@ -63,7 +64,7 @@ public class CommentService {
     public DeleteCommentResponse removeComment(Long commentId, Authentication authentication){
         Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
-        Comment comment = commentRepository.findById(commentId)
+        MatchingPostComment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_COMMENT_ERR_MSG));
         memberValidator.validateIsOwnerComment(authenticatedMember.getId(), comment.getAuthor().getId());
         if(comment.getReplies().isEmpty()){ // no child comments

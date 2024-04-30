@@ -11,7 +11,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Builder
@@ -37,7 +39,7 @@ public class FindDeadlineImminentMatchingPostsData {
                 .gender(profile.getGender())
                 .matchingPostId(matchingPost.getId())
                 .title(matchingPost.getTitle())
-                .dDay(Duration.between(LocalDateTime.now(), matchingPost.getDeadline()).toDays())
+                .dDay(ChronoUnit.DAYS.between(LocalDate.now(), matchingPost.getDeadline()))
                 .dong(matchingPost.getDongType())
                 .roomSize(matchingPost.getRoomSizeType())
                 .matchingStatus(matchingPost.getMatchingStatus())

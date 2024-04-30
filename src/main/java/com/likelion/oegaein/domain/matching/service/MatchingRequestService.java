@@ -15,6 +15,7 @@ import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.MatchingRequestRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
+import com.likelion.oegaein.domain.member.validation.BlockValidator;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import com.likelion.oegaein.global.dto.ResponseDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -55,6 +56,7 @@ public class MatchingRequestService {
     // validators
     private final MatchingRequestValidator matchingRequestValidator;
     private final MemberValidator memberValidator;
+    private final BlockValidator blockValidator;
 
     public FindMyMatchingReqsResponse findMyMatchingRequest(Authentication authentication){
         Member participant = memberRepository.findByEmail(authentication.getName()) // 인증 유저 조회
@@ -89,6 +91,8 @@ public class MatchingRequestService {
         matchingRequestValidator.validateIsNotSelfRequest(findParticipant.getId(), findMatchingPost.getAuthor().getId());
         matchingRequestValidator.validateIsNotAlreadyRequest(findParticipant, findMatchingPost);
         matchingRequestValidator.validateIsNotCompletedOrExpiredMatchingPost(findMatchingPost);
+        blockValidator.validateBlockedMember(findParticipant.getId(), findMatchingPost.getAuthor().getId());
+        blockValidator.validateBlockedMember(findMatchingPost.getAuthor().getId(), findParticipant.getId());
         // create new matching request
         MatchingRequest newMatchingRequest = new MatchingRequest(findMatchingPost, findParticipant);
         matchingRequestRepository.save(newMatchingRequest);
