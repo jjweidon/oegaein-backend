@@ -8,7 +8,7 @@ import lombok.Getter;
 public class FindReviewResponse extends FindReviewData {
 
     public FindReviewResponse(FindReviewData data) {
-        super(data.getWriterId(), data.getWriterName(), data.getEvaluation(), data.getSemester(), data.getDormitory(), data.getContent());
+        super(data.getWriterId(), data.getWriterName(), data.getWriterPhotoUrl(), data.getEvaluation(), data.getSemester(), data.getDormitory(), data.getContent());
     }
 }
 
