@@ -10,6 +10,8 @@ import java.util.List;
 @Getter
 @Builder
 public class FindMatchingPostResInProfile {
+    private Long id;
+    private String photoUrl;
     private Gender gender; // 성별
     private int studentNo; // 학번
     private Major major; // 전공
@@ -25,6 +27,8 @@ public class FindMatchingPostResInProfile {
 
     public static FindMatchingPostResInProfile toFindMatchingPostResInProfile(Profile profile){
         return FindMatchingPostResInProfile.builder()
+                .id(profile.getId())
+                .photoUrl(profile.getMember().getPhotoUrl())
                 .gender(profile.getGender())
                 .studentNo(profile.getStudentNo())
                 .major(profile.getMajor())
