@@ -5,7 +5,7 @@ import com.likelion.oegaein.domain.matching.entity.MatchingPostComment;
 import com.likelion.oegaein.domain.matching.entity.MatchingPostReply;
 import com.likelion.oegaein.domain.matching.repository.CommentRepository;
 import com.likelion.oegaein.domain.matching.repository.ReplyRepository;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.validation.BlockValidator;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;

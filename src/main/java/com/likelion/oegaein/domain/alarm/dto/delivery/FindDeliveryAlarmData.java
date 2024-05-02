@@ -2,7 +2,7 @@ package com.likelion.oegaein.domain.alarm.dto.delivery;
 
 import com.likelion.oegaein.domain.alarm.entity.DeliveryAlarm;
 import com.likelion.oegaein.domain.alarm.entity.DeliveryAlarmType;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import lombok.Builder;
 import lombok.Getter;

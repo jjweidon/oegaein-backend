@@ -1,6 +1,6 @@
 package com.likelion.oegaein.global.security;
 
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.exception.MemberException;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.util.JwtUtil;

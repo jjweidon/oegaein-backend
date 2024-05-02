@@ -1,9 +1,7 @@
 package com.likelion.oegaein.domain.member.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.likelion.oegaein.domain.member.dto.member.CreateBlockRequest;
-import com.likelion.oegaein.domain.member.dto.member.CreateBlockResponse;
-import com.likelion.oegaein.domain.member.dto.member.RenewRefreshTokenResponse;
+import com.likelion.oegaein.domain.member.dto.member.*;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthLoginResponse;
 import com.likelion.oegaein.domain.member.service.MemberService;
 import com.likelion.oegaein.global.dto.ResponseDto;
@@ -15,7 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -47,6 +48,20 @@ public class MemberController {
         log.info("Request to post block member");
         CreateBlockResponse response = memberService.createBlockMember(authentication, dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("api/v1/member/like")
+    public ResponseEntity<ResponseDto> postLikeMember(Authentication authentication, CreateLikeRequest dto) {
+        log.info("Request to post like member");
+        CreateLikeResponse response = memberService.createLikeMember(authentication, dto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("api/v1/member/like")
+    public ResponseEntity<ResponseDto> getLikeMembers(Authentication authentication) {
+        log.info("Request to get like members");
+        FindAllLikeReceiversResponse response = memberService.findAllLikeReceivers(authentication);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/api/v1/member/refresh")

@@ -2,7 +2,7 @@ package com.likelion.oegaein.domain.member.entity.review;
 
 import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.member.dto.review.UpdateReviewRequest;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Size;

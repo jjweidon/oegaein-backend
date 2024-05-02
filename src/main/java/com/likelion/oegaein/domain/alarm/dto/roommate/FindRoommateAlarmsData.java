@@ -3,7 +3,7 @@ package com.likelion.oegaein.domain.alarm.dto.roommate;
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarm;
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarmType;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import lombok.Builder;
 import lombok.Getter;

@@ -4,11 +4,10 @@ import com.likelion.oegaein.domain.alarm.dto.delivery.DeleteDeliveryAlarmRespons
 import com.likelion.oegaein.domain.alarm.dto.delivery.DeleteDeliveryAlarmsResponse;
 import com.likelion.oegaein.domain.alarm.dto.delivery.FindDeliveryAlarmData;
 import com.likelion.oegaein.domain.alarm.dto.delivery.FindDeliveryAlarmsResponse;
-import com.likelion.oegaein.domain.alarm.dto.roommate.DeleteRoommateAlarmResponse;
 import com.likelion.oegaein.domain.alarm.entity.DeliveryAlarm;
 import com.likelion.oegaein.domain.alarm.repository.DeliveryAlarmRepository;
 import com.likelion.oegaein.domain.alarm.repository.query.DeliveryAlarmQueryRepository;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
