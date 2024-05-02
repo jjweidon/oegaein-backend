@@ -1,6 +1,7 @@
 package com.likelion.oegaein.domain.member.dto.review;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.member.entity.review.Evaluation;
 import com.likelion.oegaein.domain.member.entity.review.Review;
@@ -11,9 +12,11 @@ import lombok.Getter;
 
 @Builder
 @Getter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FindReviewData implements ResponseDto {
-    @JsonProperty("writer_name")
+    private Long writerId;
     private String writerName;
+    private String writerPhotoUrl;
     private Evaluation evaluation;
     private Semester semester;
     private DongType dormitory;
@@ -21,7 +24,9 @@ public class FindReviewData implements ResponseDto {
 
     public static FindReviewData of(Review review) {
         return FindReviewData.builder()
+                .writerId(review.getWriter().getId())
                 .writerName(review.getWriter().getProfile().getName())
+                .writerPhotoUrl(review.getWriter().getPhotoUrl())
                 .evaluation(review.getEvaluation())
                 .semester(review.getSemester())
                 .dormitory(review.getDormitory())

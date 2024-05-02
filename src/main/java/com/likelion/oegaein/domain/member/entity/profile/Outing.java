@@ -8,16 +8,15 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Outing {
-    HOMEBODY("집돌이", "집순이"),
-    ITCHY_FEET("밖돌이", "밖순이");
+    HOMEBODY("집순이"),
+    ITCHY_FEET("밖순이");
 
-    private final String maleValue;
-    private final String femaleValue;
+    private final String value;
 
     @JsonCreator
     public static Outing deserializer(String value) {
         for(Outing outing : Outing.values()){
-            if(outing.getMaleValue().equals(value)) {
+            if(outing.getValue().equals(value)) {
                 return outing;
             }
         }
@@ -26,6 +25,6 @@ public enum Outing {
 
     @JsonValue
     public String serializer(){
-        return maleValue;
+        return value;
     }
 }
