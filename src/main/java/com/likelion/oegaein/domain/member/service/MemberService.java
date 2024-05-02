@@ -106,6 +106,18 @@ public class MemberService {
     }
 
     @Transactional
+    public DeleteLikeResponse deleteLikeMember(Authentication authentication, DeleteLikeRequest form) {
+        Member sender  = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+        Member receiver = memberRepository.findById(form.getReceiver())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiver()));
+        Likey likey = likeRepository.findBySenderReceiver(sender, receiver)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Likey"));
+        likeRepository.delete(likey);
+        return new DeleteLikeResponse(likey.getId());
+    }
+
+    @Transactional
     public FindAllLikeReceiversResponse findAllLikeReceivers(Authentication authentication) {
         Member sender = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));

@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +40,13 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/api/v1/member/refresh")
+    public ResponseEntity<ResponseDto> renewRefreshToken(HttpServletRequest httpServletRequest){
+        log.info("Request to renew refresh token");
+        RenewRefreshTokenResponse response = memberService.renewRefreshToken(httpServletRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("api/v1/member/block")
     public ResponseEntity<ResponseDto> postBlockMember(Authentication authentication, CreateBlockRequest dto) {
         log.info("Request to post block member");
@@ -57,17 +61,17 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("api/v1/member/like")
+    public ResponseEntity<ResponseDto> deleteLikeMember(Authentication authentication, DeleteLikeRequest dto) {
+        log.info("Request to delete like member");
+        DeleteLikeResponse response = memberService.deleteLikeMember(authentication, dto);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
     @GetMapping("api/v1/member/like")
     public ResponseEntity<ResponseDto> getLikeMembers(Authentication authentication) {
         log.info("Request to get like members");
         FindAllLikeReceiversResponse response = memberService.findAllLikeReceivers(authentication);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/api/v1/member/refresh")
-    public ResponseEntity<ResponseDto> renewRefreshToken(HttpServletRequest httpServletRequest){
-        log.info("Request to renew refresh token");
-        RenewRefreshTokenResponse response = memberService.renewRefreshToken(httpServletRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
