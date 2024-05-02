@@ -6,7 +6,7 @@ import com.likelion.oegaein.domain.matching.entity.MatchingRequest;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
 import com.likelion.oegaein.domain.matching.exception.MatchingRequestException;
 import com.likelion.oegaein.domain.matching.repository.MatchingRequestRepository;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

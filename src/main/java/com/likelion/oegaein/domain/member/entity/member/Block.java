@@ -1,4 +1,4 @@
-package com.likelion.oegaein.domain.member.entity;
+package com.likelion.oegaein.domain.member.entity.member;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

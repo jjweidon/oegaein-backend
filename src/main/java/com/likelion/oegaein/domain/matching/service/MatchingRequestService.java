@@ -11,7 +11,7 @@ import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingRequest;
 import com.likelion.oegaein.domain.matching.repository.query.MatchingRequestQueryRepository;
 import com.likelion.oegaein.domain.matching.validation.MatchingRequestValidator;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.matching.repository.MatchingPostRepository;
 import com.likelion.oegaein.domain.matching.repository.MatchingRequestRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;

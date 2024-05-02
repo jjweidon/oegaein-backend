@@ -2,7 +2,7 @@ package com.likelion.oegaein.domain.matching.dto.matchingrequest;
 
 import com.likelion.oegaein.domain.matching.entity.*;
 import com.likelion.oegaein.domain.member.entity.profile.Gender;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

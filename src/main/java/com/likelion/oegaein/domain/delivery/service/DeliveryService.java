@@ -2,13 +2,11 @@ package com.likelion.oegaein.domain.delivery.service;
 
 import com.likelion.oegaein.domain.delivery.Entity.Delivery;
 import com.likelion.oegaein.domain.delivery.dto.DeliveryBasicResponse;
-import com.likelion.oegaein.domain.delivery.dto.LikeResponse;
 import com.likelion.oegaein.domain.delivery.dto.deliveryPost.CreateDeliveryPostData;
 import com.likelion.oegaein.domain.delivery.dto.deliveryPost.CreateDeliveryPostResponse;
 import com.likelion.oegaein.domain.delivery.dto.deliveryPost.PutDeliveryPostRequest;
 import com.likelion.oegaein.domain.delivery.repository.DeliveryRepository;
 
-import com.likelion.oegaein.domain.member.entity.Member;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 
 import java.time.Duration;
@@ -21,10 +19,9 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+
 import java.io.File;
-import java.io.FilenameFilter;
+
 @Service
 @RequiredArgsConstructor
 @Transactional

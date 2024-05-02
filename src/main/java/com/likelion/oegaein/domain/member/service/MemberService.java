@@ -1,15 +1,16 @@
 package com.likelion.oegaein.domain.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.likelion.oegaein.domain.member.dto.member.CreateBlockRequest;
-import com.likelion.oegaein.domain.member.dto.member.CreateBlockResponse;
-import com.likelion.oegaein.domain.member.dto.member.RenewRefreshTokenResponse;
+import com.likelion.oegaein.domain.member.dto.member.*;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthLoginResponse;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthToken;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthUserInfo;
-import com.likelion.oegaein.domain.member.entity.Block;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Block;
+import com.likelion.oegaein.domain.member.entity.member.Likey;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.exception.RefreshTokenException;
+import com.likelion.oegaein.domain.member.repository.BlockRepository;
+import com.likelion.oegaein.domain.member.repository.LikeRepository;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.util.GoogleOauthUtil;
 import com.likelion.oegaein.domain.member.util.JwtUtil;
@@ -24,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,6 +44,8 @@ public class MemberService {
     private final GoogleOauthUtil googleOauthUtil;
     private final MemberValidator memberValidator;
     private final RefreshTokenValidator refreshTokenValidator;
+    private final BlockRepository blockRepository;
+    private final LikeRepository likeRepository;
 
     @Transactional
     public GoogleOauthLoginResponse googleLogin(String code) throws JsonProcessingException {
@@ -82,7 +87,49 @@ public class MemberService {
                 .blocking(blockingMember)
                 .blocked(blockedMember)
                 .build();
+        blockRepository.save(block);
         return new CreateBlockResponse(block.getId());
+    }
+
+    @Transactional
+    public CreateLikeResponse createLikeMember(Authentication authentication, CreateLikeRequest form) {
+        Member sender  = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+        Member receiver = memberRepository.findById(form.getReceiver())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiver()));
+        Likey likey = Likey.builder()
+                .sender(sender)
+                .receiver(receiver)
+                .build();
+        likeRepository.save(likey);
+        return new CreateLikeResponse(likey.getId());
+    }
+
+    @Transactional
+    public DeleteLikeResponse deleteLikeMember(Authentication authentication, DeleteLikeRequest form) {
+        Member sender  = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+        Member receiver = memberRepository.findById(form.getReceiver())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiver()));
+        Likey likey = likeRepository.findBySenderReceiver(sender, receiver)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Likey"));
+        likeRepository.delete(likey);
+        return new DeleteLikeResponse(likey.getId());
+    }
+
+    @Transactional
+    public FindAllLikeReceiversResponse findAllLikeReceivers(Authentication authentication) {
+        Member sender = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+        List<Likey> likeys = likeRepository.findBySender(sender)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Reviews: " + sender.getId()));
+        List<FindLikeReceiverData> receivers = likeys.stream()
+                .map(likey -> likey.getReceiver().getProfile())
+                .map(FindLikeReceiverData::of)
+                .toList();
+        return FindAllLikeReceiversResponse.builder()
+                .data(receivers)
+                .build();
     }
 
     public RenewRefreshTokenResponse renewRefreshToken(HttpServletRequest request){

@@ -1,9 +1,7 @@
 package com.likelion.oegaein.domain.member.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.likelion.oegaein.domain.member.dto.member.CreateBlockRequest;
-import com.likelion.oegaein.domain.member.dto.member.CreateBlockResponse;
-import com.likelion.oegaein.domain.member.dto.member.RenewRefreshTokenResponse;
+import com.likelion.oegaein.domain.member.dto.member.*;
 import com.likelion.oegaein.domain.member.dto.oauth.GoogleOauthLoginResponse;
 import com.likelion.oegaein.domain.member.service.MemberService;
 import com.likelion.oegaein.global.dto.ResponseDto;
@@ -42,6 +40,13 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/api/v1/member/refresh")
+    public ResponseEntity<ResponseDto> renewRefreshToken(HttpServletRequest httpServletRequest){
+        log.info("Request to renew refresh token");
+        RenewRefreshTokenResponse response = memberService.renewRefreshToken(httpServletRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("api/v1/member/block")
     public ResponseEntity<ResponseDto> postBlockMember(Authentication authentication, CreateBlockRequest dto) {
         log.info("Request to post block member");
@@ -49,10 +54,24 @@ public class MemberController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/v1/member/refresh")
-    public ResponseEntity<ResponseDto> renewRefreshToken(HttpServletRequest httpServletRequest){
-        log.info("Request to renew refresh token");
-        RenewRefreshTokenResponse response = memberService.renewRefreshToken(httpServletRequest);
+    @PostMapping("api/v1/member/like")
+    public ResponseEntity<ResponseDto> postLikeMember(Authentication authentication, CreateLikeRequest dto) {
+        log.info("Request to post like member");
+        CreateLikeResponse response = memberService.createLikeMember(authentication, dto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("api/v1/member/like")
+    public ResponseEntity<ResponseDto> deleteLikeMember(Authentication authentication, DeleteLikeRequest dto) {
+        log.info("Request to delete like member");
+        DeleteLikeResponse response = memberService.deleteLikeMember(authentication, dto);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("api/v1/member/like")
+    public ResponseEntity<ResponseDto> getLikeMembers(Authentication authentication) {
+        log.info("Request to get like members");
+        FindAllLikeReceiversResponse response = memberService.findAllLikeReceivers(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

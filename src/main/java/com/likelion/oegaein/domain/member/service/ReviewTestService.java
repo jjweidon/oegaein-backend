@@ -1,13 +1,12 @@
 package com.likelion.oegaein.domain.member.service;
 
 import com.likelion.oegaein.domain.member.dto.review.*;
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.entity.review.Review;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.repository.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

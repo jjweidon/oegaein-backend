@@ -1,6 +1,6 @@
 package com.likelion.oegaein.domain.member.repository.query;
 
-import com.likelion.oegaein.domain.member.entity.Member;
+import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.exception.ChatException;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
