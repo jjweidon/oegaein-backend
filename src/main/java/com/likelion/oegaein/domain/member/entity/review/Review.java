@@ -1,7 +1,6 @@
 package com.likelion.oegaein.domain.member.entity.review;
 
 import com.likelion.oegaein.domain.matching.entity.DongType;
-import com.likelion.oegaein.domain.member.dto.review.UpdateReviewRequest;
 import com.likelion.oegaein.domain.member.entity.member.Member;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
@@ -37,10 +36,10 @@ public class Review {
     @JoinColumn
     private Member receiver;
 
-    public void update(UpdateReviewRequest request) {
-        this.evaluation = request.getEvaluation();
-        this.semester = request.getSemester();
-        this.dormitory = request.getDormitory();
-        this.content = request.getContent();
-    }
+//    public void set(UpdateReviewRequest request) {
+//        this.evaluation = request.getEvaluation();
+//        this.semester = request.getSemester();
+//        this.dormitory = request.getDormitory();
+//        this.content = request.getContent();
+//    }
 }

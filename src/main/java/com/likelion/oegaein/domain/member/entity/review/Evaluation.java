@@ -8,12 +8,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Evaluation {
-    VERY_GOOD("최고예요"),
-    GOOD("좋아요"),
-    NORMAL("보통"),
-    BAD("별로예요"),
-    VERY_BAD("최악이에요");
+    VERY_GOOD(5, "최고예요"),
+    GOOD(4, "좋아요"),
+    NORMAL(3, "보통"),
+    BAD(2, "별로예요"),
+    VERY_BAD(1, "최악이에요");
 
+    private final int score;
     private final String value;
 
     @JsonCreator

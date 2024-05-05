@@ -5,10 +5,7 @@ import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabit;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabitEntity;
-import com.likelion.oegaein.domain.member.repository.BlockRepository;
-import com.likelion.oegaein.domain.member.repository.MemberRepository;
-import com.likelion.oegaein.domain.member.repository.ProfileRepository;
-import com.likelion.oegaein.domain.member.repository.SleepingHabitRepository;
+import com.likelion.oegaein.domain.member.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +25,7 @@ public class ProfileService {
     private final MemberRepository memberRepository;
     private final SleepingHabitRepository sleepingHabitRepository;
     private final BlockRepository blockRepository;
+    private final ReviewRepository reviewRepository;
 
     public CreateProfileResponse createProfile(Authentication authentication, CreateProfileRequest form) {
         Member loginMember = findAuthenticatedMember(authentication);
@@ -72,7 +70,7 @@ public class ProfileService {
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Profile: " + loginMember.getId()));
 
         // 내용 저장
-        profile.update(form);
+        profile.set(form);
         loginMember.setPhotoUrl(form.getPhotoUrl());
 
         // 수면 습관 업데이트
@@ -119,17 +117,24 @@ public class ProfileService {
         }
     }
 
-    // 로그인한 사용자 찾기
-    private Member findAuthenticatedMember(Authentication authentication) {
-        return memberRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
-    }
-
     // 차단 확인
     public void isBlockedMember(Member loginMember, Member findMember) {
         if (blockRepository.isBlocked(loginMember.getId(), findMember.getId())) {
             throw new IllegalStateException("차단된 사용자입니다.");
         }
+    }
+
+    // 리뷰 평점 계산
+    public void setAverageScore(Member member) {
+        Profile profile = member.getProfile();
+        double averageScore = reviewRepository.averageScoreByReceiver(member);
+        profile.setScore(averageScore);
+    }
+
+    // 로그인한 사용자 찾기
+    private Member findAuthenticatedMember(Authentication authentication) {
+        return memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
     }
 
     // 전공 추출
