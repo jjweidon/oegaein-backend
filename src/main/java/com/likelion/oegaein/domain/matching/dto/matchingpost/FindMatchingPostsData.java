@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -21,6 +22,8 @@ public class FindMatchingPostsData {
     private int studentNo; // studentNo
     private String name; // name
     private Gender gender; // gender
+    private String photoUrl; // profile photo
+    private Date birthdate;
     private Mbti mbti;
     private List<SleepingHabit> sleepingHabits;
     private LifePattern lifePattern;
@@ -33,6 +36,7 @@ public class FindMatchingPostsData {
     private Long dDay; // D-day
     private DongType dong; // dorm dong
     private RoomSizeType roomSize; // dorm roomSize
+    private int targetNumberOfPeople; // 모집 인원
     private MatchingStatus matchingStatus; // matching status
     private LocalDateTime createdAt;
 
@@ -46,6 +50,8 @@ public class FindMatchingPostsData {
                 .studentNo(profile.getStudentNo())
                 .name(profile.getName())
                 .gender(profile.getGender())
+                .photoUrl(matchingPost.getAuthor().getPhotoUrl())
+                .birthdate(profile.getBirthdate())
                 .mbti(profile.getMbti())
                 .sleepingHabits(sleepingHabitDataList)
                 .lifePattern(profile.getLifePattern())
@@ -58,6 +64,7 @@ public class FindMatchingPostsData {
                 .dDay(ChronoUnit.DAYS.between(LocalDate.now(), matchingPost.getDeadline()))
                 .dong(matchingPost.getDongType())
                 .roomSize(matchingPost.getRoomSizeType())
+                .targetNumberOfPeople(matchingPost.getTargetNumberOfPeople())
                 .matchingStatus(matchingPost.getMatchingStatus())
                 .createdAt(matchingPost.getCreatedAt())
                 .build();

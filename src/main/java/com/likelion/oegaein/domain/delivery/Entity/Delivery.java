@@ -1,14 +1,10 @@
 package com.likelion.oegaein.domain.delivery.Entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import com.likelion.oegaein.domain.member.entity.member.Member;
+import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -21,34 +17,35 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.context.event.EventListener;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Delivery {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String restaurantName;
-    private String locate;
-    private int maxApplicants;
-    private int nowApplicants;
-    private LocalDateTime deadLine;
-    private String content;
-    private String restaurantImageUrl;
-    public boolean heart;
-
-    @CreationTimestamp
+    private String title;
+    private String address;
+    @Enumerated(value = EnumType.STRING)
+    private FoodType foodType;
+    private String foodImageUrl;
+    private int targetNumberOfPeople; // 목표 인원수
+    private LocalDate deadLine; // 마감 기한
+    private String content; // 상세 내용
+    @CreatedDate
     private LocalDateTime createdAt;
-    @UpdateTimestamp
+    @LastModifiedDate
     private LocalDateTime updatedAt;
-
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "together_delivery_id")
-    private TogetherDelivery togetherDelivery;
-
+    private Member author;
 }

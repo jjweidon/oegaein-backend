@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DeliveryBasicResponse {
+public class FindDeliveryPostsResponse {
     private Long id;
     private String restaurantName;
     private int nowApplicants;
