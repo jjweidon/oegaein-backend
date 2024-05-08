@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Likey, Long> {
     Optional<List<Likey>> findBySender(Member sender);
-    Optional<Likey> findBySenderReceiver(Member sender, Member receiver);
+    Optional<Likey> findBySenderAndReceiver(Member sender, Member receiver);
 }

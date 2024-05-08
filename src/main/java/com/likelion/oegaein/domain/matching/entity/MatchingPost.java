@@ -11,6 +11,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +24,7 @@ import java.util.List;
 @Getter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class MatchingPost {
     @Id @GeneratedValue
     @Column(name = "matching_post_id")
@@ -38,9 +42,9 @@ public class MatchingPost {
 
     private LocalDate deadline;
 
-    @CreationTimestamp
+    @CreatedDate
     private LocalDateTime createdAt;
-    @UpdateTimestamp
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)

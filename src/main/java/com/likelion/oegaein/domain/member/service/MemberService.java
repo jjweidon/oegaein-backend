@@ -111,7 +111,7 @@ public class MemberService {
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
         Member receiver = memberRepository.findById(form.getReceiver())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiver()));
-        Likey likey = likeRepository.findBySenderReceiver(sender, receiver)
+        Likey likey = likeRepository.findBySenderAndReceiver(sender, receiver)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Likey"));
         likeRepository.delete(likey);
         return new DeleteLikeResponse(likey.getId());
