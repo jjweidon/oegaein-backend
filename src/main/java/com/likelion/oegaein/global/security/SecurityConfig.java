@@ -42,14 +42,14 @@ public class SecurityConfig {
         http.authorizeHttpRequests((configure) -> {
             configure.requestMatchers("/api/v1/**").permitAll(); // 임시 모두 허용
             configure.requestMatchers("/h2-console/**").permitAll();
-            configure.anyRequest().authenticated();
+            configure.anyRequest().permitAll();
         });
         http.logout(httpSecurityLogoutConfigurer -> {
             httpSecurityLogoutConfigurer.logoutUrl("/api/v1/member/logout");
             httpSecurityLogoutConfigurer.logoutSuccessHandler((request, response, authentication) -> {
                response.sendRedirect("http://127.0.0.1:3000");
             });
-            httpSecurityLogoutConfigurer.deleteCookies("refresh_token");
+            httpSecurityLogoutConfigurer.deleteCookies("refreshToken");
         });
         http.addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationExceptionHandlerFilter(), JwtAuthenticationFilter.class);
@@ -61,10 +61,10 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         // cors 설정
+        config.setAllowedOriginPatterns(List.of("http://127.0.0.1:3000", "http://localhost:3000"));
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedHeaders(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "HEAD", "OPTIONS"));
         // source -> config 적용
         source.registerCorsConfiguration("/**", config);
         return source;

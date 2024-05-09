@@ -14,6 +14,7 @@ import com.likelion.oegaein.domain.member.validation.BlockValidator;
 import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,8 @@ public class MatchingPostService {
             Member member = memberRepository.findByEmail(authentication.getName())
                     .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
             List<Long> blackList = getBlackList(member);
-            matchingPosts = matchingPostQueryRepository.findAllExceptBlockedMember(blackList);
+            if(blackList.isEmpty()) matchingPosts = matchingPostRepository.findAll();
+            else matchingPosts = matchingPostQueryRepository.findAllExceptBlockedMember(blackList);
         }else{
             matchingPosts = matchingPostRepository.findAll();
         }
