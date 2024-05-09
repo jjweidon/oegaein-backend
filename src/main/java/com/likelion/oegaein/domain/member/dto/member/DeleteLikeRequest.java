@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class DeleteLikeRequest {
-    @JsonProperty("receiver")
-    private Long receiver;
+    @JsonProperty("receiver_id")
+    private Long receiverId;
 }

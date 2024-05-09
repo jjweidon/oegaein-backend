@@ -95,8 +95,8 @@ public class MemberService {
     public CreateLikeResponse createLikeMember(Authentication authentication, CreateLikeRequest form) {
         Member sender  = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
-        Member receiver = memberRepository.findById(form.getReceiver())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiver()));
+        Member receiver = memberRepository.findById(form.getReceiverId())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiverId()));
         Likey likey = Likey.builder()
                 .sender(sender)
                 .receiver(receiver)
@@ -109,9 +109,9 @@ public class MemberService {
     public DeleteLikeResponse deleteLikeMember(Authentication authentication, DeleteLikeRequest form) {
         Member sender  = memberRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
-        Member receiver = memberRepository.findById(form.getReceiver())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiver()));
-        Likey likey = likeRepository.findBySenderAndReceiver(sender, receiver)
+        Member receiver = memberRepository.findById(form.getReceiverId())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiverId()));
+        Likey likey = likeRepository.findBySenderReceiver(sender, receiver)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Likey"));
         likeRepository.delete(likey);
         return new DeleteLikeResponse(likey.getId());

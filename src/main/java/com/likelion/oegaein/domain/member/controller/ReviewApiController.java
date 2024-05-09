@@ -1,6 +1,7 @@
 package com.likelion.oegaein.domain.member.controller;
 
 import com.likelion.oegaein.domain.member.dto.review.*;
+import com.likelion.oegaein.domain.member.service.ProfileService;
 import com.likelion.oegaein.domain.member.service.ReviewService;
 import com.likelion.oegaein.global.dto.ResponseDto;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ReviewApiController {
     private final ReviewService reviewService;
+    private final ProfileService profileService;
+
     @GetMapping("api/v1/{memberId}/reviews") // 멤버의 전체 리뷰 조희
     public ResponseEntity<ResponseDto> getReviews(@PathVariable("memberId") Long memberId) {
         log.info("Request to get reviews");

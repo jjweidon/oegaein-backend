@@ -20,6 +20,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MemberRepository memberRepository;
 
+    private final ProfileService profileService;
+
     public FindReviewResponse findReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Review: " + reviewId));
@@ -52,27 +54,27 @@ public class ReviewService {
                 .receiver(receiver)
                 .build();
         reviewRepository.save(review);
+        profileService.setAverageScore(receiver);
 
         return new CreateReviewResponse(review.getId());
     }
 
-    public UpdateReviewResponse updateReview(Authentication authentication, Long reviewId, UpdateReviewRequest form) {
-        Member writer = findAuthenticatedMember(authentication);
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Review: " + reviewId));
-        review.update(form);
-
-        return new UpdateReviewResponse(review.getId());
-    }
-
-    public DeleteReviewResponse removeReview(Authentication authentication, Long reviewId) {
-        Member writer = findAuthenticatedMember(authentication);
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Review: " + reviewId));
-        reviewRepository.delete(review);
-
-        return new DeleteReviewResponse(reviewId);
-    }
+//    public UpdateReviewResponse updateReview(Authentication authentication, Long reviewId, UpdateReviewRequest form) {
+//        Member writer = findAuthenticatedMember(authentication);
+//        Review review = reviewRepository.findById(reviewId)
+//                .orElseThrow(() -> new EntityNotFoundException("Not Found Review: " + reviewId));
+//        review.set(form);
+//        return new UpdateReviewResponse(review.getId());
+//    }
+//
+//    public DeleteReviewResponse removeReview(Authentication authentication, Long reviewId) {
+//        Member writer = findAuthenticatedMember(authentication);
+//        Review review = reviewRepository.findById(reviewId)
+//                .orElseThrow(() -> new EntityNotFoundException("Not Found Review: " + reviewId));
+//        reviewRepository.delete(review);
+//
+//        return new DeleteReviewResponse(reviewId);
+//    }
 
     private Member findAuthenticatedMember(Authentication authentication) {
         return memberRepository.findByEmail(authentication.getName())

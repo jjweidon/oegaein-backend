@@ -45,11 +45,13 @@ public class Profile {
     @Size(max = 20)
     private String introduction;
     @Setter
+    private double score;
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public void update(UpdateProfileRequest request) {
+    public void set(UpdateProfileRequest request) {
         this.name = request.getName();
         this.gender = request.getGender();
         this.studentNo = request.getStudentNo();
