@@ -153,13 +153,30 @@ public class MatchingPostService {
         return new FindBestRoomMateMatchingPostsResponse(bestRoomMateMatchingPostsData);
     }
 
-    public FindDeadlineImminentMatchingPostsResponse findDeadlineImminentMatchingPosts(){
+    public FindDeadlineImminentMatchingPostsResponse findDeadlineImminentMatchingPosts(Authentication authentication){
+        // find matchingPosts
+        List<MatchingPost> findMatchingPosts;
         LocalDateTime currentDate = LocalDateTime.now();
         LocalDateTime beforeOneDayDate = LocalDateTime.now().plusDays(1);
-        List<MatchingPost> findMatchingPosts = matchingPostQueryRepository.findMatchingPostsBetweenTwoDates(
-                beforeOneDayDate,
-                currentDate
-        );
+        if (authentication != null){ // find member except black list members
+            Member member = memberRepository.findByEmail(authentication.getName())
+                    .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+            List<Long> blackList = getBlackList(member);
+            if(blackList.isEmpty()) findMatchingPosts = matchingPostQueryRepository.findMatchingPostsBetweenTwoDates(
+                    beforeOneDayDate,
+                    currentDate
+            );
+            else findMatchingPosts = matchingPostQueryRepository.findMatchingPostsBetweenTwoDatesExceptBlockedMember(
+                    beforeOneDayDate,
+                    currentDate,
+                    blackList
+            );
+        }else{
+            findMatchingPosts = matchingPostQueryRepository.findMatchingPostsBetweenTwoDates(
+                    beforeOneDayDate,
+                    currentDate
+            );
+        }
         List<FindDeadlineImminentMatchingPostsData> deadlineImminentMatchingPostsData = findMatchingPosts.stream()
                 .map(FindDeadlineImminentMatchingPostsData::toFindDeadlineImminentMatchingPostsData)
                 .toList();

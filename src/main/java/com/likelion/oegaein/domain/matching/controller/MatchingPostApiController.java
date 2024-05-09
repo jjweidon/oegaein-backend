@@ -69,9 +69,9 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/deadline-imminent-matchingposts")
-    public ResponseEntity<ResponseDto> getDeadlineImminentMatchingPosts(){
+    public ResponseEntity<ResponseDto> getDeadlineImminentMatchingPosts(Authentication authentication){
         log.info("Request to get deadline-imminent matching posts");
-        FindDeadlineImminentMatchingPostsResponse response = matchingPostService.findDeadlineImminentMatchingPosts();
+        FindDeadlineImminentMatchingPostsResponse response = matchingPostService.findDeadlineImminentMatchingPosts(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

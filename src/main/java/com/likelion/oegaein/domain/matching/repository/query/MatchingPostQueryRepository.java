@@ -84,4 +84,20 @@ public class MatchingPostQueryRepository {
                 .setParameter("blockedmemberids", blockedMemberIds)
                 .getResultList();
     }
+
+    public List<MatchingPost> findMatchingPostsBetweenTwoDatesExceptBlockedMember(LocalDateTime fromDate, LocalDateTime toDate, List<Long> blockedMemberIds){
+        String jpql = "select mp from MatchingPost mp" +
+                " join fetch mp.author mpa" +
+                " join fetch mpa.profile mpap" +
+                " where mp.deadline between :fromDate and :toDate" +
+                " and mp.matchingStatus = :matchingPostStatus" +
+                " and mpa.id not in :blockedmemberids" +
+                " order by mp.createdAt asc";
+        return em.createQuery(jpql, MatchingPost.class)
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .setParameter("matchingPostStatus", MatchingStatus.WAITING)
+                .setParameter("blockedmemberids", blockedMemberIds)
+                .getResultList();
+    }
 }
