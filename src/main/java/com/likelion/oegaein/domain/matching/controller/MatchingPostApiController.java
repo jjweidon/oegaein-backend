@@ -62,9 +62,9 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/best-roommate-matchingposts")
-    public ResponseEntity<ResponseDto> getBestRoomMateMatchingPosts(){
+    public ResponseEntity<ResponseDto> getBestRoomMateMatchingPosts(Authentication authentication){
         log.info("Request to get best-roommate matching posts");
-        FindBestRoomMateMatchingPostsResponse response = matchingPostService.findBestRoomMateMatchingPosts();
+        FindBestRoomMateMatchingPostsResponse response = matchingPostService.findBestRoomMateMatchingPosts(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

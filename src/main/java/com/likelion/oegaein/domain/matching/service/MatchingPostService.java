@@ -135,8 +135,18 @@ public class MatchingPostService {
     }
 
     // 베스트 룸메이트 매칭글 조회
-    public FindBestRoomMateMatchingPostsResponse findBestRoomMateMatchingPosts(){
-        List<MatchingPost> findMatchingPosts = matchingPostQueryRepository.findBestRoomMateMatchingPosts();
+    public FindBestRoomMateMatchingPostsResponse findBestRoomMateMatchingPosts(Authentication authentication){
+        // find matchingPosts
+        List<MatchingPost> findMatchingPosts;
+        if (authentication != null){ // find member except black list members
+            Member member = memberRepository.findByEmail(authentication.getName())
+                    .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+            List<Long> blackList = getBlackList(member);
+            if(blackList.isEmpty()) findMatchingPosts = matchingPostQueryRepository.findBestRoomMateMatchingPosts();
+            else findMatchingPosts = matchingPostQueryRepository.findBestRoomMateMatchingPostsExceptBlockedMember(blackList);
+        }else{
+            findMatchingPosts = matchingPostQueryRepository.findBestRoomMateMatchingPosts();
+        }
         List<FindBestRoomMateMatchingPostsData> bestRoomMateMatchingPostsData = findMatchingPosts.stream()
                 .map(FindBestRoomMateMatchingPostsData::toFindBestRoomMateMatchingPostData)
                 .toList();
