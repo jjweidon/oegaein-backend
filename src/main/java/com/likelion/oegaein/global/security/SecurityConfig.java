@@ -64,6 +64,7 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of("http://127.0.0.1:3000", "http://localhost:3000"));
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
+        config.addExposedHeader("Set-Cookie");
         config.setAllowCredentials(true);
         // source -> config 적용
         source.registerCorsConfiguration("/**", config);
