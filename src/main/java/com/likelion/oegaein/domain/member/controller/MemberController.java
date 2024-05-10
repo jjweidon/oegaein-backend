@@ -26,13 +26,6 @@ public class MemberController {
         try {
             log.info("Request to login google oauth2");
             GoogleOauthLoginResponse response = memberService.googleLogin(code);
-            ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", response.getAccessToken())
-                    .httpOnly(true)
-                    .maxAge(60*60*24)
-                    .sameSite("None")
-                    .secure(true)
-                    .path("/")
-                    .build();
             ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", response.getRefreshToken())
                     .httpOnly(true)
                     .maxAge(60*60*24)
@@ -41,7 +34,7 @@ public class MemberController {
                     .path("/")
                     .build();
             return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString(), refreshTokenCookie.toString())
+                    .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
                     .body(response);
         }catch (JsonProcessingException e){
             log.error("JsonProcessingException");

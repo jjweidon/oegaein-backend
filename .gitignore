@@ -42,3 +42,4 @@ src/test/resources/application.yaml
 
 chromedriver
 LICENSE.chromedriver
+keystore.p12
