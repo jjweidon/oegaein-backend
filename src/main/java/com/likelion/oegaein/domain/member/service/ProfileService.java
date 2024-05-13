@@ -109,6 +109,12 @@ public class ProfileService {
         return FindProfileResponse.of(profile);
     }
 
+    public FindMyProfileResponse findMyProfile(Authentication authentication){
+        Member loginMember = findAuthenticatedMember(authentication);
+        Profile profile = loginMember.getProfile();
+        return FindMyProfileResponse.of(profile);
+    }
+
     // 유효 닉네임 검사
     private void isValidName(String name) {
         Optional<Profile> member = profileRepository.findByName(name);

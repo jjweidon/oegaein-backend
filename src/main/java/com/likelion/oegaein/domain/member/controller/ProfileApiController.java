@@ -15,22 +15,28 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProfileApiController {
     private final ProfileService profileService;
+    @GetMapping("/api/v1/member/my-profile")
+    public ResponseEntity<ResponseDto> getMyProfile(Authentication authentication){
+        log.info("Request to get my profile");
+        FindMyProfileResponse response = profileService.findMyProfile(authentication);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
-    @GetMapping("api/v1/member/profile/{memberId}")
+    @GetMapping("/api/v1/member/profile/{memberId}")
     public ResponseEntity<ResponseDto> getProfile(Authentication authentication, @PathVariable("memberId") Long memberId) {
         log.info("Request to get profile by member id-{}", memberId);
         FindProfileResponse response = profileService.findProfile(authentication, memberId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("api/v1/member/profile")
+    @PostMapping("/api/v1/member/profile")
     public ResponseEntity<ResponseDto> postProfile(Authentication authentication, @RequestBody CreateProfileRequest dto){
         log.info("Request to post profile");
         CreateProfileResponse response = profileService.createProfile(authentication, dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("api/v1/member/profile")
+    @PutMapping("/api/v1/member/profile")
     public ResponseEntity<ResponseDto> putProfile(Authentication authentication, @RequestBody UpdateProfileRequest dto){
         log.info("Request to put profile");
         UpdateProfileResponse response = profileService.updateProfile(authentication, dto);

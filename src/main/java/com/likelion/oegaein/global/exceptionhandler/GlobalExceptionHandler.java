@@ -122,5 +122,13 @@ public class GlobalExceptionHandler {
     }
 
     // global exception
-//
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception ex){
+        Map<String, String> errors = new HashMap<>();
+        errors.put(COMMON_ERR_MSG_KEY, ex.getMessage());
+        final ErrorResponseDto errorResponse = ErrorResponseDto.builder()
+                .errorMessages(errors)
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
