@@ -1,5 +1,7 @@
 package com.likelion.oegaein.domain.member.controller;
 
+import com.likelion.oegaein.domain.member.dto.member.CheckDuplicateNameRequest;
+import com.likelion.oegaein.domain.member.dto.member.CheckDuplicateNameResponse;
 import com.likelion.oegaein.domain.member.dto.profile.*;
 import com.likelion.oegaein.domain.member.service.ProfileService;
 import com.likelion.oegaein.global.dto.ResponseDto;
@@ -34,6 +36,13 @@ public class ProfileApiController {
     public ResponseEntity<ResponseDto> putProfile(Authentication authentication, @RequestBody UpdateProfileRequest dto){
         log.info("Request to put profile");
         UpdateProfileResponse response = profileService.updateProfile(authentication, dto);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("api/v1/member/nickname/duplicate")
+    public ResponseEntity<ResponseDto> checkDuplicateName(@RequestBody CheckDuplicateNameRequest dto) {
+        log.info("Request to check duplicate name");
+        CheckDuplicateNameResponse response = profileService.isValidName(dto.getNickname());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

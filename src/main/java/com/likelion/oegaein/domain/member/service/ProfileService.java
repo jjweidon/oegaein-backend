@@ -1,5 +1,6 @@
 package com.likelion.oegaein.domain.member.service;
 
+import com.likelion.oegaein.domain.member.dto.member.CheckDuplicateNameResponse;
 import com.likelion.oegaein.domain.member.dto.profile.*;
 import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
@@ -110,10 +111,13 @@ public class ProfileService {
     }
 
     // 유효 닉네임 검사
-    private void isValidName(String name) {
-        Optional<Profile> member = profileRepository.findByName(name);
+    public CheckDuplicateNameResponse isValidName(String nickname) {
+        Optional<Profile> member = profileRepository.findByName(nickname);
         if (member.isPresent()) {
-            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+            return new CheckDuplicateNameResponse(true);
+        }
+        else {
+            return new CheckDuplicateNameResponse(false);
         }
     }
 
