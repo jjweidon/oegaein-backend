@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @Getter
 @Builder
@@ -22,11 +23,14 @@ public class FindDeadlineImminentMatchingPostsData {
     private int studentNo; // studentNo
     private String name; // name
     private Gender gender; // gender
+    private String photoUrl; // profile photo
+    private Date birthdate;
     private Long matchingPostId; // matchingPost ID
     private String title; // Title
     private Long dDay; // D-day
     private DongType dong; // dorm dong
     private RoomSizeType roomSize; // dorm roomSize
+    private int targetNumberOfPeople; // 모집 인원
     private MatchingStatus matchingStatus; // matching status
     private LocalDateTime createdAt;
 
@@ -37,11 +41,14 @@ public class FindDeadlineImminentMatchingPostsData {
                 .studentNo(profile.getStudentNo())
                 .name(profile.getName())
                 .gender(profile.getGender())
+                .photoUrl(matchingPost.getAuthor().getPhotoUrl())
+                .birthdate(profile.getBirthdate())
                 .matchingPostId(matchingPost.getId())
                 .title(matchingPost.getTitle())
                 .dDay(ChronoUnit.DAYS.between(LocalDate.now(), matchingPost.getDeadline()))
                 .dong(matchingPost.getDongType())
                 .roomSize(matchingPost.getRoomSizeType())
+                .targetNumberOfPeople(matchingPost.getTargetNumberOfPeople())
                 .matchingStatus(matchingPost.getMatchingStatus())
                 .createdAt(matchingPost.getCreatedAt())
                 .build();
