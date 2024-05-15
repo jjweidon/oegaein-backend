@@ -27,8 +27,8 @@ public class ProfileService {
     private final BlockRepository blockRepository;
     private final ReviewRepository reviewRepository;
 
-    public CreateProfileResponse createProfile(String authentication, CreateProfileRequest form) {
-        Member loginMember = findAuthenticatedMember(authentication);
+    public CreateProfileResponse createProfile(String email, CreateProfileRequest form) {
+        Member loginMember = findAuthenticatedMember(email);
         
         // 닉네임 중복 확인
         isValidName(form.getName());
