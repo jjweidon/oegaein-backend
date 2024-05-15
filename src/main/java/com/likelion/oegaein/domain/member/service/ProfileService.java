@@ -112,8 +112,8 @@ public class ProfileService {
         return FindProfileResponse.of(profile);
     }
 
-    public FindMyProfileResponse findMyProfile(Authentication authentication){
-        Member loginMember = findAuthenticatedMember(authentication);
+    public FindMyProfileResponse findMyProfile(String email){
+        Member loginMember = findAuthenticatedMember(email);
         Profile profile = loginMember.getProfile();
         return FindMyProfileResponse.of(profile);
     }

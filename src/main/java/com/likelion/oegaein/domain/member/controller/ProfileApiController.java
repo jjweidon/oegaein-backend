@@ -20,7 +20,7 @@ public class ProfileApiController {
     @GetMapping("/api/v1/member/my-profile")
     public ResponseEntity<ResponseDto> getMyProfile(Authentication authentication){
         log.info("Request to get my profile");
-        FindMyProfileResponse response = profileService.findMyProfile(authentication);
+        FindMyProfileResponse response = profileService.findMyProfile(authentication.getName());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
