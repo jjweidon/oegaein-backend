@@ -6,6 +6,7 @@ import com.likelion.oegaein.domain.member.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -40,16 +41,49 @@ public class SecurityConfig {
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // authentication 관련 설정
         http.authorizeHttpRequests((configure) -> {
-            configure.requestMatchers("/api/v1/**").permitAll(); // 임시 모두 허용
-            configure.requestMatchers("/h2-console/**").permitAll();
-            configure.anyRequest().authenticated();
+            // ALL 인증
+            configure.requestMatchers("/api/v1/roommate-alarms**").authenticated();
+            configure.requestMatchers("/api/v1/delivery-alarms**").authenticated();
+            configure.requestMatchers("/api/v1/comments**").authenticated();
+            configure.requestMatchers("/api/v1/replies**").authenticated();
+            configure.requestMatchers("/api/v1/member/like**").authenticated();
+            configure.requestMatchers("/api/v1/member/block**").authenticated();
+            // GET 인증
+            configure.requestMatchers(HttpMethod.GET,
+                    "/api/v1/my-matchingposts**",
+                    "/api/v1/my-matchingrequests**",
+                    "/api/v1/come-matchingrequests**",
+                    "/api/v1/member/my-profile**"
+            ).authenticated();
+            // POST 인증
+            configure.requestMatchers(HttpMethod.POST,
+                    "/api/v1/matchingposts**",
+                    "/api/v1/matchingrequests**",
+                    "/api/v1/member/block**",
+                    "/api/v1/member/profile**"
+            ).authenticated();
+            // PUT 인증
+            configure.requestMatchers(HttpMethod.PUT,
+                    "/api/v1/matchingposts**",
+                    "/api/v1/member/profile**"
+            ).authenticated();
+            // PATCH 인증
+            configure.requestMatchers(HttpMethod.PATCH,
+                "/api/v1/matchingrequests**"
+            ).authenticated();
+            // DELETE 인증
+            configure.requestMatchers(HttpMethod.DELETE,
+                    "/api/v1/matchingposts**",
+                    "/api/v1/matchingrequests**"
+            ).authenticated();
+            configure.anyRequest().permitAll();
         });
         http.logout(httpSecurityLogoutConfigurer -> {
             httpSecurityLogoutConfigurer.logoutUrl("/api/v1/member/logout");
             httpSecurityLogoutConfigurer.logoutSuccessHandler((request, response, authentication) -> {
                response.sendRedirect("http://127.0.0.1:3000");
             });
-            httpSecurityLogoutConfigurer.deleteCookies("refresh_token");
+            httpSecurityLogoutConfigurer.deleteCookies("refreshToken");
         });
         http.addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationExceptionHandlerFilter(), JwtAuthenticationFilter.class);
@@ -61,10 +95,11 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         // cors 설정
+        config.setAllowedOriginPatterns(List.of("http://127.0.0.1:3000", "http://localhost:3000"));
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        config.addExposedHeader("Set-Cookie");
         config.setAllowCredentials(true);
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedHeaders(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "HEAD", "OPTIONS"));
         // source -> config 적용
         source.registerCorsConfiguration("/**", config);
         return source;

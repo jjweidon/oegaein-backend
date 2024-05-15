@@ -62,16 +62,16 @@ public class MatchingPostApiController {
     }
 
     @GetMapping("/api/v1/best-roommate-matchingposts")
-    public ResponseEntity<ResponseDto> getBestRoomMateMatchingPosts(){
+    public ResponseEntity<ResponseDto> getBestRoomMateMatchingPosts(Authentication authentication){
         log.info("Request to get best-roommate matching posts");
-        FindBestRoomMateMatchingPostsResponse response = matchingPostService.findBestRoomMateMatchingPosts();
+        FindBestRoomMateMatchingPostsResponse response = matchingPostService.findBestRoomMateMatchingPosts(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/api/v1/deadline-imminent-matchingposts")
-    public ResponseEntity<ResponseDto> getDeadlineImminentMatchingPosts(){
+    public ResponseEntity<ResponseDto> getDeadlineImminentMatchingPosts(Authentication authentication){
         log.info("Request to get deadline-imminent matching posts");
-        FindDeadlineImminentMatchingPostsResponse response = matchingPostService.findDeadlineImminentMatchingPosts();
+        FindDeadlineImminentMatchingPostsResponse response = matchingPostService.findDeadlineImminentMatchingPosts(authentication);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
