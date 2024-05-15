@@ -39,6 +39,7 @@ out/
 ### Project ###
 src/main/resources/application.yaml
 src/test/resources/application.yaml
+!**/src/main/resources/keystore.p12
 
 chromedriver
 LICENSE.chromedriver

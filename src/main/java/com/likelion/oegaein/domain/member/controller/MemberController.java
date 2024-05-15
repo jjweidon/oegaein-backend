@@ -26,16 +26,20 @@ public class MemberController {
         try {
             log.info("Request to login google oauth2");
             GoogleOauthLoginResponse response = memberService.googleLogin(code);
-            ResponseCookie responseCookie = ResponseCookie.from("refreshToken", response.getRefreshToken())
+            ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", response.getRefreshToken())
                     .httpOnly(true)
                     .maxAge(60*60*24)
+                    .sameSite("None")
+                    .secure(true)
                     .path("/")
                     .build();
             return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
                     .body(response);
         }catch (JsonProcessingException e){
             log.error("JsonProcessingException");
+
+
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

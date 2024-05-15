@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchingPostQueryRepository {
     private final EntityManager em; // 엔티티 매니저
-    private final int STANDARD_RATE = 70; // 베스트 룸메이트 기준
+    private final int STANDARD_RATE = 4; // 베스트 룸메이트 기준
 
     public List<MatchingPost> findByMember(Member member){
         String jpql = "select distinct mp from MatchingPost mp"
@@ -28,8 +28,8 @@ public class MatchingPostQueryRepository {
         String jpql = "select mp from MatchingPost mp" +
                 " join fetch mp.author mpa" +
                 " join fetch mpa.profile mpap" +
-                " where mpap.rate >= :standardRate" +
-                " order by mpap.rate desc";
+                " where mpap.score >= :standardRate" +
+                " order by mpap.score desc";
         return em.createQuery(jpql, MatchingPost.class)
                 .setParameter("standardRate", STANDARD_RATE)
                 .getResultList();
@@ -68,6 +68,35 @@ public class MatchingPostQueryRepository {
                 " where mpa.id not in :blockedmemberids" +
                 " order by mp.createdAt desc";
         return em.createQuery(jpql, MatchingPost.class)
+                .setParameter("blockedmemberids", blockedMemberIds)
+                .getResultList();
+    }
+
+    public List<MatchingPost> findBestRoomMateMatchingPostsExceptBlockedMember(List<Long> blockedMemberIds){
+        String jpql = "select mp from MatchingPost mp" +
+                " join fetch mp.author mpa" +
+                " join fetch mpa.profile mpap" +
+                " where mpap.score >= :standardRate" +
+                " and mpa.id not in :blockedmemberids" +
+                " order by mpap.score desc";
+        return em.createQuery(jpql, MatchingPost.class)
+                .setParameter("standardRate", STANDARD_RATE)
+                .setParameter("blockedmemberids", blockedMemberIds)
+                .getResultList();
+    }
+
+    public List<MatchingPost> findMatchingPostsBetweenTwoDatesExceptBlockedMember(LocalDateTime fromDate, LocalDateTime toDate, List<Long> blockedMemberIds){
+        String jpql = "select mp from MatchingPost mp" +
+                " join fetch mp.author mpa" +
+                " join fetch mpa.profile mpap" +
+                " where mp.deadline between :fromDate and :toDate" +
+                " and mp.matchingStatus = :matchingPostStatus" +
+                " and mpa.id not in :blockedmemberids" +
+                " order by mp.createdAt asc";
+        return em.createQuery(jpql, MatchingPost.class)
+                .setParameter("fromDate", fromDate)
+                .setParameter("toDate", toDate)
+                .setParameter("matchingPostStatus", MatchingStatus.WAITING)
                 .setParameter("blockedmemberids", blockedMemberIds)
                 .getResultList();
     }
