@@ -24,28 +24,28 @@ public class ProfileApiController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("api/v1/member/profile/{memberId}")
+    @GetMapping("/api/v1/member/profile/{memberId}")
     public ResponseEntity<ResponseDto> getProfile(Authentication authentication, @PathVariable("memberId") Long memberId) {
         log.info("Request to get profile by member id-{}", memberId);
         FindProfileResponse response = profileService.findProfile(authentication.getName(), memberId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("api/v1/member/profile")
+    @PostMapping("/api/v1/member/profile")
     public ResponseEntity<ResponseDto> postProfile(Authentication authentication, @RequestBody CreateProfileRequest dto){
         log.info("Request to post profile");
         CreateProfileResponse response = profileService.createProfile(authentication.getName(), dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("api/v1/member/profile")
+    @PutMapping("/api/v1/member/profile")
     public ResponseEntity<ResponseDto> putProfile(Authentication authentication, @RequestBody UpdateProfileRequest dto){
         log.info("Request to put profile");
         UpdateProfileResponse response = profileService.updateProfile(authentication.getName(), dto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("api/v1/member/nickname/duplicate")
+    @GetMapping("/api/v1/member/nickname/duplicate")
     public ResponseEntity<ResponseDto> checkDuplicateName(@RequestBody CheckDuplicateNameRequest dto) {
         log.info("Request to check duplicate name");
         CheckDuplicateNameResponse response = profileService.isValidName(dto.getNickname());
