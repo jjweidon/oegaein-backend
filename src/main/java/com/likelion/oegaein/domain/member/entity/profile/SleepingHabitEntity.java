@@ -1,8 +1,10 @@
 package com.likelion.oegaein.domain.member.entity.profile;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter

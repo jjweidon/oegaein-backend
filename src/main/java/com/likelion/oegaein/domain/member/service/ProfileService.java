@@ -10,7 +10,6 @@ import com.likelion.oegaein.domain.member.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +27,7 @@ public class ProfileService {
     private final BlockRepository blockRepository;
     private final ReviewRepository reviewRepository;
 
-    public CreateProfileResponse createProfile(Authentication authentication, CreateProfileRequest form) {
+    public CreateProfileResponse createProfile(String authentication, CreateProfileRequest form) {
         Member loginMember = findAuthenticatedMember(authentication);
         
         // 닉네임 중복 확인
@@ -52,14 +51,14 @@ public class ProfileService {
         profile.setMember(loginMember);
         profileRepository.save(profile);
 
-        // 수면 습관 엔티티 생성
+        // 수면습관 설정
         updateSleepingHabit(form.getSleepingHabit(), profile);
 
         return new CreateProfileResponse(profile.getId());
     }
 
-    public UpdateProfileResponse updateProfile(Authentication authentication, UpdateProfileRequest form) {
-        Member loginMember = findAuthenticatedMember(authentication);// 사용자 찾기
+    public UpdateProfileResponse updateProfile(String email, UpdateProfileRequest form) {
+        Member loginMember = findAuthenticatedMember(email);// 사용자 찾기
 
         // 닉네임이 바뀌었으면 중복 확인
         if (!loginMember.getProfile().getName().equals(form.getName())) {
@@ -74,7 +73,7 @@ public class ProfileService {
         profile.set(form);
         loginMember.setPhotoUrl(form.getPhotoUrl());
 
-        // 수면 습관 업데이트
+        // 수면습관 업데이트
         updateSleepingHabit(form.getSleepingHabit(), profile);
 
         return new UpdateProfileResponse(profile.getId());
@@ -82,23 +81,26 @@ public class ProfileService {
 
     public void updateSleepingHabit(List<SleepingHabit> newSleepingHabits, Profile profile) {
         // 기존 내용 delete
-        List<SleepingHabitEntity> findSleepingHabitEntities = sleepingHabitRepository.findAllByProfile(profile);
-        for (SleepingHabitEntity sleepingHabitEntity : findSleepingHabitEntities) {
-            sleepingHabitRepository.delete(sleepingHabitEntity);
-        }
+        Optional<List<SleepingHabitEntity>> findSleepingHabitEntities = sleepingHabitRepository.findAllByProfile(profile);
+        findSleepingHabitEntities.ifPresent(sleepingHabitEntities -> {
+            for (SleepingHabitEntity sleepingHabitEntity : sleepingHabitEntities) {
+                sleepingHabitRepository.delete(sleepingHabitEntity);
+            }
+        });
 
         // 새로운 내용 생성
-        for (SleepingHabit sleepingHabit : newSleepingHabits) {
-            SleepingHabitEntity sleepingHabitEntity = SleepingHabitEntity.builder()
-                    .sleepingHabit(sleepingHabit)
-                    .profile(profile)
-                    .build();
-            sleepingHabitRepository.save(sleepingHabitEntity);
-        }
+        Optional.ofNullable(newSleepingHabits)
+                .ifPresent(habits -> habits.forEach(habit -> {
+                    SleepingHabitEntity sleepingHabitEntity = SleepingHabitEntity.builder()
+                            .sleepingHabit(habit)
+                            .profile(profile)
+                            .build();
+                    sleepingHabitRepository.save(sleepingHabitEntity);
+                }));
     }
 
-    public FindProfileResponse findProfile(Authentication authentication, Long memberId) {
-        Member loginMember = findAuthenticatedMember(authentication);
+    public FindProfileResponse findProfile(String email, Long memberId) {
+        Member loginMember = findAuthenticatedMember(email);
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + memberId));
 
@@ -136,9 +138,9 @@ public class ProfileService {
     }
 
     // 로그인한 사용자 찾기
-    private Member findAuthenticatedMember(Authentication authentication) {
-        return memberRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
+    private Member findAuthenticatedMember(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + email));
     }
 
     // 전공 추출
