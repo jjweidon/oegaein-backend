@@ -1,39 +1,42 @@
 package com.likelion.oegaein.domain.member.dto.profile;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.likelion.oegaein.domain.member.entity.profile.*;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProfileData {
     private String name;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @JsonProperty("student_no")
     private int studentNo;
     private Date birthdate;
     private Major major;
     private String introduction;
     @Enumerated(EnumType.STRING)
     private Mbti mbti;
-    @JsonProperty("sleeping_habit")
     private List<SleepingHabit> sleepingHabit;
     @Enumerated(EnumType.STRING)
-    @JsonProperty("life_pattern")
     private LifePattern lifePattern;
     @Enumerated(EnumType.STRING)
     private Smoking smoking;
     @Enumerated(EnumType.STRING)
-    @JsonProperty("cleaning_cycle")
     private CleaningCycle cleaningCycle;
     @Enumerated(EnumType.STRING)
     private Outing outing;
     @Enumerated(EnumType.STRING)
-    @JsonProperty("sound_sensitivity")
     private Sensitivity soundSensitivity;
 }

@@ -48,7 +48,7 @@ public class Profile {
     private double score;
     @Setter
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     public void set(UpdateProfileRequest request) {
