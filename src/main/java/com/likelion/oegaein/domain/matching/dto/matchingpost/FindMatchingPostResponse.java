@@ -31,6 +31,7 @@ public class FindMatchingPostResponse implements ResponseDto {
     private LocalDateTime createdAt; // 생성일
     private MatchingStatus matchingStatus; // 매칭 상태
     private FindMatchingPostResInProfile authorProfile; // 작성자 프로필
+    private int commentsCount; // 댓글 개수
     private List<FindCommentData> comments; // 자식 댓글
     private String authorName; // 작성자 이름
 
@@ -39,6 +40,8 @@ public class FindMatchingPostResponse implements ResponseDto {
         FindMatchingPostResInProfile convertedProfile = FindMatchingPostResInProfile.toFindMatchingPostResInProfile(findProfile);
         List<MatchingPostComment> findComments = matchingPost.getComments();
         List<FindCommentData> convertedComments = findComments.stream().map(FindCommentData::toFindCommentData).toList();
+        int calcCommentsCount = convertedComments.size() + convertedComments.stream()
+                .mapToInt((cc) -> cc.getReplies().size()).sum();
         return FindMatchingPostResponse.builder()
                 .id(matchingPost.getId())
                 .title(matchingPost.getTitle())
@@ -50,6 +53,7 @@ public class FindMatchingPostResponse implements ResponseDto {
                 .createdAt(matchingPost.getCreatedAt())
                 .matchingStatus(matchingPost.getMatchingStatus())
                 .authorProfile(convertedProfile)
+                .commentsCount(calcCommentsCount)
                 .comments(convertedComments)
                 .authorName(findProfile.getName())
                 .build();

@@ -1,5 +1,7 @@
 package com.likelion.oegaein.domain.matching.dto.reply;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.likelion.oegaein.domain.matching.entity.MatchingPostReply;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FindReplyData {
     private Long id;
     private String content;

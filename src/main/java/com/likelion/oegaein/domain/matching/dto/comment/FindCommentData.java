@@ -1,5 +1,7 @@
 package com.likelion.oegaein.domain.matching.dto.comment;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.likelion.oegaein.domain.matching.dto.reply.FindReplyData;
 import com.likelion.oegaein.domain.matching.entity.MatchingPostComment;
 import lombok.Builder;
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Builder
 @Getter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FindCommentData {
     private Long id;
     private String content;

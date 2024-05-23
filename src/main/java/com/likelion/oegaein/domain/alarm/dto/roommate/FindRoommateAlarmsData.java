@@ -1,5 +1,7 @@
 package com.likelion.oegaein.domain.alarm.dto.roommate;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarm;
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarmType;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
@@ -10,6 +12,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FindRoommateAlarmsData {
     private Long roommateAlarmId; // 알림 ID
     private String name; // 이름
