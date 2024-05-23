@@ -10,4 +10,5 @@ public class GoogleOauthLoginResponse implements ResponseDto {
     private String email;
     private String accessToken;
     private String refreshToken;
+    private boolean profileSetUpStatus;
 }

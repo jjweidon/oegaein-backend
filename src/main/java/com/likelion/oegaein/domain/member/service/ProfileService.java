@@ -50,7 +50,7 @@ public class ProfileService {
                 .build();
         profile.setMember(loginMember);
         profileRepository.save(profile);
-
+        loginMember.updateProfileSetUpStatus();
         // 수면습관 설정
         updateSleepingHabit(form.getSleepingHabit(), profile);
 

@@ -45,7 +45,7 @@ public class ProfileApiController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/api/v1/member/nickname/duplicate")
+    @PostMapping("/api/v1/member/nickname/duplicate")
     public ResponseEntity<ResponseDto> checkDuplicateName(@RequestBody CheckDuplicateNameRequest dto) {
         log.info("Request to check duplicate name");
         CheckDuplicateNameResponse response = profileService.isValidName(dto.getNickname());

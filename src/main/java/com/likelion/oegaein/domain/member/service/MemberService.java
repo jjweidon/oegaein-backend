@@ -61,6 +61,7 @@ public class MemberService {
             Member newMember = Member.builder()
                     .email(userInfo.getEmail())
                     .photoUrl(userInfo.getPicture())
+                    .profileSetUpStatus(false)
                     .build();
             memberRepository.save(newMember);
             return newMember;
@@ -74,6 +75,7 @@ public class MemberService {
                 .email(member.getEmail())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .profileSetUpStatus(member.getProfileSetUpStatus())
                 .build();
     }
 
@@ -148,6 +150,7 @@ public class MemberService {
         String newAccessToken = jwtUtil.generateAccessToken(member);
         return RenewRefreshTokenResponse.builder()
                 .accessToken(newAccessToken)
+                .profileSetUpStatus(member.getProfileSetUpStatus())
                 .build();
     }
 

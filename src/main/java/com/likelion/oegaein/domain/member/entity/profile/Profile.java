@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Transactional
 public class Profile {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id")
     private Long id;
     @Column(unique = true)

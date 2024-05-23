@@ -13,6 +13,7 @@ public class FindReplyData {
     private String content;
     private Long authorId;
     private String authorName;
+    private String photoUrl;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private Boolean isDeleted;
@@ -23,6 +24,7 @@ public class FindReplyData {
                 .content(reply.getContent())
                 .authorId(reply.getAuthor().getId())
                 .authorName(reply.getAuthor().getProfile().getName())
+                .photoUrl(reply.getAuthor().getPhotoUrl())
                 .createdAt(reply.getCreatedAt())
                 .modifiedAt(reply.getModifiedAt())
                 .isDeleted(reply.getIsDeleted())

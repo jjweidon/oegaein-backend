@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Member {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
     @Column(unique = true)
@@ -37,5 +37,9 @@ public class Member {
 
     public void renewRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
+    }
+
+    public void updateProfileSetUpStatus(){
+        profileSetUpStatus = true;
     }
 }

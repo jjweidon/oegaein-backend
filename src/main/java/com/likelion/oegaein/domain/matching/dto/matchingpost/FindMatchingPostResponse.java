@@ -1,5 +1,7 @@
 package com.likelion.oegaein.domain.matching.dto.matchingpost;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.likelion.oegaein.domain.matching.entity.DongType;
 import com.likelion.oegaein.domain.matching.entity.MatchingPost;
 import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
@@ -17,7 +19,9 @@ import java.util.List;
 
 @Getter
 @Builder
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FindMatchingPostResponse implements ResponseDto {
+    private Long id;
     private String title; // 제목
     private String content; // 내용
     private DongType dong; // 동 타입
@@ -27,6 +31,7 @@ public class FindMatchingPostResponse implements ResponseDto {
     private MatchingStatus matchingStatus; // 매칭 상태
     private FindMatchingPostResInProfile authorProfile; // 작성자 프로필
     private List<FindCommentData> comments; // 자식 댓글
+    private String authorName; // 작성자 이름
 
     public static FindMatchingPostResponse toFindMatchingPostResponse(MatchingPost matchingPost){
         Profile findProfile = matchingPost.getAuthor().getProfile();
@@ -34,6 +39,7 @@ public class FindMatchingPostResponse implements ResponseDto {
         List<MatchingPostComment> findComments = matchingPost.getComments();
         List<FindCommentData> convertedComments = findComments.stream().map(FindCommentData::toFindCommentData).toList();
         return FindMatchingPostResponse.builder()
+                .id(matchingPost.getId())
                 .title(matchingPost.getTitle())
                 .content(matchingPost.getContent())
                 .dong(matchingPost.getDongType())
@@ -43,6 +49,7 @@ public class FindMatchingPostResponse implements ResponseDto {
                 .matchingStatus(matchingPost.getMatchingStatus())
                 .authorProfile(convertedProfile)
                 .comments(convertedComments)
+                .authorName(findProfile.getName())
                 .build();
     }
 }

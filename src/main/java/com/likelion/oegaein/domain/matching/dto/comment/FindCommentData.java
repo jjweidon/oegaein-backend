@@ -15,6 +15,7 @@ public class FindCommentData {
     private String content;
     private Long authorId;
     private String authorName;
+    private String photoUrl;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private Boolean isDeleted;
@@ -28,6 +29,7 @@ public class FindCommentData {
                 .content(comment.getContent())
                 .authorId(comment.getAuthor().getId())
                 .authorName(comment.getAuthor().getProfile().getName())
+                .photoUrl(comment.getAuthor().getPhotoUrl())
                 .createdAt(comment.getCreatedAt())
                 .modifiedAt(comment.getModifiedAt())
                 .isDeleted(comment.getIsDeleted())
