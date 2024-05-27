@@ -10,6 +10,8 @@ import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -20,6 +22,7 @@ public class FindRoommateAlarmsData {
     private RoommateAlarmType roommateAlarmType; // 알림 타입
     private Long matchingPostId; // 매칭글 ID
     private String title; // 매칭글 제목
+    private LocalDateTime createdAt; // 생성일
 
     public static FindRoommateAlarmsData toFindRoommateAlarmsData(RoommateAlarm roommateAlarm){
         Member member = roommateAlarm.getMember();
@@ -32,6 +35,7 @@ public class FindRoommateAlarmsData {
                 .roommateAlarmType(roommateAlarm.getAlarmType())
                 .matchingPostId(matchingPost.getId())
                 .title(matchingPost.getTitle())
+                .createdAt(roommateAlarm.getCreatedAt())
                 .build();
     }
 }
