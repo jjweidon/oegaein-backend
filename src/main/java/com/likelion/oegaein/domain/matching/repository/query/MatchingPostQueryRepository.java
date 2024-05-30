@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -99,5 +100,17 @@ public class MatchingPostQueryRepository {
                 .setParameter("matchingPostStatus", MatchingStatus.WAITING)
                 .setParameter("blockedmemberids", blockedMemberIds)
                 .getResultList();
+    }
+
+    public int updateExpiredMatchingPost(){
+        String jpql = "update MatchingPost mp set mp.matchingStatus = :matchingPostStatus" +
+                " where mp.deadline < :deadlineDate";
+        int resultCount = em.createQuery(jpql)
+                .setParameter("matchingPostStatus", MatchingStatus.EXPIRED)
+                .setParameter("deadlineDate", LocalDate.now())
+                .executeUpdate();
+        em.flush();
+        em.clear();
+        return resultCount;
     }
 }
