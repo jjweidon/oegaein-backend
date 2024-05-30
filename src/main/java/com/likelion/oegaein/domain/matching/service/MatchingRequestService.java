@@ -147,19 +147,10 @@ public class MatchingRequestService {
                 .message(matchingPost.getTitle())
                 .build();
         emailService.sendMail(emailMessage,EMAIL_MATCHING_REQUEST_TYPE);
-        // check matching is completed
-        if(isCompletedMatching(matchingPost)){
-            updateFailedMatchingRequests(matchingPost);
-            updateCompletedMatchingRequests(matchingPost);
-            // generate uuid
-            String chatRoomNo = UUID.randomUUID().toString();
-            // return matchingReqResponse
-            return new CompletedMatchingResponse(
-                    chatRoomNo
-            );
-        }
+        // generate uuid
+        String chatRoomNo = UUID.randomUUID().toString();
         // not completed matching
-        return new AcceptMatchingReqResponse(matchingRequestId);
+        return new AcceptMatchingReqResponse(chatRoomNo);
     }
 
     @Transactional
@@ -194,12 +185,12 @@ public class MatchingRequestService {
     }
 
     // 사용자 정의 메서드
-    private Boolean isCompletedMatching(MatchingPost matchingPost){
-        int targetNumberOfPeople = matchingPost.getTargetNumberOfPeople();
-        int completedMatchingRequest = matchingRequestQueryRepository
-                .countCompletedMatchingRequest(matchingPost);
-        return targetNumberOfPeople == completedMatchingRequest;
-    }
+//    private Boolean isCompletedMatching(MatchingPost matchingPost){
+//        int targetNumberOfPeople = matchingPost.getTargetNumberOfPeople();
+//        int completedMatchingRequest = matchingRequestQueryRepository
+//                .countCompletedMatchingRequest(matchingPost);
+//        return targetNumberOfPeople == completedMatchingRequest;
+//    }
 
     private void updateFailedMatchingRequests(MatchingPost matchingPost){
         // change other requests of status
