@@ -10,5 +10,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AcceptMatchingReqResponse implements ResponseDto {
-    private String chattingRoomId; // 매칭 요청 ID
+    private Long matchingRequestId; // 매칭 요청 ID
 }

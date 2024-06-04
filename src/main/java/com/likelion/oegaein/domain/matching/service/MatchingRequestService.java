@@ -4,6 +4,10 @@ import com.likelion.oegaein.domain.alarm.entity.RoommateAlarm;
 import com.likelion.oegaein.domain.alarm.entity.RoommateAlarmType;
 import com.likelion.oegaein.domain.alarm.repository.RoommateAlarmRepository;
 import com.likelion.oegaein.domain.alarm.repository.query.RoommateAlarmQueryRepository;
+import com.likelion.oegaein.domain.chat.entity.ChatRoom;
+import com.likelion.oegaein.domain.chat.entity.ChatRoomMember;
+import com.likelion.oegaein.domain.chat.repository.ChatRoomMemberRepository;
+import com.likelion.oegaein.domain.chat.repository.ChatRoomRepository;
 import com.likelion.oegaein.domain.email.dto.EmailMessage;
 import com.likelion.oegaein.domain.email.service.EmailService;
 import com.likelion.oegaein.domain.matching.dto.matchingrequest.*;
@@ -20,11 +24,16 @@ import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import com.likelion.oegaein.global.dto.ResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.http.HttpClient;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -43,6 +52,7 @@ public class MatchingRequestService {
     private final String EMAIL_MATCHING_REQUEST_ACCEPT_TYPE = "matchingrequestaccept";
     private final String EMAIL_MATCHING_REQUEST_REJECT_TYPE = "matchingrequestreject";
     private final String EMAIL_MATCHING_COMPLETE_TYPE = "matchingrequestcomplete";
+    private final String CHAT_ROOM_NAME_POSTFIX = " 행성방";
 
     // repository
     private final MatchingRequestRepository matchingRequestRepository;
@@ -51,6 +61,8 @@ public class MatchingRequestService {
     private final MemberRepository memberRepository;
     private final RoommateAlarmRepository roommateAlarmRepository;
     private final RoommateAlarmQueryRepository roommateAlarmQueryRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomMemberRepository chatRoomMemberRepository;
     // service
     private final EmailService emailService;
     // validators
@@ -147,10 +159,17 @@ public class MatchingRequestService {
                 .message(matchingPost.getTitle())
                 .build();
         emailService.sendMail(emailMessage,EMAIL_MATCHING_REQUEST_TYPE);
-        // generate uuid
-        String chatRoomNo = UUID.randomUUID().toString();
-        // not completed matching
-        return new AcceptMatchingReqResponse(chatRoomNo);
+        // check isAlreadyExist ChatRoom
+        Optional<ChatRoom> findChatRoom = chatRoomRepository.findByMatchingPost(matchingPost);
+        if(findChatRoom.isEmpty()){
+            ChatRoom newChatRoom = createChatRoom(matchingPost);
+            createChatRoomMember(authenticatedMember, newChatRoom);
+            createChatRoomMember(matchingRequest.getParticipant(), newChatRoom);
+        } // create chatroom & chatroomMember for owner
+        else{
+            createChatRoomMember(matchingRequest.getParticipant(), findChatRoom.get());
+        }
+        return new AcceptMatchingReqResponse(matchingRequestId);
     }
 
     @Transactional
@@ -184,13 +203,35 @@ public class MatchingRequestService {
         );
     }
 
-    // 사용자 정의 메서드
-//    private Boolean isCompletedMatching(MatchingPost matchingPost){
-//        int targetNumberOfPeople = matchingPost.getTargetNumberOfPeople();
-//        int completedMatchingRequest = matchingRequestQueryRepository
-//                .countCompletedMatchingRequest(matchingPost);
-//        return targetNumberOfPeople == completedMatchingRequest;
-//    }
+    private ChatRoom createChatRoom(MatchingPost matchingPost){ // 채팅방 생성 서버 간 통신
+        // create chat room
+        String chatRoomName = generateChatRoomName(matchingPost.getTitle());
+        ChatRoom chatRoom = ChatRoom.builder()
+                .roomId(UUID.randomUUID().toString())
+                .roomName(chatRoomName)
+                .memberCount(0)
+                .matchingPost(matchingPost)
+                .build();
+        chatRoomRepository.save(chatRoom);
+        return chatRoom;
+    }
+
+    private void createChatRoomMember(Member member, ChatRoom chatRoom){ // 채팅 멤버 생성 서버 간 통신
+        ChatRoomMember newChatRoomMember = ChatRoomMember.builder()
+                .member(member)
+                .chatRoom(chatRoom)
+                .disconnectedAt(LocalDateTime.now())
+                .build();
+        chatRoomMemberRepository.save(newChatRoomMember);
+        chatRoom.upMemberCount();
+    }
+
+    private Boolean isCompletedMatching(MatchingPost matchingPost){
+        int targetNumberOfPeople = matchingPost.getTargetNumberOfPeople();
+        int completedMatchingRequest = matchingRequestQueryRepository
+                .countCompletedMatchingRequest(matchingPost);
+        return targetNumberOfPeople == completedMatchingRequest;
+    }
 
     private void updateFailedMatchingRequests(MatchingPost matchingPost){
         // change other requests of status
@@ -239,5 +280,15 @@ public class MatchingRequestService {
                 .message(fmr.getMatchingPost().getTitle())
                 .build()).toList();
         emailMessages.forEach((emailMessage) -> emailService.sendMail(emailMessage, EMAIL_MATCHING_COMPLETE_TYPE));
+    }
+
+    // custom method
+    private String generateChatRoomName(String matchingPostTitle){
+        int titleLength = matchingPostTitle.length();
+        if(titleLength > 10){
+            String slicedTitle = matchingPostTitle.substring(0, 11);
+            return slicedTitle + "..." + CHAT_ROOM_NAME_POSTFIX;
+        }
+        return matchingPostTitle + CHAT_ROOM_NAME_POSTFIX;
     }
 }
