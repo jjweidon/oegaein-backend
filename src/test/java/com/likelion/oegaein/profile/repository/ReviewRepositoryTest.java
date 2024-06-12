@@ -11,21 +11,21 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class ReviewRepositoryTest {
-
-    @Autowired
-    private ReviewRepository reviewRepository;
-
-    @Test
-    public void ReviewRepository_FindAllByReceiver_ReturnSaveReview() {
-
-        // Arrange
-        Review review = Review.builder()
-
-                .build();
-
-        // Act
-
-        // Assert
-
-    }
+//
+//    @Autowired
+//    private ReviewRepository reviewRepository;
+//
+//    @Test
+//    public void ReviewRepository_FindAllByReceiver_ReturnSaveReview() {
+//
+//        // Arrange
+//        Review review = Review.builder()
+//
+//                .build();
+//
+//        // Act
+//
+//        // Assert
+//
+//    }
 }

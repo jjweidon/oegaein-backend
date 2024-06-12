@@ -54,6 +54,13 @@ public class MatchingPostApiController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PatchMapping("/api/v1/matchingposts/{matchingpostid}")
+    public ResponseEntity<ResponseDto> completeMatchingPost(@PathVariable("matchingpostid") Long matchingPostId, Authentication authentication){
+        log.info("Request to Complete matchingPost-{}", matchingPostId);
+        CompleteMatchingPostResponse response = matchingPostService.completeMatchingPost(matchingPostId, authentication);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/api/v1/my-matchingposts")
     public ResponseEntity<ResponseDto> getMyMatchingPosts(Authentication authentication){
         log.info("Request to get my matching posts");

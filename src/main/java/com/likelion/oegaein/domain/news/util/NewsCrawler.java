@@ -27,7 +27,7 @@ public class NewsCrawler {
     private final NewsService newsService;
     private static final String url = "https://builder.hufs.ac.kr/user/indexSub.action?codyMenuSeq=103803938&siteId=mhdorm3&menuType=T&uId=13&sortChar=A&linkUrl=5_1.html&mainFrame=right";
 
-    @Scheduled(cron = "0 0 0 * * *") // 초 분 시 일 월 년
+    @Scheduled(cron = "0 * * * * *") // 초 분 시 일 월 년
     public void newsCrawling(){
         // webdriver config
         System.setProperty("webdriver.chrome.driver", "/app/chrome/chromedriver");

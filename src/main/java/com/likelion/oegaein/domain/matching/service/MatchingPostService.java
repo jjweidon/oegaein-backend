@@ -121,6 +121,17 @@ public class MatchingPostService {
         return new UpdateMatchingPostResponse(matchingPostId);
     }
 
+    @Transactional
+    public CompleteMatchingPostResponse completeMatchingPost(Long matchingPostId, Authentication authentication){
+        Member authenticatedMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        MatchingPost findMatchingPost = matchingPostRepository.findById(matchingPostId)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_POST_ERR_MSG));
+        memberValidator.validateIsOwnerMatchingPost(authenticatedMember.getId(), findMatchingPost.getAuthor().getId());
+        findMatchingPost.completeMatchingPost();
+        return new CompleteMatchingPostResponse(matchingPostId);
+    }
+
     // 내 매칭글 조회
     public FindMyMatchingPostResponse findMyMatchingPosts(Authentication authentication){
         Member author = memberRepository.findByEmail(authentication.getName())

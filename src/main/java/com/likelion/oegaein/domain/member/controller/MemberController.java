@@ -38,8 +38,6 @@ public class MemberController {
                     .body(response);
         }catch (JsonProcessingException e){
             log.error("JsonProcessingException");
-
-
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

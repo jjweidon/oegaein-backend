@@ -19,8 +19,10 @@ import java.time.temporal.ChronoUnit;
 public class FindBestRoomMateMatchingPostsData {
     private int star; // rate
     private Major major; // major
-    private String studentNo; // studentNo
+    private int studentNo; // studentNo
     private String name; // name
+    private int targetOfNumber; // targetOfNumber
+    private String photoUrl; // photoUrl
     private Long matchingPostId; // matchingPost ID
     private String title; // Title
     private Long dDay; // D-day
@@ -33,8 +35,10 @@ public class FindBestRoomMateMatchingPostsData {
         Profile profile = matchingPost.getAuthor().getProfile();
         return FindBestRoomMateMatchingPostsData.builder()
                 .major(profile.getMajor())
-                //.studentNo(profile.getStudentNo())
+                .studentNo(profile.getStudentNo())
                 .name(profile.getName())
+                .targetOfNumber(matchingPost.getTargetNumberOfPeople())
+                .photoUrl(matchingPost.getAuthor().getPhotoUrl())
                 .matchingPostId(matchingPost.getId())
                 .title(matchingPost.getTitle())
                 .dDay(ChronoUnit.DAYS.between(LocalDate.now(), matchingPost.getDeadline()))
