@@ -6,6 +6,7 @@ import com.likelion.oegaein.domain.matching.exception.MatchingRequestException;
 import com.likelion.oegaein.domain.member.exception.BlockException;
 import com.likelion.oegaein.domain.member.exception.MemberException;
 import com.likelion.oegaein.domain.member.exception.RefreshTokenException;
+import com.likelion.oegaein.domain.news.exception.NewException;
 import com.likelion.oegaein.global.dto.ErrorResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -113,6 +114,16 @@ public class GlobalExceptionHandler {
     // RefreshTokenException
     @ExceptionHandler(RefreshTokenException.class)
     public ResponseEntity<ErrorResponseDto> handleRefreshTokenException(RefreshTokenException ex){
+        Map<String, String> errors = new HashMap<>();
+        errors.put(COMMON_ERR_MSG_KEY, ex.getMessage());
+        final ErrorResponseDto errorResponse = ErrorResponseDto.builder()
+                .errorMessages(errors)
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NewException.class)
+    public ResponseEntity<ErrorResponseDto> handleNewsException(NewException ex){
         Map<String, String> errors = new HashMap<>();
         errors.put(COMMON_ERR_MSG_KEY, ex.getMessage());
         final ErrorResponseDto errorResponse = ErrorResponseDto.builder()

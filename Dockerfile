@@ -13,6 +13,8 @@ RUN mv ./chromedriver-linux64/chromedriver /app/chrome
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app
+RUN touch /app/encoded_titles.txt
+
 # install chrome
 COPY --from=builder /app/google-chrome-stable_current_amd64.deb .
 RUN apt-get -y update
