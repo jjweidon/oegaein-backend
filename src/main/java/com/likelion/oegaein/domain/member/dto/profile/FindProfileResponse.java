@@ -38,8 +38,9 @@ public class FindProfileResponse implements ResponseDto {
     private Outing outing; // 외출 빈도
     @Enumerated(EnumType.STRING)
     private Sensitivity soundSensitivity; // 소리 민감도
+    private Boolean isLike; // 프로필 좋아요 여부
 
-    public static FindProfileResponse of(Profile profile) {;
+    public static FindProfileResponse of(Profile profile, Boolean isLike) {;
         List<SleepingHabit> sleepingHabit = profile.getSleepingHabit().stream()
                 .map(SleepingHabitEntity::getSleepingHabit)
                 .collect(Collectors.toList());
@@ -59,6 +60,7 @@ public class FindProfileResponse implements ResponseDto {
                 .cleaningCycle(profile.getCleaningCycle())
                 .outing(profile.getOuting())
                 .soundSensitivity(profile.getSoundSensitivity())
+                .isLike(isLike)
                 .build();
     }
 

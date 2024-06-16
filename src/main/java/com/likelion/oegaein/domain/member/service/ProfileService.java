@@ -2,6 +2,7 @@ package com.likelion.oegaein.domain.member.service;
 
 import com.likelion.oegaein.domain.member.dto.member.CheckDuplicateNameResponse;
 import com.likelion.oegaein.domain.member.dto.profile.*;
+import com.likelion.oegaein.domain.member.entity.member.Likey;
 import com.likelion.oegaein.domain.member.entity.member.Member;
 import com.likelion.oegaein.domain.member.entity.profile.Profile;
 import com.likelion.oegaein.domain.member.entity.profile.SleepingHabit;
@@ -10,6 +11,7 @@ import com.likelion.oegaein.domain.member.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +23,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class ProfileService {
+    private final String NOT_FOUND_MEMBER_ERR_MSG = "찾을 수 없는 사용자입니다.";
+
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
     private final SleepingHabitRepository sleepingHabitRepository;
     private final BlockRepository blockRepository;
     private final ReviewRepository reviewRepository;
+    private final LikeRepository likeRepository;
 
     public CreateProfileResponse createProfile(String email, CreateProfileRequest form) {
         Member loginMember = findAuthenticatedMember(email);
@@ -99,17 +104,18 @@ public class ProfileService {
                 }));
     }
 
-    public FindProfileResponse findProfile(String email, Long memberId) {
-        Member loginMember = findAuthenticatedMember(email);
+    public FindProfileResponse findProfile(Authentication authentication, Long memberId) {
+        Member loginMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
         Member findMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + memberId));
-
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
+        Boolean isLike = Boolean.FALSE;
         // 차단 확인
         isBlockedMember(loginMember, findMember);
-
-        Profile profile = profileRepository.findById(findMember.getProfile().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Not Found Profile: " + memberId));
-        return FindProfileResponse.of(profile);
+        Profile profile = findMember.getProfile();
+        Optional<Likey> likey = likeRepository.findBySenderReceiver(loginMember, findMember);
+        if(likey.isPresent()) isLike = Boolean.TRUE;
+        return FindProfileResponse.of(profile, isLike);
     }
 
     public FindMyProfileResponse findMyProfile(String email){

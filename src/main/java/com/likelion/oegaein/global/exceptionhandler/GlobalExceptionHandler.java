@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
     }
     // EmailException
     @ExceptionHandler(EmailException.class)
-    public ResponseEntity<ErrorResponseDto> handleMatchingPostException(EmailException ex){
+    public ResponseEntity<ErrorResponseDto> handleEmailException(EmailException ex){
         Map<String, String> errors = new HashMap<>();
         errors.put(COMMON_ERR_MSG_KEY, ex.getMessage());
         final ErrorResponseDto errorResponse = ErrorResponseDto.builder()

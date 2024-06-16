@@ -27,7 +27,7 @@ public class ProfileApiController {
     @GetMapping("/api/v1/member/profile/{memberId}")
     public ResponseEntity<ResponseDto> getProfile(Authentication authentication, @PathVariable("memberId") Long memberId) {
         log.info("Request to get profile by member id-{}", memberId);
-        FindProfileResponse response = profileService.findProfile(authentication.getName(), memberId);
+        FindProfileResponse response = profileService.findProfile(authentication, memberId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

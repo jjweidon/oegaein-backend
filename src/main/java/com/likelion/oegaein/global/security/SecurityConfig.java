@@ -53,7 +53,8 @@ public class SecurityConfig {
                     "/api/v1/my-matchingposts**",
                     "/api/v1/my-matchingrequests**",
                     "/api/v1/come-matchingrequests**",
-                    "/api/v1/member/my-profile**"
+                    "/api/v1/member/my-profile**",
+                    "/api/v1/member/profile**"
             ).authenticated();
             // POST 인증
             configure.requestMatchers(HttpMethod.POST,
