@@ -15,6 +15,8 @@ import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,14 +49,15 @@ public class MatchingPostService {
     public FindMatchingPostsResponse findAllMatchingPosts(Authentication authentication){
         // find matchingPosts
         List<MatchingPost> matchingPosts;
+        Pageable limit = PageRequest.of(0,10);
         if (authentication != null){ // find member except black list members
             Member member = memberRepository.findByEmail(authentication.getName())
                     .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
             List<Long> blackList = getBlackList(member);
-            if(blackList.isEmpty()) matchingPosts = matchingPostRepository.findAll();
+            if(blackList.isEmpty()) matchingPosts = matchingPostRepository.findAll(limit).getContent();
             else matchingPosts = matchingPostQueryRepository.findAllExceptBlockedMember(blackList);
         }else{
-            matchingPosts = matchingPostRepository.findAll();
+            matchingPosts = matchingPostRepository.findAll(limit).getContent();
         }
         // create matchingPostsData
         List<FindMatchingPostsData> matchingPostsData = matchingPosts.stream()
