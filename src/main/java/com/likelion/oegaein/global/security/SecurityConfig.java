@@ -3,6 +3,8 @@ package com.likelion.oegaein.global.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.oegaein.domain.member.repository.MemberRepository;
 import com.likelion.oegaein.domain.member.util.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,25 +50,26 @@ public class SecurityConfig {
             configure.requestMatchers("/api/v1/replies**").authenticated();
             configure.requestMatchers("/api/v1/member/like**").authenticated();
             configure.requestMatchers("/api/v1/member/block**").authenticated();
+            configure.requestMatchers("/api/v1/member/profile**").authenticated();
             // GET 인증
             configure.requestMatchers(HttpMethod.GET,
                     "/api/v1/my-matchingposts**",
                     "/api/v1/my-matchingrequests**",
                     "/api/v1/come-matchingrequests**",
                     "/api/v1/member/my-profile**",
-                    "/api/v1/member/profile**"
+                    "/api/v1/review**",
+                    "/api/v1/reviews**"
             ).authenticated();
             // POST 인증
             configure.requestMatchers(HttpMethod.POST,
                     "/api/v1/matchingposts**",
                     "/api/v1/matchingrequests**",
                     "/api/v1/member/block**",
-                    "/api/v1/member/profile**"
+                    "/api/v1/review**"
             ).authenticated();
             // PUT 인증
             configure.requestMatchers(HttpMethod.PUT,
-                    "/api/v1/matchingposts**",
-                    "/api/v1/member/profile**"
+                    "/api/v1/matchingposts**"
             ).authenticated();
             // PATCH 인증
             configure.requestMatchers(HttpMethod.PATCH,
@@ -78,13 +81,6 @@ public class SecurityConfig {
                     "/api/v1/matchingrequests**"
             ).authenticated();
             configure.anyRequest().permitAll();
-        });
-        http.logout(httpSecurityLogoutConfigurer -> {
-            httpSecurityLogoutConfigurer.logoutUrl("/api/v1/member/logout");
-            httpSecurityLogoutConfigurer.logoutSuccessHandler((request, response, authentication) -> {
-               response.sendRedirect("http://127.0.0.1:3000");
-            });
-            httpSecurityLogoutConfigurer.deleteCookies("refreshToken");
         });
         http.addFilterBefore(jwtAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationExceptionHandlerFilter(), JwtAuthenticationFilter.class);

@@ -36,7 +36,7 @@ public class MatchingPostQueryRepository {
                 .getResultList();
     }
 
-    public List<MatchingPost> findMatchingPostsBetweenTwoDates(LocalDateTime fromDate, LocalDateTime toDate){
+    public List<MatchingPost> findMatchingPostsBetweenTwoDates(LocalDate fromDate, LocalDate toDate){
         String jpql = "select mp from MatchingPost mp" +
                 " join fetch mp.author mpa" +
                 " join fetch mpa.profile mpap" +
@@ -86,7 +86,7 @@ public class MatchingPostQueryRepository {
                 .getResultList();
     }
 
-    public List<MatchingPost> findMatchingPostsBetweenTwoDatesExceptBlockedMember(LocalDateTime fromDate, LocalDateTime toDate, List<Long> blockedMemberIds){
+    public List<MatchingPost> findMatchingPostsBetweenTwoDatesExceptBlockedMember(LocalDate fromDate, LocalDate toDate, List<Long> blockedMemberIds){
         String jpql = "select mp from MatchingPost mp" +
                 " join fetch mp.author mpa" +
                 " join fetch mpa.profile mpap" +

@@ -22,6 +22,19 @@ public class ReviewService {
 
     private final ProfileService profileService;
 
+    public FindMyReviewsResponse findMyReview(Authentication authentication){
+        Member loginMember = memberRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Member"));
+        List<Review> reviews = reviewRepository.findAllByReceiver(loginMember)
+                .orElseThrow(() -> new EntityNotFoundException("Not Found Reviews"));
+        List<FindReviewData> findMemberReviewsData = reviews.stream()
+                .map(FindReviewData::of)
+                .toList();
+        return FindMyReviewsResponse.builder()
+                .data(findMemberReviewsData)
+                .build();
+    }
+
     public FindReviewResponse findReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Review: " + reviewId));

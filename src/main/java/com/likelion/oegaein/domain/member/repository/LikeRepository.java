@@ -11,6 +11,5 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Likey, Long> {
     Optional<List<Likey>> findBySender(Member sender);
-    @Query(value = "SELECT l FROM Likey l WHERE l.sender = :sender AND l.receiver = :receiver", nativeQuery = true)
-    Optional<Likey> findBySenderReceiver(@Param("sender") Member sender, @Param("receiver") Member receiver);
+    Optional<Likey> findBySenderAndReceiver(Member sender, Member receiver);
 }

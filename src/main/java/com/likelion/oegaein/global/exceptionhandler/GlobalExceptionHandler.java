@@ -119,7 +119,7 @@ public class GlobalExceptionHandler {
         final ErrorResponseDto errorResponse = ErrorResponseDto.builder()
                 .errorMessages(errors)
                 .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NewException.class)

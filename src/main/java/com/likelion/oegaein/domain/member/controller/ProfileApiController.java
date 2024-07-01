@@ -27,6 +27,9 @@ public class ProfileApiController {
     @GetMapping("/api/v1/member/profile/{memberId}")
     public ResponseEntity<ResponseDto> getProfile(Authentication authentication, @PathVariable("memberId") Long memberId) {
         log.info("Request to get profile by member id-{}", memberId);
+        if(authentication == null){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         FindProfileResponse response = profileService.findProfile(authentication, memberId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -34,6 +37,9 @@ public class ProfileApiController {
     @PostMapping("/api/v1/member/profile")
     public ResponseEntity<ResponseDto> postProfile(Authentication authentication, @RequestBody CreateProfileRequest dto){
         log.info("Request to post profile");
+        if(authentication == null){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         CreateProfileResponse response = profileService.createProfile(authentication.getName(), dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -41,6 +47,9 @@ public class ProfileApiController {
     @PutMapping("/api/v1/member/profile")
     public ResponseEntity<ResponseDto> putProfile(Authentication authentication, @RequestBody UpdateProfileRequest dto){
         log.info("Request to put profile");
+        if(authentication == null){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         UpdateProfileResponse response = profileService.updateProfile(authentication.getName(), dto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

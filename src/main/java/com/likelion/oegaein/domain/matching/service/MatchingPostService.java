@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -128,6 +129,7 @@ public class MatchingPostService {
         MatchingPost findMatchingPost = matchingPostRepository.findById(matchingPostId)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCHING_POST_ERR_MSG));
         memberValidator.validateIsOwnerMatchingPost(authenticatedMember.getId(), findMatchingPost.getAuthor().getId());
+        memberValidator.validateIsAlreadyCompleted(findMatchingPost.getMatchingStatus());
         findMatchingPost.completeMatchingPost();
         return new CompleteMatchingPostResponse(matchingPostId);
     }
@@ -167,8 +169,8 @@ public class MatchingPostService {
     public FindDeadlineImminentMatchingPostsResponse findDeadlineImminentMatchingPosts(Authentication authentication){
         // find matchingPosts
         List<MatchingPost> findMatchingPosts;
-        LocalDateTime currentDate = LocalDateTime.now();
-        LocalDateTime beforeOneDayDate = LocalDateTime.now().plusDays(1);
+        LocalDate currentDate = LocalDate.now();
+        LocalDate beforeOneDayDate = LocalDate.now().plusDays(1);
         if (authentication != null){ // find member except black list members
             Member member = memberRepository.findByEmail(authentication.getName())
                     .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));

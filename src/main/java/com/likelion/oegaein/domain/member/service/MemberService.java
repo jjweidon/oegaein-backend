@@ -73,6 +73,10 @@ public class MemberService {
         member.renewRefreshToken(refreshToken);
         return GoogleOauthLoginResponse.builder()
                 .email(member.getEmail())
+                .name(member.getProfile().getName())
+                .gender(member.getProfile().getGender())
+                .photoUrl(member.getPhotoUrl())
+                .introduction(member.getProfile().getIntroduction())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .profileSetUpStatus(member.getProfileSetUpStatus())
@@ -113,7 +117,7 @@ public class MemberService {
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + authentication.getName()));
         Member receiver = memberRepository.findById(form.getReceiverId())
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Member: " + form.getReceiverId()));
-        Likey likey = likeRepository.findBySenderReceiver(sender, receiver)
+        Likey likey = likeRepository.findBySenderAndReceiver(sender, receiver)
                 .orElseThrow(() -> new EntityNotFoundException("Not Found Likey"));
         likeRepository.delete(likey);
         return new DeleteLikeResponse(likey.getId());

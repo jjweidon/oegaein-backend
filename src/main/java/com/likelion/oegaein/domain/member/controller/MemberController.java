@@ -21,6 +21,22 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
+    @PostMapping("/api/v1/member/logout")
+    public ResponseEntity<ResponseDto> postLogout(){
+        log.info("Request to logout");
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", null)
+                .httpOnly(true)
+                .maxAge(0)
+                .sameSite("None")
+                .secure(true)
+                .path("/")
+                .build();
+        LogoutResponse response = new LogoutResponse(Boolean.TRUE);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .body(response);
+    }
+
     @GetMapping("/api/v1/member/auth/google/callback")
     public ResponseEntity<ResponseDto> googleLoginCallbackRequest(@RequestParam("code") String code){
         try {
@@ -50,21 +66,21 @@ public class MemberController {
     }
 
     @PostMapping("api/v1/member/block")
-    public ResponseEntity<ResponseDto> postBlockMember(Authentication authentication, CreateBlockRequest dto) {
+    public ResponseEntity<ResponseDto> postBlockMember(Authentication authentication, @RequestBody CreateBlockRequest dto) {
         log.info("Request to post block member");
         CreateBlockResponse response = memberService.createBlockMember(authentication, dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("api/v1/member/like")
-    public ResponseEntity<ResponseDto> postLikeMember(Authentication authentication, CreateLikeRequest dto) {
+    public ResponseEntity<ResponseDto> postLikeMember(Authentication authentication, @RequestBody CreateLikeRequest dto) {
         log.info("Request to post like member");
         CreateLikeResponse response = memberService.createLikeMember(authentication, dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping("api/v1/member/like")
-    public ResponseEntity<ResponseDto> deleteLikeMember(Authentication authentication, DeleteLikeRequest dto) {
+    public ResponseEntity<ResponseDto> deleteLikeMember(Authentication authentication, @RequestBody DeleteLikeRequest dto) {
         log.info("Request to delete like member");
         DeleteLikeResponse response = memberService.deleteLikeMember(authentication, dto);
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);

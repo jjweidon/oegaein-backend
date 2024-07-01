@@ -18,7 +18,14 @@ public class ReviewApiController {
     private final ReviewService reviewService;
     private final ProfileService profileService;
 
-    @GetMapping("/api/v1/{memberId}/reviews") // 멤버의 전체 리뷰 조희
+    @GetMapping("/api/v1/reviews/my-review")
+    public ResponseEntity<ResponseDto> getMyReview(Authentication authentication){
+        log.info("Request to my review");
+        FindMyReviewsResponse response = reviewService.findMyReview(authentication);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/v1/reviews/{memberId}") // 멤버의 전체 리뷰 조희
     public ResponseEntity<ResponseDto> getReviews(@PathVariable("memberId") Long memberId) {
         log.info("Request to get reviews");
         FindMemberReviewsResponse response = reviewService.findMemberReviews(memberId);

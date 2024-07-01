@@ -11,6 +11,6 @@ import java.util.List;
 @Getter
 @Builder
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class FindMemberReviewsResponse implements ResponseDto {
+public class FindMyReviewsResponse implements ResponseDto {
     private final List<FindReviewData> data;
 }

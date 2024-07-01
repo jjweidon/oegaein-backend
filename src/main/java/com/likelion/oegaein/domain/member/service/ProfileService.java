@@ -113,7 +113,7 @@ public class ProfileService {
         // 차단 확인
         isBlockedMember(loginMember, findMember);
         Profile profile = findMember.getProfile();
-        Optional<Likey> likey = likeRepository.findBySenderReceiver(loginMember, findMember);
+        Optional<Likey> likey = likeRepository.findBySenderAndReceiver(loginMember, findMember);
         if(likey.isPresent()) isLike = Boolean.TRUE;
         return FindProfileResponse.of(profile, isLike);
     }

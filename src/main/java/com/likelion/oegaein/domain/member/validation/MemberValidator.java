@@ -1,5 +1,7 @@
 package com.likelion.oegaein.domain.member.validation;
 
+import com.likelion.oegaein.domain.matching.entity.MatchingStatus;
+import com.likelion.oegaein.domain.matching.exception.MatchingPostException;
 import com.likelion.oegaein.domain.member.exception.MemberException;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,8 @@ public class MemberValidator {
     private final String IS_OWNER_ROOMMATE_ALARM_ERR_MSG = "올바른 룸메이트 알림 수신자가 아닙니다.";
     private final String IS_HUFS_EMAIL_DOMAIN_ERR_MSG = "한국외국어대학교 계정이 아닙니다.";
     private final String HUFS_EMAIL_DOMAIN = "hufs.ac.kr";
+    private final String IS_ALREADY_COMPLETED_MATCHING_POST = "이미 매칭이 완료된 매칭글입니다.";
+
     public void validateIsOwnerMatchingPost(Long authenticatedMemberId, Long matchingPostAuthorId){
         if(!authenticatedMemberId.equals(matchingPostAuthorId)){
             throw new MemberException(IS_OWNER_MATCHING_POST_ERR_MSG);
@@ -47,6 +51,12 @@ public class MemberValidator {
         String emailDomain = email.substring(email.indexOf('@') + 1);
         if(!emailDomain.equals(HUFS_EMAIL_DOMAIN)){
             throw new MemberException(IS_HUFS_EMAIL_DOMAIN_ERR_MSG);
+        }
+    }
+
+    public void validateIsAlreadyCompleted(MatchingStatus matchingStatus){
+        if(matchingStatus.equals(MatchingStatus.COMPLETED)){
+            throw new MatchingPostException(IS_ALREADY_COMPLETED_MATCHING_POST);
         }
     }
 }

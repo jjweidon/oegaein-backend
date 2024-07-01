@@ -1,5 +1,7 @@
 package com.likelion.oegaein.domain.matching.dto.matchingpost;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.likelion.oegaein.domain.member.entity.profile.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Getter
 @Builder
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FindMatchingPostResInProfile {
     private Long id;
     private String photoUrl;
