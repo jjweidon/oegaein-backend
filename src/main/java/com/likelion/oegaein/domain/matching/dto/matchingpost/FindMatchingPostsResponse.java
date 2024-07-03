@@ -12,6 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FindMatchingPostsResponse implements ResponseDto {
-    private
     private List<FindMatchingPostsData> data;
 }

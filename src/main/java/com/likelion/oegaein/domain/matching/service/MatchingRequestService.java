@@ -8,6 +8,7 @@ import com.likelion.oegaein.domain.chat.entity.ChatRoom;
 import com.likelion.oegaein.domain.chat.entity.ChatRoomMember;
 import com.likelion.oegaein.domain.chat.repository.ChatRoomMemberRepository;
 import com.likelion.oegaein.domain.chat.repository.ChatRoomRepository;
+import com.likelion.oegaein.domain.chat.service.ChatRoomService;
 import com.likelion.oegaein.domain.email.dto.EmailMessage;
 import com.likelion.oegaein.domain.email.service.EmailService;
 import com.likelion.oegaein.domain.matching.dto.matchingrequest.*;
@@ -65,6 +66,7 @@ public class MatchingRequestService {
     private final ChatRoomMemberRepository chatRoomMemberRepository;
     // service
     private final EmailService emailService;
+    private final ChatRoomService chatRoomService;
     // validators
     private final MatchingRequestValidator matchingRequestValidator;
     private final MemberValidator memberValidator;
@@ -223,7 +225,7 @@ public class MatchingRequestService {
                 .disconnectedAt(LocalDateTime.now())
                 .build();
         chatRoomMemberRepository.save(newChatRoomMember);
-        chatRoom.upMemberCount();
+        chatRoomService.increaseMemberCountPessimisticLock(chatRoom.getId());
     }
 
     private Boolean isCompletedMatching(MatchingPost matchingPost){
