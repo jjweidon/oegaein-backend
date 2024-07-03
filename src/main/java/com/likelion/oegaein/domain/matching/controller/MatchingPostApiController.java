@@ -6,6 +6,9 @@ import com.likelion.oegaein.global.dto.ResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,9 +21,9 @@ public class MatchingPostApiController {
     private final MatchingPostService matchingPostService;
 
     @GetMapping("/api/v1/matchingposts") // 전체 매칭 글 조회
-    public ResponseEntity<ResponseDto> getMatchingPosts(Authentication authentication){
+    public ResponseEntity<ResponseDto> getMatchingPosts(Authentication authentication, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         log.info("Request to get matchingposts"); // logging
-        FindMatchingPostsResponse response = matchingPostService.findAllMatchingPosts(authentication);
+        FindMatchingPostsResponse response = matchingPostService.findAllMatchingPosts(authentication, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

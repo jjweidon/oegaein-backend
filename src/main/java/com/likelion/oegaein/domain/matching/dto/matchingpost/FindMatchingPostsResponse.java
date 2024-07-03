@@ -12,5 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FindMatchingPostsResponse implements ResponseDto {
+    private int totalPages;
+    private int curPage;
     private List<FindMatchingPostsData> data;
 }

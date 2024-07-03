@@ -15,6 +15,7 @@ import com.likelion.oegaein.domain.member.validation.MemberValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -46,24 +47,37 @@ public class MatchingPostService {
     private final BlockValidator blockValidator;
 
     // 모든 매칭글 조회
-    public FindMatchingPostsResponse findAllMatchingPosts(Authentication authentication){
+    public FindMatchingPostsResponse findAllMatchingPosts(Authentication authentication, Pageable limit){
         // find matchingPosts
         List<MatchingPost> matchingPosts;
-        Pageable limit = PageRequest.of(0,10);
+        Page<MatchingPost> result;
+        int totalPages;
+        int curPage = limit.getPageNumber();
         if (authentication != null){ // find member except black list members
             Member member = memberRepository.findByEmail(authentication.getName())
                     .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MEMBER_ERR_MSG));
             List<Long> blackList = getBlackList(member);
-            if(blackList.isEmpty()) matchingPosts = matchingPostRepository.findAll(limit).getContent();
-            else matchingPosts = matchingPostQueryRepository.findAllExceptBlockedMember(blackList);
+            if(blackList.isEmpty()){
+                result = matchingPostRepository.findAll(limit);
+                matchingPosts = result.getContent();
+                totalPages = result.getTotalPages();
+            }
+            else{
+                result = matchingPostQueryRepository.findAllExceptBlockedMember(blackList, limit);
+                matchingPosts = result.getContent();
+                totalPages = result.getTotalPages();
+            }
         }else{
-            matchingPosts = matchingPostRepository.findAll(limit).getContent();
+            result = matchingPostRepository.findAll(limit);
+            matchingPosts = result.getContent();
+            totalPages = result.getTotalPages();
         }
         // create matchingPostsData
         List<FindMatchingPostsData> matchingPostsData = matchingPosts.stream()
                 .map(FindMatchingPostsData::toFindMatchingPostsData)
                 .toList();
-        return new FindMatchingPostsResponse(matchingPostsData);
+
+        return new FindMatchingPostsResponse(totalPages, curPage, matchingPostsData);
     }
 
     // 매칭글 작성
